@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <title>Convergint – Technical Operations Coordination Simulator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="description" content="Convergint-inspired technical operations coordination simulator with searchable work orders, exports for Power BI and SAP-style tables, and donut KPIs placed at the bottom." />
+<meta name="description" content="Convergint-inspired technical operations coordination simulator: searchable work orders, exports, PDF report, donut KPIs at bottom, plus interactive line/bar charts for trends and operational analysis." />
 
 <style>
   :root{
@@ -106,10 +106,10 @@
   @media(max-width:980px){.controls{grid-template-columns:1fr 1fr}}
   @media(max-width:560px){.controls{grid-template-columns:1fr}}
   .field label{display:block;margin-bottom:6px;font-weight:950;font-size:.9rem;color:rgba(15,23,42,.85)}
-  .field input{
+  .field input,.field select{
     width:100%;padding:11px 12px;border-radius:12px;
     border:1px solid rgba(15,23,42,.16);
-    background:#fff;color:var(--text);outline:none;
+    background:#fff;color:var(--text);outline:none;font-weight:800;
   }
 
   .kpi{
@@ -142,7 +142,24 @@
   th,td{padding:10px;border-bottom:1px solid rgba(15,23,42,.08);font-size:.92rem;white-space:nowrap;text-align:left}
   th{position:sticky;top:0;background:#fff;color:rgba(15,23,42,.75);font-weight:950;z-index:2}
 
-  /* Donuts ONLY at bottom (centered) */
+  /* Charts */
+  .chartsGrid{
+    display:grid;
+    grid-template-columns:1.25fr .75fr;
+    gap:12px;
+    margin-top:12px;
+  }
+  @media(max-width:980px){.chartsGrid{grid-template-columns:1fr}}
+  .chartCard{
+    border:1px solid rgba(15,23,42,.12);
+    background:#fff;
+    border-radius:14px;
+    padding:12px;
+  }
+  .chartCanvasWrap{position:relative;height:320px}
+  @media(max-width:980px){.chartCanvasWrap{height:300px}}
+
+  /* Donuts bottom */
   .donutGrid{
     display:grid;
     grid-template-columns:repeat(3, minmax(0, 1fr));
@@ -187,14 +204,14 @@
   <div class="container top-inner">
     <div>
       <div class="brand"><span class="dot"></span> Convergint – Technical Operations (Example)</div>
-      <div class="sub">Work orders · Security systems · SLA · Exports · PDF</div>
+      <div class="sub">Work orders · Security systems · SLA · Exports · PDF · Charts</div>
     </div>
     <nav class="nav" aria-label="Page">
       <a href="#overview">Overview</a>
       <a href="#generator">Generator</a>
       <a href="#table">Table</a>
-      <a href="#exports">Exports</a>
       <a href="#charts">Charts</a>
+      <a href="#exports">Exports</a>
       <a class="btn small" href="index.html">← Back</a>
     </nav>
   </div>
@@ -202,22 +219,20 @@
 
 <main class="container">
 
-  <!-- OVERVIEW -->
   <section id="overview" class="section">
     <div class="grid2">
       <div class="card">
         <div class="row">
           <h1>Technical Operations Coordination</h1>
-          <span class="pill"><span class="pDot"></span> coherent dataset</span>
+          <span class="pill"><span class="pDot"></span> realistic reporting</span>
         </div>
         <p class="muted" style="margin:8px 0 0">
-          Professional example of a coordinator workflow: generating work orders, assigning a small team (max 5 technicians),
-          tracking SLA, and exporting structured tables for reporting.
+          Example coordinator workflow: generate work orders, assign max 5 technicians, measure SLA performance, and export structured data.
         </p>
 
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
           <a class="btn primary" href="#generator">Generate data</a>
-          <a class="btn" href="#exports">Download exports</a>
+          <a class="btn" href="#charts">Open charts</a>
           <button class="btn danger" id="btnPdf">Download PDF report</button>
         </div>
 
@@ -231,7 +246,7 @@
       <div class="card">
         <div class="row">
           <h2 style="margin:0">Systems included</h2>
-          <span class="chip blue">essential only</span>
+          <span class="chip blue">coherent</span>
         </div>
 
         <div class="grid3" style="margin-top:12px">
@@ -250,13 +265,12 @@
         </div>
 
         <p class="muted" style="margin:12px 0 0">
-          The dataset is intentionally focused: fields that are useful for coordination and KPI reporting.
+          The charts below are designed to “tell the story”: SLA trend, overdue spikes, incident mix, and workload distribution.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- GENERATOR -->
   <section id="generator" class="section">
     <div class="card">
       <div class="row">
@@ -271,11 +285,11 @@
         </div>
         <div class="field">
           <label>Work orders</label>
-          <input id="nOrders" type="number" min="30" max="600" value="160" />
+          <input id="nOrders" type="number" min="30" max="800" value="220" />
         </div>
         <div class="field">
           <label>Days horizon</label>
-          <input id="horizon" type="number" min="30" max="365" value="140" />
+          <input id="horizon" type="number" min="60" max="900" value="540" />
         </div>
         <div class="field">
           <label>Target SLA compliance %</label>
@@ -291,12 +305,11 @@
       </div>
 
       <p class="muted" style="margin:10px 0 0">
-        Search filters the table live. Try names, incident types, WO IDs, or system categories.
+        Search is applied to table + charts context (you can still analyze overall trends in charts).
       </p>
     </div>
   </section>
 
-  <!-- TABLE + KPI CARDS -->
   <section id="table" class="section">
     <div class="card">
       <div class="row">
@@ -326,14 +339,87 @@
           <tbody id="tbody"></tbody>
         </table>
       </div>
-
-      <p class="muted" style="margin:10px 0 0">
-        Export this dataset to build dashboards: SLA compliance, overdue by system, workload by technician, and incident mix.
-      </p>
     </div>
   </section>
 
-  <!-- EXPORTS -->
+  <section id="charts" class="section">
+    <div class="card">
+      <div class="row">
+        <h2 style="margin:0">Interactive Operations Dashboard</h2>
+        <span class="chip blue">line + bar</span>
+      </div>
+
+      <div class="controls" style="margin-top:12px">
+        <div class="field">
+          <label>Granularity</label>
+          <select id="gran">
+            <option value="month" selected>Month</option>
+            <option value="day">Day</option>
+            <option value="year">Year</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Trend metric</label>
+          <select id="trendMetric">
+            <option value="slaCompliance" selected>SLA compliance (%)</option>
+            <option value="overdueRate">Overdue rate (%)</option>
+            <option value="completionRate">Completion rate (%)</option>
+            <option value="workOrders">Work orders count</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Bar metric</label>
+          <select id="barMetric">
+            <option value="incidentsBySystem" selected>Incidents by system</option>
+            <option value="workloadByTech">Workload by technician</option>
+            <option value="overdueBySystem">Overdue by system</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Downloads</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn small" id="dlTrendPng" type="button">Trend PNG</button>
+            <button class="btn small" id="dlBarPng" type="button">Bar PNG</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="chartsGrid">
+        <div class="chartCard">
+          <div class="row">
+            <h3 style="margin:0">Trend chart</h3>
+            <span class="chip">time series</span>
+          </div>
+          <div class="chartCanvasWrap">
+            <canvas id="trendChart"></canvas>
+          </div>
+          <p class="muted" style="margin:10px 0 0">
+            Useful for: showing SLA drift, operational pressure spikes, and performance improvements.
+          </p>
+        </div>
+
+        <div class="chartCard">
+          <div class="row">
+            <h3 style="margin:0">Operational breakdown</h3>
+            <span class="chip red">root cause</span>
+          </div>
+          <div class="chartCanvasWrap">
+            <canvas id="barChart"></canvas>
+          </div>
+          <p class="muted" style="margin:10px 0 0">
+            Useful for: workload balance (tech) and incident concentration (system).
+          </p>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:16px">
+        <h2 style="margin:0">Operational KPIs (Donuts)</h2>
+        <span class="chip blue">quick view</span>
+      </div>
+      <div class="donutGrid" id="donutGrid"></div>
+    </div>
+  </section>
+
   <section id="exports" class="section">
     <div class="card">
       <div class="row">
@@ -369,20 +455,6 @@
     </div>
   </section>
 
-  <!-- CHARTS AT THE VERY BOTTOM -->
-  <section id="charts" class="section">
-    <div class="card">
-      <div class="row">
-        <h2 style="margin:0">Operational KPIs (Charts)</h2>
-        <span class="chip blue">donut charts</span>
-      </div>
-      <div class="donutGrid" id="donutGrid"></div>
-      <p class="muted" style="margin:10px 0 0">
-        Clean, readable donut charts: SLA compliance, overdue rate, completion rate.
-      </p>
-    </div>
-  </section>
-
   <!-- Hidden PDF report area -->
   <div class="container">
     <div class="reportArea" id="reportArea">
@@ -401,7 +473,7 @@
       <div id="reportKpis" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px"></div>
 
       <h3 style="margin:12px 0 8px">Charts</h3>
-      <div id="reportCharts" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px"></div>
+      <div id="reportCharts" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px"></div>
     </div>
   </div>
 
@@ -411,6 +483,7 @@
   <div class="container">© Example simulator – Andrei Adam</div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
@@ -466,6 +539,9 @@
   let DATA = { work_orders: [], assets: [], notifications: [], service_orders: [], confirmations: [] };
   let showOverdueOnly = false;
 
+  let trendChart = null;
+  let barChart = null;
+
   function downloadCSV(filename, rows){
     if(!rows || !rows.length){
       alert("Please generate data first.");
@@ -490,7 +566,7 @@
     URL.revokeObjectURL(url);
   }
 
-  // Donut helpers
+  // Donuts
   function drawDonut(canvas, value01, label, strokeStyle){
     const ctx = canvas.getContext("2d");
     const w = canvas.width, h = canvas.height;
@@ -545,23 +621,16 @@
     return card;
   }
 
-  function applySearchFilter(rows){
-    const q = ($("search").value || "").trim().toLowerCase();
-    if(!q) return rows;
-
-    return rows.filter(r => {
-      const hay = [
-        r.wo_id, r.date, r.client_name, r.site, r.system, r.priority,
-        r.status, r.incident, r.assigned_tech, r.tech_id, r.within_sla
-      ].join(" ").toLowerCase();
-      return hay.includes(q);
-    });
+  function groupKey(date, gran){
+    if (gran === "day") return date;
+    if (gran === "month") return date.slice(0,7);
+    return date.slice(0,4);
   }
 
   function generate(){
     const seed = +$("seed").value || 77;
-    const n = +$("nOrders").value || 160;
-    const horizon = +$("horizon").value || 140;
+    const n = +$("nOrders").value || 220;
+    const horizon = +$("horizon").value || 540;
     const slaTarget = Math.max(0.70, Math.min(0.99, (+$("slaTarget").value || 92)/100));
     const rnd = mulberry32(seed);
 
@@ -574,7 +643,7 @@
     let assetCounter = 1;
     for(const c of CLIENTS){
       for(const s of SYSTEMS){
-        const count = 3 + Math.floor(rnd()*5);
+        const count = 4 + Math.floor(rnd()*6);
         for(let i=0;i<count;i++){
           const asset_id = "AS-" + pad(assetCounter++, 4);
           DATA.assets.push({
@@ -601,16 +670,19 @@
 
       const sla_hours = Math.max(4, Math.round(sys.baseSla * pr.slaMul * (0.9 + rnd()*0.3)));
 
-      const severityPenalty = (pr.p==="P1") ? 0.04 : (pr.p==="P2") ? 0.02 : 0;
-      const systemPenalty = (sys.key==="Video Surveillance") ? 0.01 : 0;
-      const withinProb = Math.max(0.65, Math.min(0.99, slaTarget - severityPenalty - systemPenalty));
+      const severityPenalty = (pr.p==="P1") ? 0.05 : (pr.p==="P2") ? 0.03 : 0;
+      const systemPenalty = (sys.key==="Video Surveillance") ? 0.015 : 0;
+      const month = Number(date.slice(5,7));
+      const seasonPenalty = (month>=11 || month<=2) ? 0.01 : 0; // winter increases risk slightly
+
+      const withinProb = Math.max(0.60, Math.min(0.99, slaTarget - severityPenalty - systemPenalty - seasonPenalty));
       const within_sla = (rnd() < withinProb) ? "Yes" : "No";
 
-      const incident_flag = (rnd() < 0.30) ? "Yes" : "No";
+      const incident_flag = (rnd() < 0.32) ? "Yes" : "No";
       const incident = (incident_flag==="Yes") ? pick(FAILURE_MODES) : "None";
 
-      const status = (within_sla==="No" && rnd()<0.55) ? "Overdue"
-                   : (rnd()<0.62) ? "Completed"
+      const status = (within_sla==="No" && rnd()<0.60) ? "Overdue"
+                   : (rnd()<0.60) ? "Completed"
                    : (rnd()<0.88) ? "In Progress"
                    : "Scheduled";
 
@@ -689,6 +761,18 @@
     };
   }
 
+  function applySearchFilter(rows){
+    const q = ($("search").value || "").trim().toLowerCase();
+    if(!q) return rows;
+    return rows.filter(r => {
+      const hay = [
+        r.wo_id, r.date, r.client_name, r.site, r.system, r.priority,
+        r.status, r.incident, r.assigned_tech, r.tech_id, r.within_sla
+      ].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
   function renderKpiCards(){
     const k = computeKPIs();
     $("kpiGrid").innerHTML = `
@@ -725,37 +809,132 @@
     });
   }
 
-  function renderDonutsBottom(){
+  function renderDonuts(){
     const k = computeKPIs();
     const grid = $("donutGrid");
     grid.innerHTML = "";
-    grid.appendChild(donutCard(
-      "SLA Compliance",
-      k.withinPct,
-      "Within SLA",
-      "rgba(37,99,235,1)",
-      `${Math.round(k.withinPct*100)}% within SLA`
-    ));
-    grid.appendChild(donutCard(
-      "Overdue Rate",
-      k.overduePct,
-      "Overdue",
-      "rgba(239,68,68,1)",
-      `${Math.round(k.overduePct*100)}% overdue or breached`
-    ));
-    grid.appendChild(donutCard(
-      "Completion Rate",
-      k.completionPct,
-      "Completed",
-      "rgba(15,23,42,.86)",
-      `${Math.round(k.completionPct*100)}% completed`
-    ));
+    grid.appendChild(donutCard("SLA Compliance", k.withinPct, "Within SLA", "rgba(37,99,235,1)", `${Math.round(k.withinPct*100)}% within SLA`));
+    grid.appendChild(donutCard("Overdue Rate", k.overduePct, "Overdue", "rgba(239,68,68,1)", `${Math.round(k.overduePct*100)}% overdue/breached`));
+    grid.appendChild(donutCard("Completion Rate", k.completionPct, "Completed", "rgba(15,23,42,.86)", `${Math.round(k.completionPct*100)}% completed`));
   }
 
-  function renderAll(){
-    renderKpiCards();
-    renderTable();
-    renderDonutsBottom();
+  function buildTimeSeries(gran, metric){
+    const map = new Map();
+    for (const r of DATA.work_orders){
+      const k = groupKey(r.date, gran);
+      if (!map.has(k)){
+        map.set(k, {key:k, total:0, within:0, overdue:0, completed:0});
+      }
+      const o = map.get(k);
+      o.total += 1;
+      if (r.within_sla === "Yes") o.within += 1;
+      if (r.status === "Overdue" || r.within_sla === "No") o.overdue += 1;
+      if (r.status === "Completed") o.completed += 1;
+    }
+    const arr = Array.from(map.values()).sort((a,b)=> a.key.localeCompare(b.key));
+    const labels = arr.map(x=>x.key);
+    const values = arr.map(x=>{
+      if (metric === "slaCompliance") return +(x.total ? (x.within/x.total*100) : 0).toFixed(1);
+      if (metric === "overdueRate") return +(x.total ? (x.overdue/x.total*100) : 0).toFixed(1);
+      if (metric === "completionRate") return +(x.total ? (x.completed/x.total*100) : 0).toFixed(1);
+      return x.total;
+    });
+    return {labels, values};
+  }
+
+  function buildBar(metric){
+    // incidents by system / workload by tech / overdue by system
+    const map = new Map();
+
+    if (metric === "workloadByTech"){
+      for (const t of TECHS) map.set(t.name, 0);
+      for (const r of DATA.work_orders){
+        map.set(r.assigned_tech, (map.get(r.assigned_tech)||0) + 1);
+      }
+      const labels = Array.from(map.keys());
+      const values = labels.map(l => map.get(l));
+      return {labels, values, label:"Work orders"};
+    }
+
+    if (metric === "overdueBySystem"){
+      for (const s of SYSTEMS) map.set(s.key, 0);
+      for (const r of DATA.work_orders){
+        const isOver = (r.status === "Overdue" || r.within_sla === "No");
+        if (isOver) map.set(r.system, (map.get(r.system)||0) + 1);
+      }
+      const labels = Array.from(map.keys());
+      const values = labels.map(l => map.get(l));
+      return {labels, values, label:"Overdue count"};
+    }
+
+    // incidentsBySystem
+    for (const s of SYSTEMS) map.set(s.key, 0);
+    for (const r of DATA.work_orders){
+      if (r.incident && r.incident !== "None"){
+        map.set(r.system, (map.get(r.system)||0) + 1);
+      }
+    }
+    const labels = Array.from(map.keys());
+    const values = labels.map(l => map.get(l));
+    return {labels, values, label:"Incidents count"};
+  }
+
+  function renderCharts(){
+    const gran = $("gran").value;
+    const trendMetric = $("trendMetric").value;
+    const barMetric = $("barMetric").value;
+
+    const ts = buildTimeSeries(gran, trendMetric);
+    const b = buildBar(barMetric);
+
+    if (trendChart) trendChart.destroy();
+    trendChart = new Chart($("trendChart"), {
+      type: "line",
+      data: {
+        labels: ts.labels,
+        datasets: [{
+          label: trendMetric,
+          data: ts.values,
+          tension: 0.25,
+          pointRadius: 2,
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: true } },
+        interaction: { mode: "index", intersect: false },
+        scales: { x: { grid: { display: false } }, y: { beginAtZero: false } }
+      }
+    });
+
+    if (barChart) barChart.destroy();
+    barChart = new Chart($("barChart"), {
+      type: "bar",
+      data: {
+        labels: b.labels,
+        datasets: [{
+          label: b.label,
+          data: b.values,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: true } },
+        scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
+      }
+    });
+  }
+
+  function downloadChartPng(chart, filename){
+    if (!chart){ alert("Generate data first."); return; }
+    const a = document.createElement("a");
+    a.href = chart.toBase64Image("image/png", 1);
+    a.download = filename;
+    a.click();
   }
 
   function downloadPowerBIPack(){
@@ -805,36 +984,26 @@
       </div>
     `;
 
-    // reuse donuts for report charts
+    // embed chart images
     $("reportCharts").innerHTML = "";
-    const mk = (title, val, color) => {
-      const div = document.createElement("div");
-      div.style.border="1px solid #e5e7eb";
-      div.style.borderRadius="12px";
-      div.style.padding="10px";
-      div.innerHTML = `<div style="font-weight:950;margin-bottom:6px;color:#0f172a">${title}</div>`;
-      const c = document.createElement("canvas");
-      c.width=240; c.height=160;
-      div.appendChild(c);
-
-      const ctx = c.getContext("2d");
-      const cx=80, cy=80, r=52;
-      ctx.lineWidth=12; ctx.lineCap="round";
-      ctx.strokeStyle="rgba(15,23,42,.12)";
-      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
-      const start=-Math.PI/2;
-      ctx.strokeStyle=color;
-      ctx.beginPath(); ctx.arc(cx,cy,r,start,start+Math.PI*2*Math.max(0,Math.min(1,val))); ctx.stroke();
-      ctx.fillStyle="rgba(15,23,42,.92)";
-      ctx.font="900 16px system-ui";
-      ctx.textAlign="center"; ctx.textBaseline="middle";
-      ctx.fillText(Math.round(val*100)+"%", cx, cy);
-
-      $("reportCharts").appendChild(div);
-    };
-    mk("SLA compliance", k.withinPct, "rgba(37,99,235,1)");
-    mk("Overdue rate", k.overduePct, "rgba(239,68,68,1)");
-    mk("Completion rate", k.completionPct, "rgba(15,23,42,.86)");
+    const chartImg1 = trendChart ? trendChart.toBase64Image("image/png", 1) : "";
+    const chartImg2 = barChart ? barChart.toBase64Image("image/png", 1) : "";
+    if (chartImg1){
+      const img = document.createElement("img");
+      img.src = chartImg1;
+      img.style.width = "100%";
+      img.style.border = "1px solid #e5e7eb";
+      img.style.borderRadius = "12px";
+      $("reportCharts").appendChild(img);
+    }
+    if (chartImg2){
+      const img = document.createElement("img");
+      img.src = chartImg2;
+      img.style.width = "100%";
+      img.style.border = "1px solid #e5e7eb";
+      img.style.borderRadius = "12px";
+      $("reportCharts").appendChild(img);
+    }
 
     const area = $("reportArea");
     area.style.display="block";
@@ -879,19 +1048,29 @@
     area.style.display="none";
   }
 
-  // events
+  function renderAll(){
+    renderKpiCards();
+    renderTable();
+    renderDonuts();
+    renderCharts();
+  }
+
+  // Events
   $("btnGenerate").addEventListener("click", () => { showOverdueOnly=false; generate(); });
   $("btnOverdue").addEventListener("click", () => { showOverdueOnly=true; renderAll(); });
   $("btnAll").addEventListener("click", () => { showOverdueOnly=false; renderAll(); });
-  $("search").addEventListener("input", renderAll);
+  $("search").addEventListener("input", renderTable);
+
+  ["gran","trendMetric","barMetric"].forEach(id => $(id).addEventListener("change", renderCharts));
+  $("dlTrendPng").addEventListener("click", ()=>downloadChartPng(trendChart, "Convergint_Trend.png"));
+  $("dlBarPng").addEventListener("click", ()=>downloadChartPng(barChart, "Convergint_Bar.png"));
 
   $("dlPB").addEventListener("click", downloadPowerBIPack);
   $("dlSAP").addEventListener("click", downloadSAPPack);
-
   $("btnPdf").addEventListener("click", downloadPDFReport);
   $("dlPDF2").addEventListener("click", downloadPDFReport);
 
-  // init
+  // Init
   generate();
 </script>
 
