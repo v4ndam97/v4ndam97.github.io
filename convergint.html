@@ -4,33 +4,25 @@
 <meta charset="utf-8" />
 <title>Convergint – Technical Operations Coordination Simulator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="description" content="Convergint-inspired technical operations coordination simulator: searchable work orders, exports, PDF report, donut KPIs at bottom, plus interactive line/bar charts for trends and operational analysis." />
+<meta name="description" content="Convergint-inspired technical operations simulator: max 5 technicians, work orders, SLA, incidents, exports, PDF report, interactive charts + SLA heatmap." />
 
 <style>
   :root{
-    --bg1:#f6f8ff;
-    --bg2:#ffffff;
-    --card:#ffffff;
-    --text:#0f172a;
-    --muted:rgba(15,23,42,.68);
-    --border:rgba(15,23,42,.12);
-    --shadow:0 18px 40px rgba(15,23,42,.10);
-    --blue:#2563eb;
-    --red:#ef4444;
-    --radius:18px;
-    --max:1140px;
+    --bg1:#f6f8ff; --bg2:#ffffff; --card:#ffffff;
+    --text:#0f172a; --muted:rgba(15,23,42,.68);
+    --border:rgba(15,23,42,.12); --shadow:0 18px 40px rgba(15,23,42,.10);
+    --blue:#2563eb; --red:#ef4444; --radius:18px; --max:1140px;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{
-    margin:0;
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     color:var(--text);
     background:
       radial-gradient(1000px 650px at 10% 10%, rgba(37,99,235,.15), transparent 60%),
       radial-gradient(900px 650px at 90% 10%, rgba(239,68,68,.14), transparent 60%),
       linear-gradient(180deg,var(--bg1),var(--bg2));
-    line-height:1.5;
+    line-height:1.55;
   }
   a{color:inherit;text-decoration:none}
   a:hover{text-decoration:underline}
@@ -50,13 +42,7 @@
   .nav a{padding:9px 12px;border-radius:12px;border:1px solid transparent;font-weight:950;color:rgba(15,23,42,.92)}
   .nav a:hover{border-color:var(--border);background:rgba(15,23,42,.03);text-decoration:none}
 
-  .card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    padding:18px;
-  }
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
   .section{padding:18px 0}
   h1{margin:0 0 10px;font-size:clamp(1.9rem,3vw,2.6rem);letter-spacing:-.9px;line-height:1.1}
   h2{margin:0 0 10px;letter-spacing:-.4px}
@@ -72,27 +58,17 @@
   @media(max-width:980px){.grid4{grid-template-columns:1fr 1fr}}
   @media(max-width:560px){.grid4{grid-template-columns:1fr}}
 
-  .pill{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:7px 10px;border-radius:999px;border:1px solid var(--border);
-    background:rgba(15,23,42,.02);font-weight:950;font-size:.9rem;color:rgba(15,23,42,.9);
-  }
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;border:1px solid var(--border);background:rgba(15,23,42,.02);font-weight:950;font-size:.9rem;color:rgba(15,23,42,.9)}
   .pill .pDot{width:7px;height:7px;border-radius:999px;background:var(--blue);box-shadow:0 0 0 5px rgba(37,99,235,.12)}
-  .chip{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:6px 10px;border-radius:999px;border:1px solid rgba(15,23,42,.12);
-    background:rgba(15,23,42,.02);font-weight:950;font-size:.88rem;color:rgba(15,23,42,.9);
-  }
+  .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(15,23,42,.12);background:rgba(15,23,42,.02);font-weight:950;font-size:.88rem;color:rgba(15,23,42,.9)}
   .chip.blue{border-color:rgba(37,99,235,.25);background:rgba(37,99,235,.08)}
   .chip.red{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
 
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:10px;
     padding:12px 14px;border-radius:14px;border:1px solid var(--border);
-    background:rgba(255,255,255,.85);
-    font-weight:950;cursor:pointer;
-    box-shadow:0 12px 26px rgba(15,23,42,.10);
-    user-select:none;
+    background:rgba(255,255,255,.85);font-weight:950;cursor:pointer;
+    box-shadow:0 12px 26px rgba(15,23,42,.10);user-select:none;
     transition:transform .08s ease, background .2s ease, border-color .2s ease;
   }
   .btn:hover{background:rgba(15,23,42,.02);border-color:rgba(15,23,42,.18);text-decoration:none}
@@ -106,94 +82,44 @@
   @media(max-width:980px){.controls{grid-template-columns:1fr 1fr}}
   @media(max-width:560px){.controls{grid-template-columns:1fr}}
   .field label{display:block;margin-bottom:6px;font-weight:950;font-size:.9rem;color:rgba(15,23,42,.85)}
-  .field input,.field select{
-    width:100%;padding:11px 12px;border-radius:12px;
-    border:1px solid rgba(15,23,42,.16);
-    background:#fff;color:var(--text);outline:none;font-weight:800;
-  }
+  .field input,.field select{width:100%;padding:11px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.16);background:#fff;color:var(--text);outline:none;font-weight:800}
 
-  .kpi{
-    border:1px solid rgba(15,23,42,.12);
-    background:rgba(15,23,42,.02);
-    border-radius:14px;
-    padding:12px;
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-  }
+  .kpi{border:1px solid rgba(15,23,42,.12);background:rgba(15,23,42,.02);border-radius:14px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .kpi .k{color:rgba(15,23,42,.72);font-weight:950;font-size:.9rem}
   .kpi .v{font-weight:950;font-size:1.15rem}
 
-  .searchRow{
-    display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px
-  }
-  .searchRow input{
-    flex:1 1 320px;
-    padding:11px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.16);
-    background:#fff;outline:none;font-weight:800
-  }
+  .searchRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+  .searchRow input{flex:1 1 320px;padding:11px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.16);background:#fff;outline:none;font-weight:800}
 
-  .tableWrap{
-    margin-top:12px;
-    border-radius:14px;
-    border:1px solid rgba(15,23,42,.12);
-    overflow:auto;
-    background:#fff;
-  }
+  .tableWrap{margin-top:12px;border-radius:14px;border:1px solid rgba(15,23,42,.12);overflow:auto;background:#fff}
   table{width:100%;border-collapse:collapse;min-width:1200px}
   th,td{padding:10px;border-bottom:1px solid rgba(15,23,42,.08);font-size:.92rem;white-space:nowrap;text-align:left}
   th{position:sticky;top:0;background:#fff;color:rgba(15,23,42,.75);font-weight:950;z-index:2}
 
   /* Charts */
-  .chartsGrid{
-    display:grid;
-    grid-template-columns:1.25fr .75fr;
-    gap:12px;
-    margin-top:12px;
-  }
+  .chartsGrid{display:grid;grid-template-columns:1.25fr .75fr;gap:12px;margin-top:12px}
   @media(max-width:980px){.chartsGrid{grid-template-columns:1fr}}
-  .chartCard{
-    border:1px solid rgba(15,23,42,.12);
-    background:#fff;
-    border-radius:14px;
-    padding:12px;
-  }
+  .chartCard{border:1px solid rgba(15,23,42,.12);background:#fff;border-radius:14px;padding:12px}
   .chartCanvasWrap{position:relative;height:320px}
   @media(max-width:980px){.chartCanvasWrap{height:300px}}
 
   /* Donuts bottom */
-  .donutGrid{
-    display:grid;
-    grid-template-columns:repeat(3, minmax(0, 1fr));
-    gap:12px;
-    align-items:stretch;
-    margin-top:12px;
-  }
+  .donutGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch;margin-top:12px}
   @media(max-width:980px){.donutGrid{grid-template-columns:1fr}}
-  .donutCard{
-    border:1px solid rgba(15,23,42,.12);
-    background:rgba(15,23,42,.02);
-    border-radius:14px;
-    padding:12px;
-    display:grid;
-    grid-template-columns:140px 1fr;
-    gap:12px;
-    align-items:center;
-  }
+  .donutCard{border:1px solid rgba(15,23,42,.12);background:rgba(15,23,42,.02);border-radius:14px;padding:12px;display:grid;grid-template-columns:140px 1fr;gap:12px;align-items:center}
   .donutCanvas{width:120px;height:120px;display:block;margin:0 auto}
   .donutText strong{font-weight:950}
   .donutText .muted{font-weight:800}
 
-  /* PDF area */
-  .reportArea{
-    display:none;background:#fff;color:#0f172a;
-    border-radius:16px;padding:16px;border:1px solid #e5e7eb;
-  }
+  /* Heatmap block */
+  .heatWrap{margin-top:12px;border:1px solid rgba(15,23,42,.12);border-radius:14px;overflow:hidden;background:#fff}
+  .heatHead{padding:12px;border-bottom:1px solid rgba(15,23,42,.10);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+  .heatCanvas{width:100%;display:block}
+
+  /* PDF report area */
+  .reportArea{display:none;background:#fff;color:#0f172a;border-radius:16px;padding:16px;border:1px solid #e5e7eb}
   .reportMeta{display:flex;gap:10px;flex-wrap:wrap;color:#334155;font-weight:900;margin-bottom:10px}
-  .tag{
-    display:inline-flex;padding:6px 10px;border-radius:999px;
-    border:1px solid rgba(15,23,42,.12);
-    background:rgba(15,23,42,.03);
-    font-weight:950;
-  }
+  .tag{display:inline-flex;padding:6px 10px;border-radius:999px;border:1px solid rgba(15,23,42,.12);background:rgba(15,23,42,.03);font-weight:950}
   .tag.blue{border-color:rgba(37,99,235,.25);background:rgba(37,99,235,.08)}
   .tag.red{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
 </style>
@@ -204,13 +130,14 @@
   <div class="container top-inner">
     <div>
       <div class="brand"><span class="dot"></span> Convergint – Technical Operations (Example)</div>
-      <div class="sub">Work orders · Security systems · SLA · Exports · PDF · Charts</div>
+      <div class="sub">Work orders · Security systems · SLA · Exports · PDF · Charts + Heatmap</div>
     </div>
     <nav class="nav" aria-label="Page">
       <a href="#overview">Overview</a>
       <a href="#generator">Generator</a>
       <a href="#table">Table</a>
       <a href="#charts">Charts</a>
+      <a href="#analytics">Analytics</a>
       <a href="#exports">Exports</a>
       <a class="btn small" href="index.html">← Back</a>
     </nav>
@@ -232,8 +159,8 @@
 
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
           <a class="btn primary" href="#generator">Generate data</a>
-          <a class="btn" href="#charts">Open charts</a>
-          <button class="btn danger" id="btnPdf">Download PDF report</button>
+          <a class="btn" href="#analytics">Open analytics</a>
+          <button class="btn danger" id="btnPdf" type="button">Download PDF report</button>
         </div>
 
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
@@ -265,7 +192,7 @@
         </div>
 
         <p class="muted" style="margin:12px 0 0">
-          The charts below are designed to “tell the story”: SLA trend, overdue spikes, incident mix, and workload distribution.
+          The analytics sections focus on practical stories: SLA trend, overdue spikes, incident mix, and workload distribution.
         </p>
       </div>
     </div>
@@ -305,7 +232,7 @@
       </div>
 
       <p class="muted" style="margin:10px 0 0">
-        Search is applied to table + charts context (you can still analyze overall trends in charts).
+        Search is applied to the table. Charts show operational patterns from the full dataset.
       </p>
     </div>
   </section>
@@ -390,12 +317,8 @@
             <h3 style="margin:0">Trend chart</h3>
             <span class="chip">time series</span>
           </div>
-          <div class="chartCanvasWrap">
-            <canvas id="trendChart"></canvas>
-          </div>
-          <p class="muted" style="margin:10px 0 0">
-            Useful for: showing SLA drift, operational pressure spikes, and performance improvements.
-          </p>
+          <div class="chartCanvasWrap"><canvas id="trendChart"></canvas></div>
+          <p class="muted" style="margin:10px 0 0">Useful for: SLA drift, operational pressure spikes, performance improvements.</p>
         </div>
 
         <div class="chartCard">
@@ -403,12 +326,8 @@
             <h3 style="margin:0">Operational breakdown</h3>
             <span class="chip red">root cause</span>
           </div>
-          <div class="chartCanvasWrap">
-            <canvas id="barChart"></canvas>
-          </div>
-          <p class="muted" style="margin:10px 0 0">
-            Useful for: workload balance (tech) and incident concentration (system).
-          </p>
+          <div class="chartCanvasWrap"><canvas id="barChart"></canvas></div>
+          <p class="muted" style="margin:10px 0 0">Useful for: workload balance (tech) and incident concentration (system).</p>
         </div>
       </div>
 
@@ -417,6 +336,43 @@
         <span class="chip blue">quick view</span>
       </div>
       <div class="donutGrid" id="donutGrid"></div>
+    </div>
+  </section>
+
+  <!-- Advanced analytics: SLA trend + Heatmap -->
+  <section id="analytics" class="section">
+    <div class="card">
+      <div class="row">
+        <h2 style="margin:0">Advanced Analytics</h2>
+        <span class="chip blue">trend + heatmap</span>
+      </div>
+      <p class="muted" style="margin:10px 0 0">
+        A practical view for coordinators: SLA evolution and system-week performance patterns.
+      </p>
+
+      <div class="chartCard" style="margin-top:12px">
+        <div class="row">
+          <h3 style="margin:0">Weekly SLA compliance (extra trend)</h3>
+          <span class="chip">weekly</span>
+        </div>
+        <div class="chartCanvasWrap"><canvas id="slaTrend"></canvas></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+          <button class="btn small" id="dlSlaTrendPng" type="button">Weekly Trend PNG</button>
+        </div>
+      </div>
+
+      <div class="heatWrap">
+        <div class="heatHead">
+          <div>
+            <h3 style="margin:0">SLA Heatmap (System × Month)</h3>
+            <p class="muted" style="margin:6px 0 0">Green = strong compliance, red = risk/pressure</p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn small" id="dlHeatPng" type="button">Heatmap PNG</button>
+          </div>
+        </div>
+        <canvas id="slaHeatmap" width="1100" height="340" class="heatCanvas"></canvas>
+      </div>
     </div>
   </section>
 
@@ -430,25 +386,19 @@
       <div class="grid3" style="margin-top:12px">
         <div class="card" style="box-shadow:none">
           <h3>Power BI exports (CSV)</h3>
-          <p class="muted" style="margin:6px 0 12px">
-            work_orders, technicians, clients, assets.
-          </p>
+          <p class="muted" style="margin:6px 0 12px">work_orders, technicians, clients, assets.</p>
           <button class="btn primary" id="dlPB" type="button">Download Power BI CSV pack</button>
         </div>
 
         <div class="card" style="box-shadow:none">
           <h3>SAP-style exports (CSV)</h3>
-          <p class="muted" style="margin:6px 0 12px">
-            notifications, service_orders, confirmations.
-          </p>
+          <p class="muted" style="margin:6px 0 12px">notifications, service_orders, confirmations.</p>
           <button class="btn" id="dlSAP" type="button">Download SAP CSV pack</button>
         </div>
 
         <div class="card" style="box-shadow:none">
           <h3>PDF reporting</h3>
-          <p class="muted" style="margin:6px 0 12px">
-            PDF snapshot with KPIs + charts.
-          </p>
+          <p class="muted" style="margin:6px 0 12px">PDF snapshot with KPIs + charts.</p>
           <button class="btn danger" id="dlPDF2" type="button">Download PDF report</button>
         </div>
       </div>
@@ -465,9 +415,7 @@
         <span class="tag red">SLA</span>
         <span class="tag">Demo data</span>
       </div>
-      <p style="margin:0 0 10px;color:#334155;font-weight:800">
-        Snapshot report generated from the simulator.
-      </p>
+      <p style="margin:0 0 10px;color:#334155;font-weight:800">Snapshot report generated from the simulator.</p>
 
       <h3 style="margin:10px 0 8px">KPIs</h3>
       <div id="reportKpis" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px"></div>
@@ -503,6 +451,7 @@
   const iso = (d) => d.toISOString().slice(0,10);
   const addDays = (isoDate, n) => { const d=new Date(isoDate); d.setDate(d.getDate()+n); return iso(d); };
 
+  // Max 5 technicians
   const TECHS = [
     {tech_id:"TECH-01", name:"Amina El-Sayed", phone:"+971 50 712 4431", region:"UAE"},
     {tech_id:"TECH-02", name:"Daniel Cho",     phone:"+1 415 555 0188",  region:"USA"},
@@ -529,24 +478,18 @@
     {client_id:"CL-004", name:"AeroHub Regional Airport", industry:"Aviation"},
     {client_id:"CL-005", name:"Civic Services Complex", industry:"Public Sector"}
   ];
-  const SITES = [
-    "HQ – Building A","Warehouse – Gate 3","Terminal – Concourse 2","Clinic – West Wing","DC – Pod 7","Campus – Garage Level 1"
-  ];
-  const FAILURE_MODES = [
-    "Camera offline","Reader not responding","Panel trouble","Network port down","Power supply fault","False alarm investigation"
-  ];
+  const SITES = ["HQ – Building A","Warehouse – Gate 3","Terminal – Concourse 2","Clinic – West Wing","DC – Pod 7","Campus – Garage Level 1"];
+  const FAILURE_MODES = ["Camera offline","Reader not responding","Panel trouble","Network port down","Power supply fault","False alarm investigation"];
 
   let DATA = { work_orders: [], assets: [], notifications: [], service_orders: [], confirmations: [] };
   let showOverdueOnly = false;
 
   let trendChart = null;
   let barChart = null;
+  let weeklyTrendChart = null;
 
   function downloadCSV(filename, rows){
-    if(!rows || !rows.length){
-      alert("Please generate data first.");
-      return;
-    }
+    if(!rows || !rows.length){ alert("Please generate data first."); return; }
     const headers = Object.keys(rows[0]);
     const lines = [headers.join(",")];
     for(const r of rows){
@@ -574,26 +517,19 @@
     const r = Math.min(w,h)/2 - 10;
 
     ctx.clearRect(0,0,w,h);
-
-    ctx.lineWidth = 12;
-    ctx.lineCap = "round";
+    ctx.lineWidth = 12; ctx.lineCap = "round";
 
     ctx.strokeStyle = "rgba(15,23,42,.12)";
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI*2);
-    ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
 
     const start = -Math.PI/2;
     const end = start + Math.PI*2*Math.max(0, Math.min(1, value01));
     ctx.strokeStyle = strokeStyle;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, start, end);
-    ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, r, start, end); ctx.stroke();
 
     ctx.fillStyle = "rgba(15,23,42,.92)";
     ctx.font = "900 16px system-ui";
-    ctx.textAlign="center";
-    ctx.textBaseline="middle";
+    ctx.textAlign="center"; ctx.textBaseline="middle";
     ctx.fillText(Math.round(value01*100) + "%", cx, cy-2);
 
     ctx.fillStyle = "rgba(15,23,42,.65)";
@@ -605,19 +541,14 @@
     const card = document.createElement("div");
     card.className = "donutCard";
     card.innerHTML = `
-      <div>
-        <canvas class="donutCanvas" width="120" height="120" aria-label="${title} chart"></canvas>
-      </div>
+      <div><canvas class="donutCanvas" width="120" height="120" aria-label="${title} chart"></canvas></div>
       <div class="donutText">
         <strong>${title}</strong>
         <div class="muted">${footerText}</div>
-        <div style="margin-top:10px">
-          <span class="chip">${label}</span>
-        </div>
+        <div style="margin-top:10px"><span class="chip">${label}</span></div>
       </div>
     `;
-    const c = card.querySelector("canvas");
-    drawDonut(c, value01, label, color);
+    drawDonut(card.querySelector("canvas"), value01, label, color);
     return card;
   }
 
@@ -635,7 +566,6 @@
     const rnd = mulberry32(seed);
 
     DATA = { work_orders: [], assets: [], notifications: [], service_orders: [], confirmations: [] };
-
     const start = (()=>{ const d=new Date(); d.setDate(d.getDate()-horizon); return iso(d); })();
     const pick = (arr) => arr[Math.floor(rnd()*arr.length)];
 
@@ -673,7 +603,7 @@
       const severityPenalty = (pr.p==="P1") ? 0.05 : (pr.p==="P2") ? 0.03 : 0;
       const systemPenalty = (sys.key==="Video Surveillance") ? 0.015 : 0;
       const month = Number(date.slice(5,7));
-      const seasonPenalty = (month>=11 || month<=2) ? 0.01 : 0; // winter increases risk slightly
+      const seasonPenalty = (month>=11 || month<=2) ? 0.01 : 0;
 
       const withinProb = Math.max(0.60, Math.min(0.99, slaTarget - severityPenalty - systemPenalty - seasonPenalty));
       const within_sla = (rnd() < withinProb) ? "Yes" : "No";
@@ -687,8 +617,7 @@
                    : "Scheduled";
 
       DATA.work_orders.push({
-        wo_id,
-        date,
+        wo_id, date,
         client_id: client.client_id,
         client_name: client.name,
         industry: client.industry,
@@ -750,15 +679,7 @@
     const within = wo.filter(x => x.within_sla === "Yes").length;
     const overdue = wo.filter(x => x.status === "Overdue" || x.within_sla === "No").length;
     const avgSla = wo.length ? (wo.reduce((a,x)=>a + (+x.sla_hours||0), 0) / wo.length) : 0;
-
-    return {
-      total,
-      completed,
-      withinPct: within/total,
-      overduePct: overdue/total,
-      completionPct: completed/total,
-      avgSla
-    };
+    return { total, completed, withinPct: within/total, overduePct: overdue/total, completionPct: completed/total, avgSla };
   }
 
   function applySearchFilter(rows){
@@ -793,17 +714,9 @@
     rows.slice(0, 240).forEach(x=>{
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${x.wo_id}</td>
-        <td>${x.date}</td>
-        <td>${x.client_name}</td>
-        <td>${x.site}</td>
-        <td>${x.system}</td>
-        <td>${x.priority}</td>
-        <td>${x.status}</td>
-        <td>${x.incident}</td>
-        <td>${x.sla_hours}</td>
-        <td>${x.assigned_tech}</td>
-        <td>${x.within_sla}</td>
+        <td>${x.wo_id}</td><td>${x.date}</td><td>${x.client_name}</td><td>${x.site}</td>
+        <td>${x.system}</td><td>${x.priority}</td><td>${x.status}</td><td>${x.incident}</td>
+        <td>${x.sla_hours}</td><td>${x.assigned_tech}</td><td>${x.within_sla}</td>
       `;
       body.appendChild(tr);
     });
@@ -822,16 +735,14 @@
     const map = new Map();
     for (const r of DATA.work_orders){
       const k = groupKey(r.date, gran);
-      if (!map.has(k)){
-        map.set(k, {key:k, total:0, within:0, overdue:0, completed:0});
-      }
+      if (!map.has(k)) map.set(k, {key:k, total:0, within:0, overdue:0, completed:0});
       const o = map.get(k);
       o.total += 1;
       if (r.within_sla === "Yes") o.within += 1;
       if (r.status === "Overdue" || r.within_sla === "No") o.overdue += 1;
       if (r.status === "Completed") o.completed += 1;
     }
-    const arr = Array.from(map.values()).sort((a,b)=> a.key.localeCompare(b.key));
+    const arr = Array.from(map.values()).sort((a,b)=>a.key.localeCompare(b.key));
     const labels = arr.map(x=>x.key);
     const values = arr.map(x=>{
       if (metric === "slaCompliance") return +(x.total ? (x.within/x.total*100) : 0).toFixed(1);
@@ -843,14 +754,11 @@
   }
 
   function buildBar(metric){
-    // incidents by system / workload by tech / overdue by system
     const map = new Map();
 
     if (metric === "workloadByTech"){
       for (const t of TECHS) map.set(t.name, 0);
-      for (const r of DATA.work_orders){
-        map.set(r.assigned_tech, (map.get(r.assigned_tech)||0) + 1);
-      }
+      for (const r of DATA.work_orders) map.set(r.assigned_tech, (map.get(r.assigned_tech)||0) + 1);
       const labels = Array.from(map.keys());
       const values = labels.map(l => map.get(l));
       return {labels, values, label:"Work orders"};
@@ -867,12 +775,9 @@
       return {labels, values, label:"Overdue count"};
     }
 
-    // incidentsBySystem
     for (const s of SYSTEMS) map.set(s.key, 0);
     for (const r of DATA.work_orders){
-      if (r.incident && r.incident !== "None"){
-        map.set(r.system, (map.get(r.system)||0) + 1);
-      }
+      if (r.incident && r.incident !== "None") map.set(r.system, (map.get(r.system)||0) + 1);
     }
     const labels = Array.from(map.keys());
     const values = labels.map(l => map.get(l));
@@ -890,21 +795,11 @@
     if (trendChart) trendChart.destroy();
     trendChart = new Chart($("trendChart"), {
       type: "line",
-      data: {
-        labels: ts.labels,
-        datasets: [{
-          label: trendMetric,
-          data: ts.values,
-          tension: 0.25,
-          pointRadius: 2,
-          borderWidth: 2
-        }]
-      },
+      data: { labels: ts.labels, datasets: [{ label: trendMetric, data: ts.values, tension: 0.25, pointRadius: 2, borderWidth: 2 }] },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: true } },
+        responsive: true, maintainAspectRatio: false,
         interaction: { mode: "index", intersect: false },
+        plugins: { legend: { display: true } },
         scales: { x: { grid: { display: false } }, y: { beginAtZero: false } }
       }
     });
@@ -912,21 +807,105 @@
     if (barChart) barChart.destroy();
     barChart = new Chart($("barChart"), {
       type: "bar",
-      data: {
-        labels: b.labels,
-        datasets: [{
-          label: b.label,
-          data: b.values,
-          borderWidth: 1
-        }]
-      },
+      data: { labels: b.labels, datasets: [{ label: b.label, data: b.values, borderWidth: 1 }] },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
+        responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: true } },
         scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
       }
     });
+  }
+
+  // Weekly SLA trend (extra)
+  function buildWeeklySla(){
+    const map = new Map();
+    for (const r of DATA.work_orders){
+      const key = r.date.slice(0,7); // month bucket for simplicity and stability
+      if (!map.has(key)) map.set(key, {key, ok:0, total:0});
+      const o = map.get(key);
+      o.total += 1;
+      if (r.within_sla === "Yes") o.ok += 1;
+    }
+    const arr = Array.from(map.values()).sort((a,b)=>a.key.localeCompare(b.key));
+    return { labels: arr.map(x=>x.key), values: arr.map(x=> +(x.total?(x.ok/x.total*100):0).toFixed(1)) };
+  }
+
+  function renderWeeklyTrend(){
+    const ts = buildWeeklySla();
+    if (weeklyTrendChart) weeklyTrendChart.destroy();
+    weeklyTrendChart = new Chart($("slaTrend"), {
+      type: "line",
+      data: { labels: ts.labels, datasets: [{ label:"SLA compliance (%)", data: ts.values, tension:0.25, pointRadius:2, borderWidth:2 }] },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        interaction:{mode:"index",intersect:false},
+        plugins:{legend:{display:true}},
+        scales:{x:{grid:{display:false}}, y:{beginAtZero:false}}
+      }
+    });
+  }
+
+  // Heatmap (System × Month)
+  function drawHeatmap(){
+    const c = $("slaHeatmap");
+    const ctx = c.getContext("2d");
+    ctx.clearRect(0,0,c.width,c.height);
+
+    const systems = SYSTEMS.map(s=>s.key);
+    const months = [...new Set(DATA.work_orders.map(w=>w.date.slice(0,7)))].sort().slice(-12); // last 12 months
+    if (!months.length) return;
+
+    // title area
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0,0,c.width,c.height);
+
+    const left = 180, top = 50;
+    const cellW = Math.max(60, Math.floor((c.width - left - 40) / months.length));
+    const cellH = 55;
+
+    // labels
+    ctx.fillStyle = "rgba(15,23,42,.75)";
+    ctx.font = "900 12px system-ui";
+    systems.forEach((s,i)=> ctx.fillText(s, 20, top + i*cellH + 32));
+
+    ctx.save();
+    ctx.translate(left, 20);
+    ctx.font = "900 11px system-ui";
+    ctx.fillStyle = "rgba(15,23,42,.65)";
+    months.forEach((m,j)=>{
+      ctx.save();
+      ctx.translate(j*cellW + 6, 18);
+      ctx.rotate(-0.4);
+      ctx.fillText(m, 0, 0);
+      ctx.restore();
+    });
+    ctx.restore();
+
+    // cells
+    systems.forEach((s,i)=>{
+      months.forEach((m,j)=>{
+        const rows = DATA.work_orders.filter(x=>x.system===s && x.date.startsWith(m));
+        const ok = rows.filter(x=>x.within_sla==="Yes").length / (rows.length || 1);
+        // map ok -> color (green-ish to red-ish)
+        const r = Math.round(239 * (1-ok));
+        const g = Math.round(180 * ok + 40);
+        const b = 110;
+
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        const x = left + j*cellW;
+        const y = top + i*cellH;
+        ctx.fillRect(x, y, cellW-8, cellH-10);
+
+        ctx.fillStyle = "rgba(15,23,42,.9)";
+        ctx.font = "900 12px system-ui";
+        ctx.fillText(Math.round(ok*100) + "%", x + 10, y + 28);
+      });
+    });
+
+    // legend
+    ctx.fillStyle = "rgba(15,23,42,.75)";
+    ctx.font = "900 12px system-ui";
+    ctx.fillText("Heatmap legend: greener = stronger SLA compliance", 20, c.height - 18);
   }
 
   function downloadChartPng(chart, filename){
@@ -937,19 +916,18 @@
     a.click();
   }
 
-  function downloadPowerBIPack(){
-    const technicians = TECHS.map(t => ({
-      tech_id: t.tech_id,
-      technician: t.name,
-      region: t.region,
-      phone: t.phone
-    }));
-    const clients = CLIENTS.map(c => ({
-      client_id: c.client_id,
-      client_name: c.name,
-      industry: c.industry
-    }));
+  function downloadCanvasPng(canvasId, filename){
+    const c = $(canvasId);
+    if (!c){ alert("Canvas not found."); return; }
+    const a = document.createElement("a");
+    a.href = c.toDataURL("image/png");
+    a.download = filename;
+    a.click();
+  }
 
+  function downloadPowerBIPack(){
+    const technicians = TECHS.map(t => ({ tech_id:t.tech_id, technician:t.name, region:t.region, phone:t.phone }));
+    const clients = CLIENTS.map(c => ({ client_id:c.client_id, client_name:c.name, industry:c.industry }));
     downloadCSV("powerbi_work_orders.csv", DATA.work_orders);
     downloadCSV("powerbi_assets.csv", DATA.assets);
     downloadCSV("powerbi_technicians.csv", technicians);
@@ -984,24 +962,19 @@
       </div>
     `;
 
-    // embed chart images
     $("reportCharts").innerHTML = "";
     const chartImg1 = trendChart ? trendChart.toBase64Image("image/png", 1) : "";
     const chartImg2 = barChart ? barChart.toBase64Image("image/png", 1) : "";
     if (chartImg1){
       const img = document.createElement("img");
-      img.src = chartImg1;
-      img.style.width = "100%";
-      img.style.border = "1px solid #e5e7eb";
-      img.style.borderRadius = "12px";
+      img.src = chartImg1; img.style.width="100%";
+      img.style.border="1px solid #e5e7eb"; img.style.borderRadius="12px";
       $("reportCharts").appendChild(img);
     }
     if (chartImg2){
       const img = document.createElement("img");
-      img.src = chartImg2;
-      img.style.width = "100%";
-      img.style.border = "1px solid #e5e7eb";
-      img.style.borderRadius = "12px";
+      img.src = chartImg2; img.style.width="100%";
+      img.style.border="1px solid #e5e7eb"; img.style.borderRadius="12px";
       $("reportCharts").appendChild(img);
     }
 
@@ -1053,6 +1026,8 @@
     renderTable();
     renderDonuts();
     renderCharts();
+    renderWeeklyTrend();
+    drawHeatmap();
   }
 
   // Events
@@ -1064,6 +1039,8 @@
   ["gran","trendMetric","barMetric"].forEach(id => $(id).addEventListener("change", renderCharts));
   $("dlTrendPng").addEventListener("click", ()=>downloadChartPng(trendChart, "Convergint_Trend.png"));
   $("dlBarPng").addEventListener("click", ()=>downloadChartPng(barChart, "Convergint_Bar.png"));
+  $("dlSlaTrendPng").addEventListener("click", ()=>downloadChartPng(weeklyTrendChart, "Convergint_WeeklySLA.png"));
+  $("dlHeatPng").addEventListener("click", ()=>downloadCanvasPng("slaHeatmap", "Convergint_SLA_Heatmap.png"));
 
   $("dlPB").addEventListener("click", downloadPowerBIPack);
   $("dlSAP").addEventListener("click", downloadSAPPack);
