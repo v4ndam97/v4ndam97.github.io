@@ -1,1 +1,257 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>SAP O2C Creator | Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg:#f6f8ff; --card:#fff; --text:#0f172a; --muted:rgba(15,23,42,.68); --border:rgba(15,23,42,.12);
+      --blue:#2563eb; --red:#ef4444; --shadow:0 18px 40px rgba(15,23,42,.10); --radius:18px; --max:1140px; }
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg),#fff);color:var(--text)}
+    a{color:inherit;text-decoration:none} a:hover{text-decoration:underline}
+    .container{max-width:var(--max);margin:0 auto;padding:22px}
+    .top{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+    .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+    .brand{font-weight:950;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+    .dot{width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--blue),var(--red));box-shadow:0 0 0 5px rgba(37,99,235,.12)}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-top:16px}
+    .muted{color:var(--muted)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:#fff;
+      color:var(--text);font-weight:950;box-shadow:0 12px 26px rgba(15,23,42,.10);cursor:pointer}
+    .btn:hover{background:rgba(15,23,42,.02);text-decoration:none}
+    .btn.primary{background:linear-gradient(135deg,rgba(37,99,235,1),rgba(37,99,235,.82));border-color:rgba(37,99,235,.35);color:#fff}
+    .controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+    @media(max-width:980px){.controls{grid-template-columns:1fr 1fr}} @media(max-width:560px){.controls{grid-template-columns:1fr}}
+    .field label{display:block;margin-bottom:6px;font-weight:900;font-size:.9rem;color:rgba(15,23,42,.85)}
+    .field input{width:100%;padding:11px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.16);background:#fff;color:var(--text);outline:none}
+    .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+    @media(max-width:980px){.kpis{grid-template-columns:1fr 1fr}} @media(max-width:560px){.kpis{grid-template-columns:1fr}}
+    .kpi{border:1px solid rgba(15,23,42,.12);border-radius:14px;background:rgba(15,23,42,.02);padding:12px}
+    .kpi .k{color:rgba(15,23,42,.7);font-weight:900;font-size:.9rem}
+    .kpi .v{font-weight:950;font-size:1.2rem;margin-top:6px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .tab{padding:9px 12px;border-radius:999px;border:1px solid var(--border);background:rgba(15,23,42,.02);font-weight:950;cursor:pointer}
+    .tab.active{background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.25)}
+    .tableWrap{margin-top:12px;border-radius:14px;border:1px solid rgba(15,23,42,.12);overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:980px}
+    th,td{padding:10px;border-bottom:1px solid rgba(15,23,42,.08);font-size:.92rem;white-space:nowrap;text-align:left}
+    th{position:sticky;top:0;background:#fff;color:rgba(15,23,42,.75);font-weight:950;z-index:2}
+  </style>
+</head>
+<body>
+<header class="top">
+  <div class="container row">
+    <div>
+      <div class="brand"><span class="dot"></span> SAP O2C Creator</div>
+      <div class="muted">Sales Orders → Deliveries → Invoices → Payments (bloqueos + aging)</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a class="btn" href="index.html">← Volver</a>
+      <a class="btn" href="ejemplo.html">Pack empresa</a>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="card">
+    <h2 style="margin:0 0 6px">Dataset O2C (ficticio)</h2>
+    <p class="muted" style="margin:0">Archivos: sales_orders, deliveries, invoices, payments.</p>
+
+    <div class="controls">
+      <div class="field"><label>Seed</label><input id="seed" type="number" value="13"></div>
+      <div class="field"><label>Sales Orders</label><input id="n" type="number" min="50" max="5000" value="380"></div>
+      <div class="field"><label>NET terms (days)</label><input id="net" type="number" min="7" max="90" value="30"></div>
+      <div class="field"><label>Unpaid share %</label><input id="unpaid" type="number" min="0" max="60" value="18"></div>
+
+      <div class="field"><label>Block probability %</label><input id="block" type="number" min="0" max="35" value="6"></div>
+      <div class="field"><label>Avg processing delay (days)</label><input id="delay" type="number" min="0" max="30" value="4"></div>
+      <div class="field"><label>Horizon days</label><input id="days" type="number" min="30" max="365" value="120"></div>
+      <div class="field"><label>Start date</label><input id="start" type="date"></div>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+      <button class="btn primary" id="gen">Generar</button>
+      <button class="btn" id="dlAll">Descargar TODOS los CSV</button>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="sales_orders">Sales Orders</button>
+      <button class="tab" data-tab="deliveries">Deliveries</button>
+      <button class="tab" data-tab="invoices">Invoices</button>
+      <button class="tab" data-tab="payments">Payments</button>
+    </div>
+
+    <div class="tableWrap">
+      <table>
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+  const el = (id)=>document.getElementById(id);
+  function mulberry32(seed){ let a=seed>>>0; return function(){ a+=0x6D2B79F5; let t=Math.imul(a^(a>>>15),1|a); t^=t+Math.imul(t^(t>>>7),61|t); return ((t^(t>>>14))>>>0)/4294967296; }; }
+  function iso(d){return d.toISOString().slice(0,10);}
+  function addDays(ds, n){ const d=new Date(ds); d.setDate(d.getDate()+n); return iso(d); }
+  function euro(x){ x=+x; return "€"+(Number.isFinite(x)?x:0).toFixed(2); }
+
+  function downloadCSV(filename, rows){
+    if(!rows.length) return alert("Genera datos primero");
+    const headers = Object.keys(rows[0]);
+    const lines = [headers.join(",")];
+    for(const r of rows){
+      const line = headers.map(h=>{
+        const s = String(r[h] ?? "");
+        if(s.includes(",")||s.includes('"')||s.includes("\n")) return `"${s.replaceAll('"','""')}"`;
+        return s;
+      }).join(",");
+      lines.push(line);
+    }
+    const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href=url; a.download=filename; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  const CUSTOMERS=["Iberia Retail SA","EuroParts GmbH","Nordic Stores AB","TransHub NV","Fresh Foods SARL","Build&Home SRL","Auto Components SpA","MedSupply BV","E-Commerce EU Ltd","Industrial Systems AG"];
+  const MATS=["MAT-1001","MAT-1002","MAT-1003","MAT-2001","MAT-2100","MAT-3200","MAT-4100","MAT-5002"];
+  const COUNTRIES=["ES","FR","DE","BE","NL","IT","AT","CZ","PL","RO","LU","HU"];
+
+  let DATA={sales_orders:[],deliveries:[],invoices:[],payments:[]};
+
+  function renderTable(rows, cols){
+    el("thead").innerHTML="<tr>"+cols.map(c=>`<th>${c}</th>`).join("")+"</tr>";
+    el("tbody").innerHTML="";
+    rows.slice().reverse().slice(0,80).forEach(r=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=cols.map(c=>`<td>${r[c] ?? ""}</td>`).join("");
+      el("tbody").appendChild(tr);
+    });
+  }
+
+  function renderKPIs(){
+    const so=DATA.sales_orders;
+    const inv=DATA.invoices;
+    const blocked=so.filter(x=>x.status==="BLOCKED").length;
+    const total=so.reduce((a,x)=>a+(+x.order_value||0),0);
+    const paid=inv.filter(x=>x.payment_status==="PAID").length;
+    const unpaid=inv.filter(x=>x.payment_status==="UNPAID");
+    const avgAging=unpaid.length ? unpaid.reduce((a,x)=>a+(+x.aging_days||0),0)/unpaid.length : 0;
+
+    const items=[
+      ["Sales Orders", so.length],
+      ["Blocked", blocked],
+      ["Invoices", inv.length],
+      ["Total Value", euro(total)],
+      ["Paid invoices", paid],
+      ["Unpaid invoices", unpaid.length],
+      ["Avg aging (unpaid)", avgAging.toFixed(1)+" d"],
+      ["Payments", DATA.payments.length]
+    ];
+
+    const wrap=el("kpis"); wrap.innerHTML="";
+    for(const [k,v] of items){
+      const div=document.createElement("div");
+      div.className="kpi";
+      div.innerHTML=`<div class="k">${k}</div><div class="v">${v}</div>`;
+      wrap.appendChild(div);
+    }
+  }
+
+  function build(){
+    const seed=+el("seed").value||13;
+    const n=+el("n").value||380;
+    const net=+el("net").value||30;
+    const unpaidShare=(+el("unpaid").value||18)/100;
+    const blockP=(+el("block").value||6)/100;
+    const delayAvg=+el("delay").value||4;
+    const days=+el("days").value||120;
+
+    if(!el("start").value){
+      const d=new Date(); d.setDate(d.getDate()-days);
+      el("start").value=iso(d);
+    }
+    const start=el("start").value;
+
+    const rnd=mulberry32(seed);
+    DATA={sales_orders:[],deliveries:[],invoices:[],payments:[]};
+
+    for(let i=1;i<=n;i++){
+      const so=`SO-${seed}-${String(i).padStart(5,"0")}`;
+      const customer=CUSTOMERS[Math.floor(rnd()*CUSTOMERS.length)];
+      const mat=MATS[Math.floor(rnd()*MATS.length)];
+      const qty=1+Math.floor(rnd()*24);
+      const price=40+rnd()*420;
+      const value=+(qty*price*(0.9+rnd()*0.25)).toFixed(2);
+
+      const order_date=addDays(start, Math.floor(rnd()*days));
+      const blocked=rnd()<blockP;
+      const status=blocked?"BLOCKED":"INVOICED";
+      const block_reason=blocked?(rnd()<0.5?"Credit block":"Incomplete data"):"";
+
+      const delDelay=Math.max(0, Math.round(1+rnd()*2+rnd()*delayAvg));
+      const giDelay=Math.max(0, Math.round(rnd()*2));
+      const invDelay=Math.max(0, Math.round(1+rnd()*2+rnd()*(delayAvg/2)));
+
+      const delivery_date=addDays(order_date, delDelay);
+      const gi_date=addDays(delivery_date, giDelay);
+      const invoice_date=addDays(gi_date, invDelay);
+      const due_date=addDays(invoice_date, net);
+
+      const unpaid=(!blocked)&&(rnd()<unpaidShare);
+      const paid=(!blocked)&&!unpaid;
+
+      const aging = unpaid ? Math.max(0, Math.round((Date.now()-new Date(due_date).getTime())/86400000)) : 0;
+      const pay_date = paid ? addDays(due_date, Math.max(0, Math.round((rnd()*2-1)*6 + rnd()*delayAvg))) : "";
+
+      DATA.sales_orders.push({so_id:so, order_date, customer, material:mat, quantity:qty, net_price:+price.toFixed(2), order_value:value, status, block_reason});
+
+      if(!blocked){
+        const dn=`DN-${seed}-${String(i).padStart(5,"0")}`;
+        const inv=`INV-${seed}-${String(i).padStart(5,"0")}`;
+        DATA.deliveries.push({delivery_id:dn, so_id:so, delivery_date, goods_issue_date:gi_date, ship_to_country:COUNTRIES[Math.floor(rnd()*COUNTRIES.length)]});
+        DATA.invoices.push({invoice_id:inv, so_id:so, invoice_date, due_date, amount:value, payment_status:paid?"PAID":"UNPAID", aging_days:aging});
+        if(paid){
+          DATA.payments.push({payment_id:`PAY-${seed}-${String(i).padStart(5,"0")}`, invoice_id:inv, payment_date:pay_date, amount:value, method:(rnd()<0.6)?"Bank transfer":(rnd()<0.85)?"SEPA":"Card"});
+        }
+      }
+    }
+
+    renderKPIs();
+    renderTable(DATA.sales_orders, ["so_id","order_date","customer","material","quantity","net_price","order_value","status","block_reason"]);
+  }
+
+  document.querySelectorAll("[data-tab]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll("[data-tab]").forEach(x=>x.classList.remove("active"));
+      btn.classList.add("active");
+      const t=btn.dataset.tab;
+      if(t==="sales_orders") renderTable(DATA.sales_orders, ["so_id","order_date","customer","material","quantity","net_price","order_value","status","block_reason"]);
+      if(t==="deliveries") renderTable(DATA.deliveries, ["delivery_id","so_id","delivery_date","goods_issue_date","ship_to_country"]);
+      if(t==="invoices") renderTable(DATA.invoices, ["invoice_id","so_id","invoice_date","due_date","amount","payment_status","aging_days"]);
+      if(t==="payments") renderTable(DATA.payments, ["payment_id","invoice_id","payment_date","amount","method"]);
+    });
+  });
+
+  el("gen").addEventListener("click", build);
+  el("dlAll").addEventListener("click", ()=>{
+    downloadCSV("sap_sales_orders.csv", DATA.sales_orders);
+    downloadCSV("sap_deliveries.csv", DATA.deliveries.length?DATA.deliveries:[{delivery_id:"",so_id:"",delivery_date:"",goods_issue_date:"",ship_to_country:""}]);
+    downloadCSV("sap_invoices.csv", DATA.invoices.length?DATA.invoices:[{invoice_id:"",so_id:"",invoice_date:"",due_date:"",amount:"",payment_status:"",aging_days:""}]);
+    downloadCSV("sap_payments.csv", DATA.payments.length?DATA.payments:[{payment_id:"",invoice_id:"",payment_date:"",amount:"",method:""}]);
+  });
+
+  (function init(){
+    const d=new Date(); d.setDate(d.getDate()-120);
+    el("start").value=iso(d);
+    build();
+  })();
+</script>
+</body>
+</html>
 
