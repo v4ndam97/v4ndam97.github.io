@@ -1,1 +1,258 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Operaciones | Incidencias & Dispatch Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg:#f6f8ff; --card:#fff; --text:#0f172a; --muted:rgba(15,23,42,.68); --border:rgba(15,23,42,.12);
+      --blue:#2563eb; --red:#ef4444; --shadow:0 18px 40px rgba(15,23,42,.10); --radius:18px; --max:1140px; }
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg),#fff);color:var(--text)}
+    a{color:inherit;text-decoration:none} a:hover{text-decoration:underline}
+    .container{max-width:var(--max);margin:0 auto;padding:22px}
+    .top{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+    .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+    .brand{font-weight:950;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+    .dot{width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--blue),var(--red));box-shadow:0 0 0 5px rgba(37,99,235,.12)}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-top:16px}
+    .muted{color:var(--muted)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:#fff;
+      color:var(--text);font-weight:950;box-shadow:0 12px 26px rgba(15,23,42,.10);cursor:pointer}
+    .btn:hover{background:rgba(15,23,42,.02);text-decoration:none}
+    .btn.primary{background:linear-gradient(135deg,rgba(37,99,235,1),rgba(37,99,235,.82));border-color:rgba(37,99,235,.35);color:#fff}
+    .btn.danger{background:linear-gradient(135deg,rgba(239,68,68,1),rgba(239,68,68,.82));border-color:rgba(239,68,68,.35);color:#fff}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+    .field label{display:block;margin-bottom:6px;font-weight:900;font-size:.9rem;color:rgba(15,23,42,.85)}
+    .field input,.field select,.field textarea{width:100%;padding:11px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.16);background:#fff;color:var(--text);outline:none}
+    .field textarea{min-height:92px;resize:vertical}
+    .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+    @media(max-width:980px){.kpis{grid-template-columns:1fr 1fr}} @media(max-width:560px){.kpis{grid-template-columns:1fr}}
+    .kpi{border:1px solid rgba(15,23,42,.12);border-radius:14px;background:rgba(15,23,42,.02);padding:12px}
+    .kpi .k{color:rgba(15,23,42,.7);font-weight:900;font-size:.9rem}
+    .kpi .v{font-weight:950;font-size:1.2rem;margin-top:6px}
+    .tableWrap{margin-top:12px;border-radius:14px;border:1px solid rgba(15,23,42,.12);overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:980px}
+    th,td{padding:10px;border-bottom:1px solid rgba(15,23,42,.08);font-size:.92rem;white-space:nowrap;text-align:left}
+    th{position:sticky;top:0;background:#fff;color:rgba(15,23,42,.75);font-weight:950;z-index:2}
+  </style>
+</head>
+<body>
+<header class="top">
+  <div class="container row">
+    <div>
+      <div class="brand"><span class="dot"></span> Operaciones – Incidencias & Dispatch</div>
+      <div class="muted">Simula una incidencia, decide acciones, registra llamadas y exporta el log</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a class="btn" href="index.html">← Volver</a>
+      <a class="btn danger" href="ejemplo.html">Pack empresa</a>
+    </div>
+  </div>
+</header>
 
+<main class="container">
+  <div class="card">
+    <h2 style="margin:0 0 6px">Simulador de incidencia (realista)</h2>
+    <p class="muted" style="margin:0">
+      Crea un caso, toma decisiones (re-route, reschedule, trailer swap…), y genera un log exportable.
+    </p>
+
+    <div class="grid">
+      <div>
+        <div class="field">
+          <label>Shipment ID</label>
+          <input id="shipment" type="text" value="SHP-OPS-00021">
+        </div>
+
+        <div class="field" style="margin-top:10px">
+          <label>Tipo de incidencia</label>
+          <select id="type">
+            <option>Delay (traffic)</option>
+            <option>Delay (weather)</option>
+            <option>Customs hold</option>
+            <option>Damage</option>
+            <option>Docs issue</option>
+            <option>Trailer issue</option>
+            <option>Customer not available</option>
+            <option>Temperature deviation</option>
+          </select>
+        </div>
+
+        <div class="field" style="margin-top:10px">
+          <label>Severidad</label>
+          <select id="sev">
+            <option>Low</option>
+            <option selected>Medium</option>
+            <option>High</option>
+          </select>
+        </div>
+
+        <div class="field" style="margin-top:10px">
+          <label>Conductor (nombre)</label>
+          <input id="driver" type="text" value="Carlos Vega">
+        </div>
+
+        <div class="field" style="margin-top:10px">
+          <label>Teléfono</label>
+          <input id="phone" type="text" value="+34 612 345 678">
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+          <button class="btn primary" id="create">Crear caso</button>
+          <button class="btn" id="reset">Reset</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="field">
+          <label>Acción / Decisión</label>
+          <select id="action">
+            <option>Call driver + request GPS location</option>
+            <option>Re-route to alternative highway</option>
+            <option>Reschedule customer slot</option>
+            <option>Trailer swap at partner yard</option>
+            <option>Send corrected documents + customs follow-up</option>
+            <option>Workshop check + assign spare vehicle</option>
+            <option>Cold chain validation + attach temp log</option>
+          </select>
+        </div>
+
+        <div class="field" style="margin-top:10px">
+          <label>Notas (lo que dirías a cliente / conductor)</label>
+          <textarea id="notes">Dispatch contacted driver. Updated ETA and informed customer.</textarea>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+          <button class="btn primary" id="log">Añadir al log</button>
+          <button class="btn danger" id="clear">Borrar log</button>
+          <button class="btn" id="dl">Descargar CSV log</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>timestamp</th>
+            <th>shipment_id</th>
+            <th>incident_type</th>
+            <th>severity</th>
+            <th>driver</th>
+            <th>phone</th>
+            <th>action</th>
+            <th>notes</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+  const el = (id)=>document.getElementById(id);
+  const STORE = "ops_dispatch_log_v1";
+
+  function nowISO(){
+    const d=new Date();
+    const pad=(x)=>String(x).padStart(2,"0");
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function load(){ try{ const x=JSON.parse(localStorage.getItem(STORE)||"[]"); return Array.isArray(x)?x:[]; }catch{ return []; } }
+  function save(rows){ localStorage.setItem(STORE, JSON.stringify(rows)); }
+
+  function render(){
+    const rows=load();
+    const body=el("tbody");
+    body.innerHTML="";
+    rows.slice().reverse().forEach(r=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML = `
+        <td>${r.timestamp}</td><td>${r.shipment_id}</td><td>${r.incident_type}</td><td>${r.severity}</td>
+        <td>${r.driver}</td><td>${r.phone}</td><td>${r.action}</td><td>${r.notes}</td>`;
+      body.appendChild(tr);
+    });
+
+    const total=rows.length;
+    const high=rows.filter(x=>x.severity==="High").length;
+    const customs=rows.filter(x=>x.incident_type==="Customs hold").length;
+    const reroute=rows.filter(x=>x.action==="Re-route to alternative highway").length;
+
+    el("kpis").innerHTML = `
+      <div class="kpi"><div class="k">Log entries</div><div class="v">${total}</div></div>
+      <div class="kpi"><div class="k">High severity</div><div class="v">${high}</div></div>
+      <div class="kpi"><div class="k">Customs cases</div><div class="v">${customs}</div></div>
+      <div class="kpi"><div class="k">Re-routes</div><div class="v">${reroute}</div></div>
+    `;
+  }
+
+  function downloadCSV(filename, rows){
+    if(!rows.length) return alert("No hay datos todavía.");
+    const headers = Object.keys(rows[0]);
+    const lines = [headers.join(",")];
+    for(const r of rows){
+      const line = headers.map(h=>{
+        const s = String(r[h] ?? "");
+        if(s.includes(",")||s.includes('"')||s.includes("\n")) return `"${s.replaceAll('"','""')}"`;
+        return s;
+      }).join(",");
+      lines.push(line);
+    }
+    const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href=url; a.download=filename; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  el("create").addEventListener("click", ()=>{
+    el("shipment").value = "SHP-OPS-" + String(Math.floor(1+Math.random()*99999)).padStart(5,"0");
+    el("notes").value = "Dispatch contacted driver. Customer informed. Action pending confirmation.";
+    alert("Caso creado. Ahora añade acciones al log.");
+  });
+
+  el("reset").addEventListener("click", ()=>{
+    el("shipment").value="SHP-OPS-00021";
+    el("type").value="Delay (traffic)";
+    el("sev").value="Medium";
+    el("driver").value="Carlos Vega";
+    el("phone").value="+34 612 345 678";
+    el("action").value="Call driver + request GPS location";
+    el("notes").value="Dispatch contacted driver. Updated ETA and informed customer.";
+  });
+
+  el("log").addEventListener("click", ()=>{
+    const rows=load();
+    rows.push({
+      timestamp: nowISO(),
+      shipment_id: el("shipment").value.trim(),
+      incident_type: el("type").value,
+      severity: el("sev").value,
+      driver: el("driver").value.trim(),
+      phone: el("phone").value.trim(),
+      action: el("action").value,
+      notes: el("notes").value.trim().slice(0,200)
+    });
+    save(rows);
+    render();
+  });
+
+  el("clear").addEventListener("click", ()=>{
+    if(!confirm("¿Borrar todo el log?")) return;
+    save([]);
+    render();
+  });
+
+  el("dl").addEventListener("click", ()=>{
+    downloadCSV("dispatch_log.csv", load());
+  });
+
+  (function init(){ render(); })();
+</script>
+</body>
+</html>
