@@ -1,1 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Power BI Creator | Transporte (Demo)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{ --bg:#f6f8ff; --card:#fff; --text:#0f172a; --muted:rgba(15,23,42,.68); --border:rgba(15,23,42,.12);
+      --blue:#2563eb; --red:#ef4444; --shadow:0 18px 40px rgba(15,23,42,.10); --radius:18px; --max:1140px; }
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg),#fff);color:var(--text)}
+    a{color:inherit;text-decoration:none} a:hover{text-decoration:underline}
+    .container{max-width:var(--max);margin:0 auto;padding:22px}
+    .top{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+    .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+    .brand{font-weight:950;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+    .dot{width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--blue),var(--red));box-shadow:0 0 0 5px rgba(37,99,235,.12)}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-top:16px}
+    .muted{color:var(--muted)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:#fff;
+      color:var(--text);font-weight:950;box-shadow:0 12px 26px rgba(15,23,42,.10);cursor:pointer}
+    .btn:hover{background:rgba(15,23,42,.02);text-decoration:none}
+    .btn.primary{background:linear-gradient(135deg,rgba(37,99,235,1),rgba(37,99,235,.82));border-color:rgba(37,99,235,.35);color:#fff}
+    .btn.danger{background:linear-gradient(135deg,rgba(239,68,68,1),rgba(239,68,68,.82));border-color:rgba(239,68,68,.35);color:#fff}
+    .controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+    @media(max-width:980px){.controls{grid-template-columns:1fr 1fr}} @media(max-width:560px){.controls{grid-template-columns:1fr}}
+    .field label{display:block;margin-bottom:6px;font-weight:900;font-size:.9rem;color:rgba(15,23,42,.85)}
+    .field input{width:100%;padding:11px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.16);background:#fff;color:var(--text);outline:none}
+    .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+    @media(max-width:980px){.kpis{grid-template-columns:1fr 1fr}} @media(max-width:560px){.kpis{grid-template-columns:1fr}}
+    .kpi{border:1px solid rgba(15,23,42,.12);border-radius:14px;background:rgba(15,23,42,.02);padding:12px}
+    .kpi .k{color:rgba(15,23,42,.7);font-weight:900;font-size:.9rem}
+    .kpi .v{font-weight:950;font-size:1.2rem;margin-top:6px}
+    .tableWrap{margin-top:12px;border-radius:14px;border:1px solid rgba(15,23,42,.12);overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:980px}
+    th,td{padding:10px;border-bottom:1px solid rgba(15,23,42,.08);font-size:.92rem;white-space:nowrap;text-align:left}
+    th{position:sticky;top:0;background:#fff;color:rgba(15,23,42,.75);font-weight:950;z-index:2}
+  </style>
+</head>
+<body>
+<header class="top">
+  <div class="container row">
+    <div>
+      <div class="brand"><span class="dot"></span> Power BI Creator (Transporte)</div>
+      <div class="muted">Genera datasets realistas y descárgalos como CSV</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a class="btn" href="index.html">← Volver</a>
+      <a class="btn danger" href="ejemplo.html">Pack empresa</a>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="card">
+    <h2 style="margin:0 0 6px">Dataset de transporte (10 camiones ES + doble conductor)</h2>
+    <p class="muted" style="margin:0">Archivos: shipments, stops, incidents, drivers, fleet, fuel.</p>
+
+    <div class="controls">
+      <div class="field"><label>Seed</label><input id="seed" type="number" value="97"></div>
+      <div class="field"><label>Shipments</label><input id="n" type="number" min="50" max="5000" value="520"></div>
+      <div class="field"><label>Horizon (days)</label><input id="days" type="number" min="30" max="365" value="120"></div>
+      <div class="field"><label>OTIF target %</label><input id="otif" type="number" min="70" max="99" value="92"></div>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+      <button class="btn primary" id="gen">Generar</button>
+      <button class="btn" id="dlAll">Descargar TODOS los CSV</button>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="tableWrap">
+      <table>
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+  const el = (id)=>document.getElementById(id);
+
+  function mulberry32(seed){ let a=seed>>>0; return function(){ a+=0x6D2B79F5; let t=Math.imul(a^(a>>>15),1|a); t^=t+Math.imul(t^(t>>>7),61|t); return ((t^(t>>>14))>>>0)/4294967296; }; }
+  function iso(d){return d.toISOString().slice(0,10);}
+  function addDays(ds, n){ const d=new Date(ds); d.setDate(d.getDate()+n); return iso(d); }
+  function euro(x){ x=+x; return "€"+(Number.isFinite(x)?x:0).toFixed(2); }
+  function pct(x){ x=+x; return (Number.isFinite(x)?x:0).toFixed(1)+"%"; }
+
+  function downloadCSV(filename, rows){
+    if(!rows.length) return alert("Genera datos primero");
+    const headers = Object.keys(rows[0]);
+    const lines = [headers.join(",")];
+    for(const r of rows){
+      const line = headers.map(h=>{
+        const s = String(r[h] ?? "");
+        if(s.includes(",")||s.includes('"')||s.includes("\n")) return `"${s.replaceAll('"','""')}"`;
+        return s;
+      }).join(",");
+      lines.push(line);
+    }
+    const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href=url; a.download=filename; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  const CITIES=[["Madrid","ES"],["Barcelona","ES"],["Valencia","ES"],["Zaragoza","ES"],["Bilbao","ES"],["Sevilla","ES"],
+    ["Paris","FR"],["Lyon","FR"],["Brussels","BE"],["Luxembourg","LU"],["Frankfurt","DE"],["Cologne","DE"],["Hamburg","DE"],["Munich","DE"],
+    ["Milan","IT"],["Turin","IT"],["Vienna","AT"],["Prague","CZ"],["Warsaw","PL"],["Budapest","HU"],["Bucharest","RO"],["Cluj","RO"],["Rotterdam","NL"],["Amsterdam","NL"]];
+  const CLIENTS=["IKEA","Amazon","Carrefour","DB Schenker","DHL","Zalando","Decathlon","Leroy Merlin","Auchan","Kuehne+Nagel"];
+  const INC_TYPES=["Delay (traffic)","Delay (weather)","Damage","Docs issue","Customs hold","Customer not available","Trailer issue","Temperature deviation"];
+  const DRIVERS=["Carlos Vega","Javier Martín","Sergio Ruiz","Antonio López","Miguel Santos","Álvaro Díaz","David Romero","Pablo Navarro","Iván Torres","Raúl Ortega","Adrián Molina","Rubén Herrera","Hugo Castro","Óscar Marín","Gonzalo Prieto","Marcos Gil","Juan Ramos","Fernando Delgado","Luis Reyes","Diego Serrano"];
+
+  function plateES(rnd){
+    const letters="BCDFGHJKLMNPRSTVWXYZ";
+    const n=Math.floor(1000+rnd()*9000);
+    let s=""; for(let i=0;i<3;i++) s+=letters[Math.floor(rnd()*letters.length)];
+    return `${n}-${s}`;
+  }
+
+  let DATA={fleet:[],drivers:[],shipments:[],stops:[],incidents:[],fuel:[]};
+
+  function build(){
+    const seed=+el("seed").value||97;
+    const n=+el("n").value||520;
+    const days=+el("days").value||120;
+    const target=(+el("otif").value||92)/100;
+    const rnd=mulberry32(seed);
+
+    const start=(()=>{ const d=new Date(); d.setDate(d.getDate()-days); return iso(d); })();
+
+    DATA={fleet:[],drivers:[],shipments:[],stops:[],incidents:[],fuel:[]};
+
+    for(let i=1;i<=10;i++){
+      DATA.fleet.push({
+        truck_id:`TRK-${String(i).padStart(2,"0")}`,
+        truck_plate: plateES(rnd),
+        trailer_id:`TRL-${String(i).padStart(2,"0")}`,
+        trailer_plate: plateES(rnd),
+        base: (i<=4)?"Madrid":(i<=7)?"Barcelona":"Valencia",
+        model: ["Volvo FH","Scania R450","Mercedes Actros","MAN TGX","DAF XF"][Math.floor(rnd()*5)]
+      });
+    }
+    for(let i=1;i<=20;i++){
+      const a=Math.floor(600+rnd()*99), b=Math.floor(100+rnd()*899), c=Math.floor(100+rnd()*899);
+      DATA.drivers.push({
+        driver_id:`DRV-${String(i).padStart(2,"0")}`,
+        name: DRIVERS[i-1],
+        phone: `+34 6${a} ${b} ${c}`,
+        assigned_truck:`TRK-${String(Math.ceil(i/2)).padStart(2,"0")}`
+      });
+    }
+
+    for(let i=1;i<=n;i++){
+      const sh=`SHP-${seed}-${String(i).padStart(5,"0")}`;
+      const trk=DATA.fleet[Math.floor(rnd()*DATA.fleet.length)];
+      const idx=(Number(trk.truck_id.split("-")[1])-1)*2;
+      const drv1=DATA.drivers[idx], drv2=DATA.drivers[idx+1];
+
+      const a=CITIES[Math.floor(rnd()*CITIES.length)];
+      let b=CITIES[Math.floor(rnd()*CITIES.length)];
+      while(b[0]===a[0]) b=CITIES[Math.floor(rnd()*CITIES.length)];
+
+      const date=addDays(start, Math.floor(rnd()*days));
+      const km=Math.round(220+rnd()*1500);
+
+      const lateProb = Math.min(0.30, 0.06 + (1-target) + (km>1100?0.05:0));
+      const ontime = rnd() > lateProb ? 1 : 0;
+
+      const liters = km*(0.28+rnd()*0.06);
+      const fuelCost = liters*(1.55+rnd()*0.35);
+      const toll = km*(0.06+rnd()*0.05);
+      const driverCost = (km/70)*(30+rnd()*8);
+      const overhead = 55+rnd()*35;
+      const cost = fuelCost+toll+driverCost+overhead;
+      const revenue = km*(1.08+rnd()*0.35) + (rnd()*70);
+      const margin = revenue - cost;
+
+      DATA.fuel.push({date, truck_id: trk.truck_id, liters:+liters.toFixed(1), fuel_cost:+fuelCost.toFixed(2)});
+      DATA.stops.push({shipment_id:sh, stop_no:1, type:"PICKUP", city:a[0], country:a[1], date});
+      DATA.stops.push({shipment_id:sh, stop_no:2, type:"DELIVERY", city:b[0], country:b[1], date});
+
+      let incType="None";
+      const incProb = 0.07 + (ontime?0:0.07) + (km>1200?0.03:0);
+      if(rnd() < Math.min(0.22, incProb)){
+        incType = INC_TYPES[Math.floor(rnd()*INC_TYPES.length)];
+        DATA.incidents.push({
+          incident_id:"INC-"+sh, shipment_id:sh, date,
+          type:incType, severity:(rnd()<0.55)?"Low":(rnd()<0.85)?"Medium":"High",
+          driver_contact: drv1.phone
+        });
+      }
+
+      DATA.shipments.push({
+        shipment_id:sh, date,
+        client: CLIENTS[Math.floor(rnd()*CLIENTS.length)],
+        truck_id: trk.truck_id, truck_plate: trk.truck_plate, trailer_plate: trk.trailer_plate,
+        driver_1: drv1.name, driver_2: drv2.name,
+        pickup_city:a[0], delivery_city:b[0],
+        km, on_time:ontime,
+        total_cost:+cost.toFixed(2), revenue:+revenue.toFixed(2), margin:+margin.toFixed(2),
+        incident: incType
+      });
+    }
+
+    renderKPIs();
+    renderTable();
+  }
+
+  function renderKPIs(){
+    const s=DATA.shipments;
+    const km=s.reduce((a,x)=>a+x.km,0);
+    const rev=s.reduce((a,x)=>a+x.revenue,0);
+    const cost=s.reduce((a,x)=>a+x.total_cost,0);
+    const mar=rev-cost;
+    const otif=(s.reduce((a,x)=>a+x.on_time,0)/Math.max(1,s.length))*100;
+    const inc=(DATA.incidents.length/Math.max(1,s.length))*100;
+
+    const k=[
+      ["Shipments", s.length],
+      ["OTIF", pct(otif)],
+      ["Incidents", pct(inc)],
+      ["Total km", km.toLocaleString()],
+      ["Revenue", euro(rev)],
+      ["Cost", euro(cost)],
+      ["Margin", euro(mar)],
+      ["Cost/km", "€"+(cost/Math.max(1,km)).toFixed(2)]
+    ];
+
+    const wrap=el("kpis"); wrap.innerHTML="";
+    for(const [kk,vv] of k){
+      const div=document.createElement("div");
+      div.className="kpi";
+      div.innerHTML=`<div class="k">${kk}</div><div class="v">${vv}</div>`;
+      wrap.appendChild(div);
+    }
+  }
+
+  function renderTable(){
+    const cols=["shipment_id","date","client","truck_plate","driver_1","driver_2","pickup_city","delivery_city","km","revenue","total_cost","margin","on_time","incident"];
+    el("thead").innerHTML="<tr>"+cols.map(c=>`<th>${c}</th>`).join("")+"</tr>";
+    el("tbody").innerHTML="";
+    DATA.shipments.slice().reverse().slice(0,80).forEach(r=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=cols.map(c=>`<td>${r[c] ?? ""}</td>`).join("");
+      el("tbody").appendChild(tr);
+    });
+  }
+
+  el("gen").addEventListener("click", build);
+  el("dlAll").addEventListener("click", ()=>{
+    downloadCSV("shipments.csv", DATA.shipments);
+    downloadCSV("stops.csv", DATA.stops);
+    downloadCSV("incidents.csv", DATA.incidents.length?DATA.incidents:[{incident_id:"",shipment_id:"",date:"",type:"",severity:"",driver_contact:""}]);
+    downloadCSV("drivers.csv", DATA.drivers);
+    downloadCSV("fleet.csv", DATA.fleet);
+    downloadCSV("fuel_log.csv", DATA.fuel);
+  });
+
+  (function init(){ build(); })();
+</script>
+</body>
+</html>
 
