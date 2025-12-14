@@ -1,26 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Andrei Adam | Power BI & SAP Simulators</title>
+  <title>Andrei Adam | Simuladores Power BI & SAP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Andrei Adam – Power BI & SAP simulators with downloadable datasets (CSV) for BI, reporting and interviews." />
+  <meta name="description" content="Portfolio de Andrei Adam con simuladores Power BI y SAP: generadores de datasets descargables y pack entrevista con PDFs." />
 
   <style>
     :root{
-      --bg:#0b1220;
-      --panel:#0f172a;
-      --card:#0b142b;
-      --card2:#0d1a35;
-      --text:#e5e7eb;
-      --muted:rgba(229,231,235,.72);
-      --border:rgba(229,231,235,.10);
-      --shadow:0 18px 40px rgba(0,0,0,.35);
+      --bg1:#f6f8ff;
+      --bg2:#ffffff;
+      --panel:#ffffff;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:rgba(15,23,42,.68);
+      --border:rgba(15,23,42,.12);
+      --shadow:0 18px 40px rgba(15,23,42,.10);
       --blue:#2563eb;
       --red:#ef4444;
-      --white:#ffffff;
-      --radius:16px;
-      --radius2:14px;
+      --radius:18px;
       --max:1140px;
     }
 
@@ -29,11 +27,11 @@
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:
-        radial-gradient(1000px 600px at 15% 10%, rgba(37,99,235,.22), transparent 60%),
-        radial-gradient(900px 550px at 85% 25%, rgba(239,68,68,.18), transparent 60%),
-        linear-gradient(180deg, var(--bg), #050a14);
       color:var(--text);
+      background:
+        radial-gradient(1000px 650px at 10% 10%, rgba(37,99,235,.15), transparent 60%),
+        radial-gradient(900px 650px at 90% 10%, rgba(239,68,68,.14), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
       line-height:1.5;
     }
 
@@ -47,9 +45,9 @@
       position:sticky;
       top:0;
       z-index:50;
-      background: rgba(11,18,32,.72);
+      background: rgba(255,255,255,.86);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
+      border-bottom:1px solid var(--border);
     }
     .topbar-inner{
       display:flex;
@@ -62,38 +60,39 @@
       display:flex;
       align-items:center;
       gap:12px;
-      font-weight:900;
+      font-weight:950;
       letter-spacing:-.2px;
     }
     .dot{
       width:10px; height:10px; border-radius:999px;
-      background: linear-gradient(135deg, var(--blue), #8b5cf6);
-      box-shadow: 0 0 0 4px rgba(37,99,235,.18);
+      background: linear-gradient(135deg, var(--blue), var(--red));
+      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
     }
-    .role{ color:var(--muted); font-weight:700; font-size:.95rem; }
+    .role{
+      color:var(--muted);
+      font-weight:700;
+      font-size:.95rem;
+      margin-top:2px;
+    }
 
     .nav{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
     }
     .nav a{
       padding:9px 12px;
       border-radius: 12px;
       border:1px solid transparent;
-      color: rgba(229,231,235,.92);
-      font-weight:800;
-      font-size:.95rem;
+      font-weight:900;
+      color: rgba(15,23,42,.9);
     }
     .nav a:hover{
       border-color: var(--border);
-      background: rgba(255,255,255,.04);
+      background: rgba(15,23,42,.03);
       text-decoration:none;
     }
 
     /* Hero */
-    .hero{ padding: 68px 0 34px; }
+    .hero{ padding: 64px 0 26px; }
     .hero-grid{
       display:grid;
       grid-template-columns: 1.3fr 1fr;
@@ -102,17 +101,11 @@
     }
     @media (max-width: 980px){ .hero-grid{ grid-template-columns:1fr; } }
 
-    .hero h1{
+    h1{
       margin:0 0 12px;
       font-size: clamp(2rem, 3.4vw, 3rem);
+      letter-spacing:-.9px;
       line-height:1.1;
-      letter-spacing:-.8px;
-    }
-    .sub{
-      margin:0 0 18px;
-      color:var(--muted);
-      font-size:1.06rem;
-      max-width: 70ch;
     }
     .grad{
       background: linear-gradient(135deg, var(--blue), var(--red));
@@ -120,58 +113,26 @@
       background-clip:text;
       color:transparent;
     }
-
-    /* Buttons */
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding:12px 14px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      color: var(--text);
-      font-weight:900;
-      box-shadow: 0 12px 30px rgba(0,0,0,.25);
-      cursor:pointer;
-      transition: transform .08s ease, background .2s ease, border-color .2s ease;
-      user-select:none;
+    .sub{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:1.06rem;
+      max-width: 70ch;
     }
-    .btn:hover{
-      background: rgba(255,255,255,.08);
-      border-color: rgba(229,231,235,.18);
-      text-decoration:none;
-    }
-    .btn:active{ transform: translateY(1px); }
-    .btn.primary{
-      background: linear-gradient(135deg, rgba(37,99,235,1), rgba(37,99,235,.78));
-      border-color: rgba(37,99,235,.45);
-    }
-    .btn.danger{
-      background: linear-gradient(135deg, rgba(239,68,68,1), rgba(239,68,68,.78));
-      border-color: rgba(239,68,68,.45);
-    }
-    .btn.ghost{
-      background: transparent;
-      box-shadow:none;
-    }
-    .btn.small{ padding:9px 12px; border-radius: 12px; font-weight:900; font-size:.95rem; }
-
-    .cta{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
 
     /* Cards */
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      background: var(--card);
       border:1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 18px;
     }
     .card2{
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(37,99,235,.05), rgba(239,68,68,.04));
+      border:1px solid rgba(15,23,42,.12);
       border-radius: var(--radius);
+      box-shadow: var(--shadow);
       padding: 16px;
     }
 
@@ -182,20 +143,62 @@
       padding:8px 12px;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      font-weight:900;
-      color: rgba(229,231,235,.92);
+      background: rgba(15,23,42,.02);
+      font-weight:950;
+      color: rgba(15,23,42,.92);
       width: fit-content;
       margin-bottom: 10px;
     }
     .badge .bDot{
       width:8px;height:8px;border-radius:999px;
       background: var(--red);
-      box-shadow:0 0 0 4px rgba(239,68,68,.18);
+      box-shadow:0 0 0 5px rgba(239,68,68,.12);
     }
+
     .muted{ color: var(--muted); }
 
-    .section{ padding: 26px 0; }
+    /* Buttons */
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.85);
+      color: var(--text);
+      font-weight:950;
+      box-shadow: 0 12px 26px rgba(15,23,42,.10);
+      cursor:pointer;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+    }
+    .btn:hover{
+      background: rgba(15,23,42,.02);
+      border-color: rgba(15,23,42,.18);
+      text-decoration:none;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(37,99,235,1), rgba(37,99,235,.82));
+      border-color: rgba(37,99,235,.35);
+      color:#fff;
+    }
+    .btn.danger{
+      background: linear-gradient(135deg, rgba(239,68,68,1), rgba(239,68,68,.82));
+      border-color: rgba(239,68,68,.35);
+      color:#fff;
+    }
+    .btn.ghost{
+      background: transparent;
+      box-shadow:none;
+    }
+    .btn.small{ padding:9px 12px; border-radius: 12px; font-weight:950; font-size:.95rem; }
+
+    .cta{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+
+    .section{ padding: 22px 0; }
     h2{ margin: 0 0 10px; letter-spacing:-.4px; }
     h3{ margin: 0 0 8px; letter-spacing:-.3px; }
 
@@ -207,6 +210,7 @@
       flex-wrap:wrap;
       margin-bottom: 12px;
     }
+
     .pill{
       display:inline-flex;
       align-items:center;
@@ -214,18 +218,33 @@
       padding:7px 10px;
       border-radius: 999px;
       border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      font-weight:900;
-      color: rgba(229,231,235,.90);
+      background: rgba(15,23,42,.02);
+      font-weight:950;
+      color: rgba(15,23,42,.90);
       font-size:.9rem;
     }
     .pill .pDot{
       width:7px;height:7px;border-radius:999px;
       background: var(--blue);
-      box-shadow:0 0 0 4px rgba(37,99,235,.18);
+      box-shadow:0 0 0 5px rgba(37,99,235,.12);
     }
 
-    /* Project grid */
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(15,23,42,.12);
+      background: rgba(15,23,42,.02);
+      font-weight:950;
+      font-size:.88rem;
+      color: rgba(15,23,42,.9);
+    }
+    .chip.red{ border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.08); }
+    .chip.blue{ border-color: rgba(37,99,235,.25); background: rgba(37,99,235,.08); }
+    .chip.ok{ border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.08); }
+
     .grid{
       display:grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -234,186 +253,94 @@
     }
     @media (max-width: 980px){ .grid{ grid-template-columns:1fr; } }
 
-    /* Simulator UI */
-    .tabs{
-      display:flex; gap:8px; flex-wrap:wrap;
-      margin-top: 10px;
+    /* PDF capture area */
+    .pdfArea{
+      display:none;
+      background:#fff;
+      color:#0f172a;
+      border-radius: 16px;
+      padding: 16px;
+      border:1px solid #e5e7eb;
     }
-    .tab{
-      padding:9px 12px;
-      border-radius: 999px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color: rgba(229,231,235,.92);
-      font-weight:900;
-      cursor:pointer;
-    }
-    .tab.active{
-      border-color: rgba(37,99,235,.45);
-      background: rgba(37,99,235,.18);
-    }
-
-    .controls{
-      display:grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 12px;
-    }
-    @media (max-width: 980px){ .controls{ grid-template-columns:1fr 1fr; } }
-    @media (max-width: 560px){ .controls{ grid-template-columns:1fr; } }
-
-    .field label{
-      display:block;
-      font-size:.9rem;
-      font-weight:800;
-      color: rgba(229,231,235,.85);
-      margin-bottom: 6px;
-    }
-    .field input, .field select{
-      width:100%;
-      padding: 11px 12px;
-      border-radius: 12px;
-      border:1px solid rgba(229,231,235,.16);
-      background: rgba(0,0,0,.22);
-      color: var(--text);
-      outline:none;
-    }
-    .field input::placeholder{ color: rgba(229,231,235,.35); }
-
-    .kpis{
-      display:grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 12px;
-    }
-    @media (max-width: 980px){ .kpis{ grid-template-columns:1fr 1fr; } }
-    @media (max-width: 560px){ .kpis{ grid-template-columns:1fr; } }
-
-    .kpi{
-      border:1px solid rgba(229,231,235,.12);
-      border-radius: 14px;
-      background: rgba(255,255,255,.04);
-      padding: 12px;
-    }
-    .kpi .k{ color: rgba(229,231,235,.70); font-weight:800; font-size:.9rem; }
-    .kpi .v{ font-weight:950; font-size:1.25rem; margin-top:6px; letter-spacing:-.3px; }
-
-    .actions{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin-top: 12px;
-    }
-
-    /* Table */
-    .tableWrap{
-      margin-top: 12px;
-      border-radius: 14px;
-      border:1px solid rgba(229,231,235,.12);
-      overflow:auto;
-      background: rgba(0,0,0,.18);
-    }
-    table{
-      width:100%;
-      border-collapse:collapse;
-      min-width: 980px;
-    }
-    th, td{
-      text-align:left;
-      padding: 10px;
-      border-bottom: 1px solid rgba(229,231,235,.08);
-      font-size: .92rem;
-      white-space:nowrap;
-    }
-    th{
-      position:sticky;
-      top:0;
-      background: rgba(11,18,32,.92);
-      color: rgba(229,231,235,.78);
-      font-weight:950;
-      z-index:2;
-    }
-    tr:hover td{ background: rgba(255,255,255,.03); }
-
-    .chip{
+    .pdfArea h2,.pdfArea h3{ color:#0f172a; }
+    .pdfMeta{ display:flex; gap:10px; flex-wrap:wrap; color:#334155; font-weight:800; margin-bottom:10px; }
+    .pdfTag{
       display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border:1px solid rgba(229,231,235,.12);
-      background: rgba(255,255,255,.04);
-      font-weight:900;
-      font-size:.88rem;
-      color: rgba(229,231,235,.9);
+      padding:6px 10px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#1e3a8a;
+      font-weight:950;
+      border:1px solid rgba(30,58,138,.18);
     }
-    .chip.red{ border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.12); }
-    .chip.blue{ border-color: rgba(37,99,235,.25); background: rgba(37,99,235,.12); }
-    .chip.ok{ border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.10); }
+    .pdfTag.red{
+      background:#fee2e2;
+      color:#7f1d1d;
+      border-color: rgba(127,29,29,.18);
+    }
 
     .footer{
       text-align:center;
       padding: 22px 0;
-      color: rgba(229,231,235,.65);
-      border-top: 1px solid rgba(229,231,235,.08);
-      background: rgba(0,0,0,.10);
+      color: rgba(15,23,42,.65);
+      border-top: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.65);
       margin-top: 18px;
     }
   </style>
 </head>
 
 <body>
-
 <header class="topbar">
   <div class="container topbar-inner">
     <div>
       <div class="brand"><span class="dot"></span> Andrei Adam</div>
-      <div class="role">Power BI · SAP Process Simulation · Operational KPIs</div>
+      <div class="role">Simuladores Power BI · SAP O2C · KPIs Operaciones Transporte</div>
     </div>
     <nav class="nav" aria-label="Main">
-      <a href="#projects">Projects</a>
-      <a href="#powerbi">Power BI Creator</a>
-      <a href="#sap">SAP Creator</a>
-      <a href="#contact">Contact</a>
+      <a href="#projects">Proyectos</a>
+      <a href="#pack">Pack entrevista</a>
+      <a href="#contact">Contacto</a>
     </nav>
   </div>
 </header>
 
 <main>
-
   <section class="hero">
     <div class="container">
       <div class="hero-grid">
         <div class="card">
-          <div class="badge"><span class="bDot"></span> Interview-ready demos (downloadable datasets)</div>
-          <h1>Interactive <span class="grad">Power BI</span> & <span class="grad">SAP</span> simulators for HR and hiring managers</h1>
+          <div class="badge"><span class="bDot"></span> Demos “para entrevista” (datos realistas, inventados)</div>
+          <h1>Simuladores <span class="grad">Power BI</span> & <span class="grad">SAP</span> con exportación de archivos</h1>
           <p class="sub">
-            A realistic transport company scenario: <strong>10 Spanish trucks</strong>, trailers, double drivers,
-            European routes, pickups/deliveries, schedules, incidents, and solutions.
+            Empresa ficticia de transporte: <strong>10 camiones españoles</strong>, remolques, doble conductor,
+            rutas por Europa, cargas/descargas, horarios, incidencias y soluciones.
             <br><br>
-            Generate datasets and export <strong>CSV</strong> files to use directly in <strong>Power BI</strong> or Excel.
+            Puedes abrir simuladores en páginas separadas y descargar datasets (CSV) y reportes (PDF).
           </p>
 
-          <!-- ✅ AQUÍ ESTÁ EL BOTÓN NUEVO VISIBLE EN HERO -->
           <div class="cta">
-            <a class="btn primary" href="#projects">Open projects</a>
-            <a class="btn" href="#powerbi">Generate Power BI files</a>
-            <a class="btn" href="#sap">Generate SAP files</a>
-            <a class="btn danger" href="ejemplo.html">Company interview pack (PDF + CSV)</a>
+            <a class="btn primary" href="#projects">Ver proyectos</a>
+            <a class="btn" href="powerbi.html">Abrir Power BI creator</a>
+            <a class="btn" href="sap.html">Abrir SAP O2C creator</a>
+            <a class="btn" href="operaciones.html">Abrir Simulador Operaciones</a>
+            <a class="btn danger" href="ejemplo.html">Abrir Pack empresa (PDF + CSV)</a>
           </div>
         </div>
 
         <div class="card2">
           <div class="row">
-            <h3 style="margin:0;">What this proves</h3>
-            <span class="pill"><span class="pDot"></span> Ops → BI</span>
+            <h3 style="margin:0;">Qué demuestra</h3>
+            <span class="pill"><span class="pDot"></span> Profesional</span>
           </div>
           <div style="display:grid; gap:10px; margin-top:10px;">
-            <div class="chip blue">KPI logic: cost/km, margin, OTIF</div>
-            <div class="chip">Process logic: O2C statuses, aging, blocking</div>
-            <div class="chip red">Incidents: delays, damages, docs, actions</div>
-            <div class="chip ok">Exportable datasets (CSV) + reproducible seed</div>
+            <div class="chip blue">Modelado de datos + export CSV</div>
+            <div class="chip">Procesos SAP O2C + estados</div>
+            <div class="chip red">Incidencias + decisiones + acciones</div>
+            <div class="chip ok">Reporte PDF descargable</div>
           </div>
           <p class="muted" style="margin:12px 0 0;">
-            Tip: use the same seed to reproduce the exact dataset during interviews.
+            Consejo: envía a RRHH el link a <strong>ejemplo.html</strong> y este portfolio.
           </p>
         </div>
       </div>
@@ -423,218 +350,96 @@
   <section id="projects" class="section">
     <div class="container">
       <div class="row">
-        <h2>Projects</h2>
-        <span class="pill"><span class="pDot"></span> No 404: opens on this page</span>
+        <h2>Proyectos</h2>
+        <span class="pill"><span class="pDot"></span> Se abren en páginas reales (sin 404)</span>
       </div>
 
       <div class="grid">
         <div class="card">
           <div class="row">
-            <h3 style="margin:0;">Power BI – Transport KPI Dataset Creator</h3>
-            <span class="chip blue">CSV Generator</span>
+            <h3 style="margin:0;">Power BI – Dataset Creator (Transporte)</h3>
+            <span class="chip blue">CSV</span>
           </div>
           <p class="muted" style="margin:10px 0 14px;">
-            Creates realistic transport data (shipments, drivers, trucks, trailers, incidents, schedules).
-            Download multiple CSV files and load them into Power BI (relationships ready).
+            Genera envíos, paradas, incidencias, conductores, flota y combustible.
+            Descarga CSV y cárgalo en Power BI.
           </p>
-          <a class="btn primary" href="#powerbi">Open creator</a>
+          <a class="btn primary" href="powerbi.html">Open</a>
         </div>
 
         <div class="card">
           <div class="row">
-            <h3 style="margin:0;">SAP – Order to Cash (O2C) Dataset Creator</h3>
-            <span class="chip red">Process Simulator</span>
+            <h3 style="margin:0;">SAP – O2C Creator (Orders → Invoices)</h3>
+            <span class="chip red">Process</span>
           </div>
           <p class="muted" style="margin:10px 0 14px;">
-            Generates SAP-like O2C flow data: sales orders, deliveries, invoices, payments, blocks and aging.
-            Export CSV to demonstrate process understanding and reporting KPIs.
+            Simula Sales Orders, Deliveries, Invoices, Payments, bloques y aging.
+            Descarga CSV para reporting.
           </p>
-          <a class="btn primary" href="#sap">Open creator</a>
+          <a class="btn primary" href="sap.html">Open</a>
         </div>
 
-        <!-- ✅ AQUÍ ESTÁ LA TARJETA NUEVA EN PROJECTS -->
-        <div class="card" style="grid-column: 1 / -1;">
+        <div class="card">
           <div class="row">
-            <h3 style="margin:0;">Company interview pack – PDFs + CSVs (fictitious but realistic)</h3>
-            <span class="chip ok">PDF Reports</span>
+            <h3 style="margin:0;">Operaciones – Incidencias & Dispatch Simulator</h3>
+            <span class="chip">Ops</span>
           </div>
           <p class="muted" style="margin:10px 0 14px;">
-            A separate page created to match typical company workflows: transport operations files + SAP O2C,
-            including downloadable <strong>PDF reports with charts</strong> and all datasets in CSV.
+            Simula incidencias (tráfico, aduanas, daños) y decisiones reales de dispatch.
+            Exporta log de llamadas y acciones.
           </p>
-          <a class="btn danger" href="ejemplo.html">Open company pack</a>
+          <a class="btn primary" href="operaciones.html">Open</a>
         </div>
 
+        <div class="card" id="pack">
+          <div class="row">
+            <h3 style="margin:0;">Pack empresa entrevista – PDFs + CSVs</h3>
+            <span class="chip ok">Report</span>
+          </div>
+          <p class="muted" style="margin:10px 0 14px;">
+            Página separada “para RRHH”: datasets + PDFs con gráficos coloridos.
+          </p>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn danger" href="ejemplo.html">Abrir pack</a>
+            <button class="btn" id="downloadPortfolioPdf" type="button">Descargar PDF (portfolio)</button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- POWER BI CREATOR -->
-  <section id="powerbi" class="section">
-    <div class="container">
-      <div class="row">
-        <h2>Power BI Creator</h2>
-        <span class="chip blue">Company: IberiaTrans Logistics (fictional)</span>
+  <!-- PDF hidden area -->
+  <div class="container">
+    <div class="pdfArea" id="pdfArea">
+      <h2>Portfolio – Andrei Adam (resumen)</h2>
+      <div class="pdfMeta">
+        <span class="pdfTag">Power BI · SAP · Operaciones</span>
+        <span class="pdfTag red">Datos demo</span>
+        <span class="pdfTag">Email: andreiadam.lu@hotmail.com</span>
       </div>
 
-      <div class="card">
-        <div class="row">
-          <div class="muted">
-            Generates a realistic European transport operation with 10 trucks (ES plates), trailers, double drivers,
-            loads/unloads, timestamps, incidences and resolutions.
-          </div>
-          <span class="pill"><span class="pDot"></span> Pre-generated on page load</span>
-        </div>
+      <h3>Proyectos incluidos</h3>
+      <ul style="margin:0; padding-left:18px; color:#0f172a;">
+        <li><strong>powerbi.html</strong> – dataset creator transporte (CSV)</li>
+        <li><strong>sap.html</strong> – O2C creator (CSV)</li>
+        <li><strong>operaciones.html</strong> – incidencias y dispatch (CSV)</li>
+        <li><strong>ejemplo.html</strong> – pack empresa con PDFs y charts</li>
+      </ul>
 
-        <div class="controls">
-          <div class="field">
-            <label for="pbSeed">Seed</label>
-            <input id="pbSeed" type="number" value="97" />
-          </div>
-          <div class="field">
-            <label for="pbShipments">Shipments</label>
-            <input id="pbShipments" type="number" min="50" max="5000" value="420" />
-          </div>
-          <div class="field">
-            <label for="pbStart">Start date</label>
-            <input id="pbStart" type="date" />
-          </div>
-          <div class="field">
-            <label for="pbDays">Horizon days</label>
-            <input id="pbDays" type="number" min="30" max="365" value="120" />
-          </div>
-
-          <div class="field">
-            <label for="pbFuel">Fuel price €/L</label>
-            <input id="pbFuel" type="number" step="0.01" value="1.72" />
-          </div>
-          <div class="field">
-            <label for="pbL100">Consumption L/100km</label>
-            <input id="pbL100" type="number" step="0.1" value="28.5" />
-          </div>
-          <div class="field">
-            <label for="pbRevKm">Revenue €/km</label>
-            <input id="pbRevKm" type="number" step="0.01" value="1.22" />
-          </div>
-          <div class="field">
-            <label for="pbTarget">OTIF target %</label>
-            <input id="pbTarget" type="number" min="70" max="99" value="92" />
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="btn primary" id="pbGenerate" type="button">Generate datasets</button>
-          <button class="btn" id="pbDownloadAll" type="button">Download ALL (ZIP-free)</button>
-          <button class="btn ghost" id="pbHint" type="button">Show Power BI model hint</button>
-        </div>
-
-        <div class="kpis" id="pbKpis"></div>
-
-        <div class="tabs" style="margin-top:14px;">
-          <button class="tab active" data-pbtab="shipments">Shipments</button>
-          <button class="tab" data-pbtab="incidents">Incidents</button>
-          <button class="tab" data-pbtab="drivers">Drivers</button>
-          <button class="tab" data-pbtab="fleet">Fleet</button>
-          <button class="tab" data-pbtab="stops">Stops</button>
-        </div>
-
-        <div class="tableWrap">
-          <table>
-            <thead id="pbThead"></thead>
-            <tbody id="pbTbody"></tbody>
-          </table>
-        </div>
-
-        <p class="muted" id="pbModelHint" style="display:none; margin:12px 0 0;">
-          <strong>Power BI modeling hint:</strong>
-          Create relationships: Shipments (shipment_id) → Stops (shipment_id), Shipments (shipment_id) → Incidents (shipment_id).
-          Drivers and Fleet can be linked by driver_id / truck_id used in Shipments.
-        </p>
-      </div>
+      <h3 style="margin-top:12px;">Contacto</h3>
+      <p style="margin:0; color:#0f172a;">
+        Email: <strong>andreiadam.lu@hotmail.com</strong><br/>
+        LinkedIn: <strong>www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b</strong>
+      </p>
     </div>
-  </section>
+  </div>
 
-  <!-- SAP CREATOR -->
-  <section id="sap" class="section">
-    <div class="container">
-      <div class="row">
-        <h2>SAP Creator</h2>
-        <span class="chip red">O2C: Sales Order → Delivery → Invoice → Payment</span>
-      </div>
-
-      <div class="card">
-        <div class="controls">
-          <div class="field">
-            <label for="sapSeed">Seed</label>
-            <input id="sapSeed" type="number" value="13" />
-          </div>
-          <div class="field">
-            <label for="sapOrders">Sales Orders</label>
-            <input id="sapOrders" type="number" min="50" max="5000" value="380" />
-          </div>
-          <div class="field">
-            <label for="sapNet">Payment terms NET (days)</label>
-            <input id="sapNet" type="number" min="7" max="90" value="30" />
-          </div>
-          <div class="field">
-            <label for="sapUnpaid">Unpaid share %</label>
-            <input id="sapUnpaid" type="number" min="0" max="60" value="18" />
-          </div>
-
-          <div class="field">
-            <label for="sapBlock">Block probability %</label>
-            <input id="sapBlock" type="number" min="0" max="35" value="6" />
-          </div>
-          <div class="field">
-            <label for="sapDelay">Avg processing delay (days)</label>
-            <input id="sapDelay" type="number" min="0" max="30" value="4" />
-          </div>
-          <div class="field">
-            <label for="sapStart">Start date</label>
-            <input id="sapStart" type="date" />
-          </div>
-          <div class="field">
-            <label for="sapDays">Horizon days</label>
-            <input id="sapDays" type="number" min="30" max="365" value="120" />
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="btn primary" id="sapGenerate" type="button">Generate SAP datasets</button>
-          <button class="btn" id="sapDownloadAll" type="button">Download ALL (ZIP-free)</button>
-        </div>
-
-        <div class="kpis" id="sapKpis"></div>
-
-        <div class="tabs" style="margin-top:14px;">
-          <button class="tab active" data-saptab="sales_orders">Sales Orders</button>
-          <button class="tab" data-saptab="deliveries">Deliveries</button>
-          <button class="tab" data-saptab="invoices">Invoices</button>
-          <button class="tab" data-saptab="payments">Payments</button>
-        </div>
-
-        <div class="tableWrap">
-          <table>
-            <thead id="sapThead"></thead>
-            <tbody id="sapTbody"></tbody>
-          </table>
-        </div>
-
-        <p class="muted" style="margin:12px 0 0;">
-          <strong>HR-friendly explanation:</strong> this simulator demonstrates process mapping (O2C), KPI thinking (aging, lead times),
-          and data preparation for reporting (export CSV).
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
   <section id="contact" class="section">
     <div class="container">
       <div class="card">
         <div class="row">
-          <h2>Contact</h2>
-          <span class="pill"><span class="pDot"></span> Available</span>
+          <h2>Contacto</h2>
+          <span class="pill"><span class="pDot"></span> Disponible</span>
         </div>
         <p style="margin:10px 0;">
           📧 <strong>Email:</strong> <a href="mailto:andreiadam.lu@hotmail.com">andreiadam.lu@hotmail.com</a>
@@ -648,596 +453,65 @@
       </div>
     </div>
   </section>
-
 </main>
 
 <footer class="footer">
-  <div class="container">© Andrei Adam – Power BI & SAP Simulators</div>
+  <div class="container">© Andrei Adam – Simuladores Power BI & SAP</div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <script>
-  /* (SCRIPT EXACTAMENTE EL MISMO QUE YA TENÍAS EN TU VERSIÓN “SIN 404”)
-     Para no hacerte perder tiempo, aquí va completo y funcional. */
+  async function downloadPortfolioPdf(){
+    const area = document.getElementById("pdfArea");
+    area.style.display = "block";
+    await new Promise(r=>setTimeout(r, 50));
 
-  const $ = (id) => document.getElementById(id);
+    const canvas = await html2canvas(area, {scale:2, useCORS:true});
+    const img = canvas.toDataURL("image/png");
 
-  function mulberry32(seed) {
-    let a = seed >>> 0;
-    return function() {
-      a += 0x6D2B79F5;
-      let t = Math.imul(a ^ (a >>> 15), 1 | a);
-      t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({orientation:"p", unit:"pt", format:"a4"});
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
 
-  function isoDate(d){ return d.toISOString().slice(0,10); }
-  function addDays(dateStr, days){
-    const d = new Date(dateStr);
-    d.setDate(d.getDate() + days);
-    return isoDate(d);
-  }
-  function addMinutes(dateStr, mins){
-    const d = new Date(dateStr);
-    d.setMinutes(d.getMinutes() + mins);
-    return d.toISOString().slice(0,16).replace("T"," ");
-  }
-  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
-  function fmt(n, d=2){ const x=Number(n); if(!Number.isFinite(x)) return "—"; return x.toFixed(d); }
-  function euro(n){ const x=Number(n); if(!Number.isFinite(x)) return "—"; return "€"+x.toFixed(2); }
-  function pct(n, d=1){ const x=Number(n); if(!Number.isFinite(x)) return "—"; return x.toFixed(d)+"%"; }
+    const imgW = pageW - 48;
+    const imgH = canvas.height * (imgW / canvas.width);
 
-  function downloadCSV(filename, rows){
-    if (!rows || !rows.length){ alert("Generate data first."); return; }
-    const headers = Object.keys(rows[0]);
-    const lines = [headers.join(",")];
-    for (const r of rows){
-      const line = headers.map(h=>{
-        const v = r[h] ?? "";
-        const s = String(v);
-        if (s.includes(",") || s.includes('"') || s.includes("\n")) return `"${s.replaceAll('"','""')}"`;
-        return s;
-      }).join(",");
-      lines.push(line);
-    }
-    const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
+    if (imgH <= pageH - 48){
+      pdf.addImage(img, "PNG", 24, 24, imgW, imgH);
+    } else {
+      // multi page slice
+      let remaining = imgH;
+      let srcY = 0;
+      const sliceH = canvas.width * ((pageH - 48) / imgW);
 
-  // PB data
-  let PB = { fleet: [], trailers: [], drivers: [], shipments: [], stops: [], incidents: [] };
+      while (remaining > 0){
+        const pageCanvas = document.createElement("canvas");
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = Math.min(sliceH, canvas.height - srcY);
 
-  const PB_CITIES = [
-    {c:"Madrid", cc:"ES"}, {c:"Barcelona", cc:"ES"}, {c:"Valencia", cc:"ES"}, {c:"Zaragoza", cc:"ES"},
-    {c:"Bilbao", cc:"ES"}, {c:"Sevilla", cc:"ES"}, {c:"Paris", cc:"FR"}, {c:"Lyon", cc:"FR"},
-    {c:"Brussels", cc:"BE"}, {c:"Luxembourg", cc:"LU"}, {c:"Cologne", cc:"DE"}, {c:"Frankfurt", cc:"DE"},
-    {c:"Hamburg", cc:"DE"}, {c:"Munich", cc:"DE"}, {c:"Milan", cc:"IT"}, {c:"Turin", cc:"IT"},
-    {c:"Vienna", cc:"AT"}, {c:"Prague", cc:"CZ"}, {c:"Warsaw", cc:"PL"}, {c:"Budapest", cc:"HU"},
-    {c:"Bucharest", cc:"RO"}, {c:"Cluj", cc:"RO"}, {c:"Rotterdam", cc:"NL"}, {c:"Amsterdam", cc:"NL"}
-  ];
-  const PB_CARGO = ["Pallets FMCG","Automotive parts","Retail goods","Furniture","Electronics","Frozen food","Pharma supplies","Building materials"];
-  const PB_CLIENTS = ["IKEA","Carrefour","Zalando","Amazon","DB Schenker","DHL","Kuehne+Nagel","Leroy Merlin","Decathlon","Auchan"];
-  const PB_INC_TYPES = ["Delay (traffic)","Delay (weather)","Damage","Docs issue","Customs hold","Customer not available","Temperature deviation","Trailer issue"];
-  const PB_SOLUTIONS = [
-    "Driver called dispatch – rerouted to alternative highway",
-    "Customer rescheduled delivery slot – updated ETA",
-    "Replaced trailer at partner yard – continued trip",
-    "Sent POD / corrected documents – released by customs",
-    "Cold chain checked – temperature log attached",
-    "Added rest break and swapped drivers – compliance ensured",
-    "Truck sent to workshop – spare vehicle assigned"
-  ];
-  const PB_NAMES = [
-    "Carlos Vega","Javier Martín","Sergio Ruiz","Antonio López","Miguel Santos","Álvaro Díaz","David Romero","Pablo Navarro","Iván Torres","Raúl Ortega",
-    "Adrián Molina","Rubén Herrera","Hugo Castro","Óscar Marín","Gonzalo Prieto","Marcos Gil","Juan Ramos","Fernando Delgado","Luis Reyes","Diego Serrano"
-  ];
+        const ctx = pageCanvas.getContext("2d");
+        ctx.drawImage(canvas, 0, srcY, canvas.width, pageCanvas.height, 0, 0, canvas.width, pageCanvas.height);
 
-  function genSpanishPlate(rnd){
-    const letters = "BCDFGHJKLMNPRSTVWXYZ";
-    const n = Math.floor(1000 + rnd()*9000);
-    let s = "";
-    for (let i=0;i<3;i++) s += letters[Math.floor(rnd()*letters.length)];
-    return `${n}-${s}`;
-  }
-  function pbBuildMasterData(rnd){
-    PB.fleet = [];
-    PB.trailers = [];
-    PB.drivers = [];
+        const pageImg = pageCanvas.toDataURL("image/png");
+        const pageImgH = pageCanvas.height * (imgW / pageCanvas.width);
 
-    const truckModels = ["Volvo FH","Scania R450","Mercedes Actros","MAN TGX","DAF XF"];
-    const trailerTypes = ["Curtainsider","Reefer","Box","Flatbed"];
+        pdf.addImage(pageImg, "PNG", 24, 24, imgW, pageImgH);
 
-    for (let i=1;i<=10;i++){
-      const truck_id = `TRK-${String(i).padStart(2,"0")}`;
-      const trailer_id = `TRL-${String(i).padStart(2,"0")}`;
+        remaining -= (pageH - 48);
+        srcY += pageCanvas.height;
 
-      PB.fleet.push({
-        truck_id,
-        plate: genSpanishPlate(rnd),
-        model: truckModels[Math.floor(rnd()*truckModels.length)],
-        year: 2018 + Math.floor(rnd()*7),
-        base: (i<=4) ? "Madrid" : (i<=7) ? "Barcelona" : "Valencia",
-        capacity_t: (22 + rnd()*4).toFixed(1)
-      });
-
-      PB.trailers.push({
-        trailer_id,
-        plate: genSpanishPlate(rnd),
-        type: trailerTypes[Math.floor(rnd()*trailerTypes.length)],
-        temp_control: (rnd()<0.35) ? "YES" : "NO",
-        max_pallets: 33
-      });
-    }
-
-    const phones = () => {
-      const a = Math.floor(600 + rnd()*99);
-      const b = Math.floor(100 + rnd()*899);
-      const c = Math.floor(100 + rnd()*899);
-      return `+34 6${a} ${b} ${c}`;
-    };
-
-    const used = new Set();
-    for (let i=1;i<=20;i++){
-      let name;
-      do { name = PB_NAMES[Math.floor(rnd()*PB_NAMES.length)] } while (used.has(name));
-      used.add(name);
-
-      const driver_id = `DRV-${String(i).padStart(2,"0")}`;
-      const truck_id = `TRK-${String(Math.ceil(i/2)).padStart(2,"0")}`;
-
-      PB.drivers.push({
-        driver_id,
-        name,
-        phone: phones(),
-        license: "C+E",
-        team: (i%2===1) ? "A" : "B",
-        assigned_truck: truck_id
-      });
-    }
-  }
-
-  function pickDifferentCity(rnd, avoidCity){
-    let x;
-    do { x = PB_CITIES[Math.floor(rnd()*PB_CITIES.length)] } while (x.c === avoidCity);
-    return x;
-  }
-  function distanceKm(rnd, from, to){
-    const base = 180 + rnd()*1400;
-    const cross = (from.cc !== to.cc) ? 1.15 : 0.95;
-    return Math.round(base * cross);
-  }
-
-  function pbGenerateData(){
-    const seed = +$("pbSeed").value || 97;
-    const shipmentsN = clamp(+$("pbShipments").value || 420, 50, 5000);
-    const days = clamp(+$("pbDays").value || 120, 30, 365);
-    const fuel = +$("pbFuel").value || 1.72;
-    const l100 = +$("pbL100").value || 28.5;
-    const revKm = +$("pbRevKm").value || 1.22;
-    const target = clamp(+$("pbTarget").value || 92, 70, 99);
-
-    const start = $("pbStart").value || isoDate((()=>{ const d=new Date(); d.setDate(d.getDate()-days); return d; })());
-    $("pbStart").value = start;
-
-    const rnd = mulberry32(seed);
-    pbBuildMasterData(rnd);
-
-    PB.shipments = [];
-    PB.stops = [];
-    PB.incidents = [];
-
-    for (let i=1;i<=shipmentsN;i++){
-      const shipment_id = `SHP-${seed}-${String(i).padStart(5,"0")}`;
-
-      const truck = PB.fleet[Math.floor(rnd()*PB.fleet.length)];
-      const trailer = PB.trailers[Number(truck.truck_id.split("-")[1]) - 1];
-      const driverA = PB.drivers[(Number(truck.truck_id.split("-")[1]) - 1)*2];
-      const driverB = PB.drivers[(Number(truck.truck_id.split("-")[1]) - 1)*2 + 1];
-
-      const pick = PB_CITIES[Math.floor(rnd()*PB_CITIES.length)];
-      const drop = pickDifferentCity(rnd, pick.c);
-
-      const km = distanceKm(rnd, pick, drop);
-      const cargo = PB_CARGO[Math.floor(rnd()*PB_CARGO.length)];
-      const client = PB_CLIENTS[Math.floor(rnd()*PB_CLIENTS.length)];
-
-      const dayOffset = Math.floor(rnd()*days);
-      const pickDate = addDays(start, dayOffset);
-      const pickTime = addMinutes(pickDate + "T07:00:00.000Z", Math.floor(rnd()*600));
-      const transitH = Math.max(6, Math.round((km/70) + rnd()*6));
-      const dropTimePlanned = addMinutes(pickDate + "T07:00:00.000Z", Math.floor(rnd()*600) + transitH*60);
-
-      const baseLateProb = (100 - target)/100;
-      const longTrip = km > 1100 ? 0.05 : 0;
-      const lateProb = clamp(baseLateProb + longTrip + (rnd()*0.06), 0.03, 0.30);
-      const on_time = (rnd() > lateProb) ? 1 : 0;
-
-      const lateMin = on_time ? 0 : Math.round(30 + rnd()*420);
-      const dropTimeActual = addMinutes(dropTimePlanned.replace(" ","T") + ":00.000Z", lateMin).slice(0,16).replace("T"," ");
-
-      const pallets = Math.max(8, Math.round(10 + rnd()*22));
-      const weight_t = +(6 + rnd()*18).toFixed(1);
-
-      const fuelCost = (km*(l100/100))*fuel;
-      const toll = km*(0.06 + rnd()*0.05);
-      const driverCost = (transitH*(28 + rnd()*8)) + (rnd()*40);
-      const overhead = 55 + rnd()*35;
-      const cost = fuelCost + toll + driverCost + overhead;
-      const revenue = km*(revKm + (rnd()*0.25 - 0.06)) + pallets*(3 + rnd()*2);
-      const margin = revenue - cost;
-
-      const incProb = clamp(0.06 + (on_time?0:0.05) + (km>1200?0.03:0) + (trailer.temp_control==="YES"?0.02:0), 0.04, 0.22);
-      const hasInc = rnd() < incProb;
-      let incType = "None", solution="—";
-      if (hasInc){
-        incType = PB_INC_TYPES[Math.floor(rnd()*PB_INC_TYPES.length)];
-        solution = PB_SOLUTIONS[Math.floor(rnd()*PB_SOLUTIONS.length)];
-        PB.incidents.push({
-          incident_id: `INC-${shipment_id}`,
-          shipment_id,
-          date: pickDate,
-          type: incType,
-          severity: (rnd()<0.55) ? "Low" : (rnd()<0.85) ? "Medium" : "High",
-          description: `${incType} reported. Dispatch contacted ${driverA.name}.`,
-          solution,
-          contact_phone: driverA.phone
-        });
-      }
-
-      PB.stops.push({
-        shipment_id,
-        stop_no: 1,
-        stop_type: "PICKUP",
-        city: pick.c,
-        country: pick.cc,
-        window_start: pickTime,
-        window_end: addMinutes(pickTime.replace(" ","T")+":00.000Z", 90).slice(0,16).replace("T"," "),
-        completed_time: pickTime
-      });
-      PB.stops.push({
-        shipment_id,
-        stop_no: 2,
-        stop_type: "DELIVERY",
-        city: drop.c,
-        country: drop.cc,
-        window_start: dropTimePlanned,
-        window_end: addMinutes(dropTimePlanned.replace(" ","T")+":00.000Z", 120).slice(0,16).replace("T"," "),
-        completed_time: dropTimeActual
-      });
-
-      PB.shipments.push({
-        shipment_id,
-        date: pickDate,
-        client,
-        cargo_type: cargo,
-        pallets,
-        weight_t,
-        truck_id: truck.truck_id,
-        truck_plate: truck.plate,
-        trailer_id: trailer.trailer_id,
-        trailer_plate: trailer.plate,
-        driver_1: driverA.name,
-        driver_1_phone: driverA.phone,
-        driver_2: driverB.name,
-        driver_2_phone: driverB.phone,
-        pickup_city: pick.c,
-        pickup_country: pick.cc,
-        delivery_city: drop.c,
-        delivery_country: drop.cc,
-        planned_delivery: dropTimePlanned,
-        actual_delivery: dropTimeActual,
-        on_time,
-        km,
-        total_cost: +cost.toFixed(2),
-        revenue: +revenue.toFixed(2),
-        margin: +margin.toFixed(2),
-        incident: incType
-      });
-    }
-
-    pbRenderKPIs();
-    pbRenderTable("shipments");
-  }
-
-  function pbRenderKPIs(){
-    const s = PB.shipments;
-    const totalKm = s.reduce((a,x)=>a+x.km,0);
-    const cost = s.reduce((a,x)=>a+x.total_cost,0);
-    const rev = s.reduce((a,x)=>a+x.revenue,0);
-    const mar = rev - cost;
-    const otif = (s.reduce((a,x)=>a+x.on_time,0)/Math.max(1,s.length))*100;
-    const inc = (PB.incidents.length/Math.max(1,s.length))*100;
-
-    const costKm = cost/Math.max(1,totalKm);
-    const marKm = mar/Math.max(1,totalKm);
-
-    const k = [
-      ["Shipments", s.length],
-      ["OTIF (on-time %)", pct(otif,1)],
-      ["Incidents %", pct(inc,1)],
-      ["Total km", totalKm.toLocaleString()],
-      ["Revenue", euro(rev)],
-      ["Cost", euro(cost)],
-      ["Margin", euro(mar)],
-      ["Cost / km", "€"+fmt(costKm,2)],
-      ["Margin / km", "€"+fmt(marKm,2)],
-      ["Avg km / shipment", fmt(totalKm/Math.max(1,s.length),0)]
-    ];
-
-    const wrap = $("pbKpis");
-    wrap.innerHTML = "";
-    for (const [kk,vv] of k){
-      const div = document.createElement("div");
-      div.className = "kpi";
-      div.innerHTML = `<div class="k">${kk}</div><div class="v">${vv}</div>`;
-      wrap.appendChild(div);
-    }
-  }
-
-  function renderTable(headEl, bodyEl, rows, cols){
-    headEl.innerHTML = "<tr>" + cols.map(c=>`<th>${c}</th>`).join("") + "</tr>";
-    bodyEl.innerHTML = "";
-    const sample = rows.slice(0, 80);
-    for (const r of sample){
-      const tr = document.createElement("tr");
-      tr.innerHTML = cols.map(c=>`<td>${(r[c] ?? "—")}</td>`).join("");
-      bodyEl.appendChild(tr);
-    }
-  }
-
-  function pbRenderTable(tab){
-    const thead = $("pbThead");
-    const tbody = $("pbTbody");
-
-    if (tab === "shipments"){
-      const cols = ["shipment_id","date","client","truck_plate","trailer_plate","driver_1","driver_2","pickup_city","delivery_city","km","revenue","total_cost","margin","on_time","incident"];
-      renderTable(thead, tbody, PB.shipments.slice().reverse(), cols);
-    } else if (tab === "incidents"){
-      const cols = ["incident_id","shipment_id","date","type","severity","solution","contact_phone"];
-      renderTable(thead, tbody, PB.incidents.slice().reverse(), cols);
-    } else if (tab === "drivers"){
-      const cols = ["driver_id","name","phone","license","team","assigned_truck"];
-      renderTable(thead, tbody, PB.drivers, cols);
-    } else if (tab === "fleet"){
-      const cols = ["truck_id","plate","model","year","base","capacity_t"];
-      renderTable(thead, tbody, PB.fleet, cols);
-    } else if (tab === "stops"){
-      const cols = ["shipment_id","stop_no","stop_type","city","country","window_start","window_end","completed_time"];
-      renderTable(thead, tbody, PB.stops.slice().reverse(), cols);
-    }
-  }
-
-  function pbDownloadAll(){
-    downloadCSV("pb_shipments.csv", PB.shipments);
-    downloadCSV("pb_stops.csv", PB.stops);
-    downloadCSV("pb_incidents.csv", PB.incidents.length ? PB.incidents : [{incident_id:"",shipment_id:"",date:"",type:"",severity:"",description:"",solution:"",contact_phone:""}]);
-    downloadCSV("pb_drivers.csv", PB.drivers);
-    downloadCSV("pb_fleet.csv", PB.fleet);
-    downloadCSV("pb_trailers.csv", PB.trailers);
-  }
-
-  // SAP
-  let SAP = { sales_orders: [], deliveries: [], invoices: [], payments: [] };
-  const SAP_CUSTOMERS = [
-    "Iberia Retail SA","EuroParts GmbH","Nordic Stores AB","TransHub NV","Fresh Foods SARL",
-    "Build&Home SRL","Auto Components SpA","MedSupply BV","E-Commerce EU Ltd","Industrial Systems AG"
-  ];
-  const SAP_MATS = ["MAT-1001","MAT-1002","MAT-1003","MAT-2001","MAT-2100","MAT-3200","MAT-4100","MAT-5002"];
-
-  function sapGenerate(){
-    const seed = +$("sapSeed").value || 13;
-    const n = clamp(+$("sapOrders").value || 380, 50, 5000);
-    const net = clamp(+$("sapNet").value || 30, 7, 90);
-    const unpaidShare = clamp(+$("sapUnpaid").value || 18, 0, 60)/100;
-    const blockP = clamp(+$("sapBlock").value || 6, 0, 35)/100;
-    const delayAvg = clamp(+$("sapDelay").value || 4, 0, 30);
-
-    const days = clamp(+$("sapDays").value || 120, 30, 365);
-    const start = $("sapStart").value || isoDate((()=>{ const d=new Date(); d.setDate(d.getDate()-days); return d; })());
-    $("sapStart").value = start;
-
-    const rnd = mulberry32(seed);
-
-    SAP.sales_orders = [];
-    SAP.deliveries = [];
-    SAP.invoices = [];
-    SAP.payments = [];
-
-    for (let i=1;i<=n;i++){
-      const so = `SO-${seed}-${String(i).padStart(5,"0")}`;
-      const customer = SAP_CUSTOMERS[Math.floor(rnd()*SAP_CUSTOMERS.length)];
-      const orderDate = addDays(start, Math.floor(rnd()*days));
-
-      const items = 1 + Math.floor(rnd()*4);
-      const mat = SAP_MATS[Math.floor(rnd()*SAP_MATS.length)];
-      const qty = 1 + Math.floor(rnd()*24);
-      const price = 40 + rnd()*420;
-      const value = +(qty*price*(0.9 + rnd()*0.25)).toFixed(2);
-
-      const blocked = rnd() < blockP;
-      const blockReason = blocked ? (rnd()<0.5 ? "Credit block" : "Incomplete data") : "";
-
-      const delDelay = Math.max(0, Math.round(1 + rnd()*2 + rnd()*delayAvg));
-      const giDelay  = Math.max(0, Math.round(rnd()*2));
-      const invDelay = Math.max(0, Math.round(1 + rnd()*2 + rnd()*(delayAvg/2)));
-
-      const deliveryDate = addDays(orderDate, delDelay);
-      const giDate = addDays(deliveryDate, giDelay);
-      const invoiceDate = addDays(giDate, invDelay);
-      const dueDate = addDays(invoiceDate, net);
-
-      let status = "INVOICED";
-      if (blocked) status = "BLOCKED";
-      const unpaid = (!blocked) && (rnd() < unpaidShare);
-      const paid = (!blocked) && !unpaid;
-
-      const payDelay = paid ? Math.max(0, Math.round((rnd()*2 - 1)*6 + rnd()*delayAvg)) : null;
-      const payDate = paid ? addDays(dueDate, payDelay) : "";
-
-      const aging = unpaid ? Math.max(0, Math.round((new Date().getTime() - new Date(dueDate).getTime()) / 86400000)) : 0;
-
-      SAP.sales_orders.push({
-        so_id: so,
-        order_date: orderDate,
-        customer,
-        material: mat,
-        quantity: qty,
-        net_price: +price.toFixed(2),
-        order_value: value,
-        status,
-        block_reason: blockReason
-      });
-
-      if (!blocked){
-        const dn = `DN-${seed}-${String(i).padStart(5,"0")}`;
-        const inv = `INV-${seed}-${String(i).padStart(5,"0")}`;
-
-        SAP.deliveries.push({
-          delivery_id: dn,
-          so_id: so,
-          delivery_date: deliveryDate,
-          goods_issue_date: giDate,
-          ship_to_country: ["ES","FR","DE","BE","NL","IT","AT","CZ","PL","RO","LU"][Math.floor(rnd()*11)],
-          lead_time_days: Math.max(0, Math.round((new Date(giDate) - new Date(orderDate)) / 86400000))
-        });
-
-        SAP.invoices.push({
-          invoice_id: inv,
-          so_id: so,
-          invoice_date: invoiceDate,
-          due_date: dueDate,
-          amount: value,
-          payment_status: paid ? "PAID" : "UNPAID",
-          aging_days: aging
-        });
-
-        if (paid){
-          SAP.payments.push({
-            payment_id: `PAY-${seed}-${String(i).padStart(5,"0")}`,
-            invoice_id: inv,
-            payment_date: payDate,
-            amount: value,
-            method: (rnd()<0.6) ? "Bank transfer" : (rnd()<0.85) ? "SEPA" : "Card"
-          });
-        }
+        if (remaining > 0) pdf.addPage();
       }
     }
 
-    sapRenderKPIs();
-    sapRenderTable("sales_orders");
+    pdf.save("Portfolio_AndreiAdam.pdf");
+    area.style.display = "none";
   }
 
-  function sapRenderKPIs(){
-    const count = SAP.sales_orders.length;
-    const sumVal = SAP.sales_orders.reduce((a,r)=>a+(+r.order_value||0),0);
-    const blocked = SAP.sales_orders.filter(r=>r.status==="BLOCKED").length;
-
-    const paid = SAP.invoices.filter(r=>r.payment_status==="PAID").length;
-    const unpaid = SAP.invoices.filter(r=>r.payment_status==="UNPAID").length;
-
-    const avgAging = unpaid
-      ? SAP.invoices.filter(r=>r.payment_status==="UNPAID").reduce((a,r)=>a+(+r.aging_days||0),0)/unpaid
-      : 0;
-
-    const leads = SAP.deliveries.map(r=>+r.lead_time_days).filter(x=>Number.isFinite(x));
-    const avgLead = leads.length ? (leads.reduce((a,x)=>a+x,0)/leads.length) : 0;
-
-    const items = [
-      ["Sales Orders", count],
-      ["Total value", euro(sumVal)],
-      ["Blocked Orders", blocked],
-      ["Invoices", SAP.invoices.length],
-      ["Invoices Paid", paid],
-      ["Invoices Unpaid", unpaid],
-      ["Avg lead time", fmt(avgLead,1) + " days"],
-      ["Avg aging (unpaid)", fmt(avgAging,1) + " days"]
-    ];
-
-    const wrap = $("sapKpis");
-    wrap.innerHTML = "";
-    for (const [k,v] of items){
-      const d = document.createElement("div");
-      d.className = "kpi";
-      d.innerHTML = `<div class="k">${k}</div><div class="v">${v}</div>`;
-      wrap.appendChild(d);
-    }
-  }
-
-  function sapRenderTable(tab){
-    const thead = $("sapThead");
-    const tbody = $("sapTbody");
-
-    if (tab === "sales_orders"){
-      const cols = ["so_id","order_date","customer","material","quantity","net_price","order_value","status","block_reason"];
-      renderTable(thead, tbody, SAP.sales_orders.slice().reverse(), cols);
-    } else if (tab === "deliveries"){
-      const cols = ["delivery_id","so_id","delivery_date","goods_issue_date","ship_to_country","lead_time_days"];
-      renderTable(thead, tbody, SAP.deliveries.slice().reverse(), cols);
-    } else if (tab === "invoices"){
-      const cols = ["invoice_id","so_id","invoice_date","due_date","amount","payment_status","aging_days"];
-      renderTable(thead, tbody, SAP.invoices.slice().reverse(), cols);
-    } else if (tab === "payments"){
-      const cols = ["payment_id","invoice_id","payment_date","amount","method"];
-      renderTable(thead, tbody, SAP.payments.slice().reverse(), cols);
-    }
-  }
-
-  function sapDownloadAll(){
-    downloadCSV("sap_sales_orders.csv", SAP.sales_orders);
-    downloadCSV("sap_deliveries.csv", SAP.deliveries.length ? SAP.deliveries : [{delivery_id:"",so_id:"",delivery_date:"",goods_issue_date:"",ship_to_country:"",lead_time_days:""}]);
-    downloadCSV("sap_invoices.csv", SAP.invoices.length ? SAP.invoices : [{invoice_id:"",so_id:"",invoice_date:"",due_date:"",amount:"",payment_status:"",aging_days:""}]);
-    downloadCSV("sap_payments.csv", SAP.payments.length ? SAP.payments : [{payment_id:"",invoice_id:"",payment_date:"",amount:"",method:""}]);
-  }
-
-  function setupTabs(){
-    document.querySelectorAll("[data-pbtab]").forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        document.querySelectorAll("[data-pbtab]").forEach(x=>x.classList.remove("active"));
-        btn.classList.add("active");
-        pbRenderTable(btn.dataset.pbtab);
-      });
-    });
-
-    document.querySelectorAll("[data-saptab]").forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        document.querySelectorAll("[data-saptab]").forEach(x=>x.classList.remove("active"));
-        btn.classList.add("active");
-        sapRenderTable(btn.dataset.saptab);
-      });
-    });
-  }
-
-  $("pbGenerate").addEventListener("click", pbGenerateData);
-  $("pbDownloadAll").addEventListener("click", pbDownloadAll);
-  $("pbHint").addEventListener("click", ()=>{
-    const elHint = $("pbModelHint");
-    elHint.style.display = (elHint.style.display === "none" || !elHint.style.display) ? "block" : "none";
-  });
-
-  $("sapGenerate").addEventListener("click", sapGenerate);
-  $("sapDownloadAll").addEventListener("click", sapDownloadAll);
-
-  (function init(){
-    const now = new Date();
-
-    const pbStart = new Date();
-    pbStart.setDate(now.getDate()-120);
-    $("pbStart").value = isoDate(pbStart);
-
-    const sapStart = new Date();
-    sapStart.setDate(now.getDate()-120);
-    $("sapStart").value = isoDate(sapStart);
-
-    setupTabs();
-    pbGenerateData();
-    sapGenerate();
-  })();
+  document.getElementById("downloadPortfolioPdf").addEventListener("click", downloadPortfolioPdf);
 </script>
-
 </body>
 </html>
