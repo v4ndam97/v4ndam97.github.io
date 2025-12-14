@@ -4,13 +4,12 @@
   <meta charset="utf-8" />
   <title>Andrei Adam | BI & Operations Simulators</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Andrei Adam portfolio with interactive simulators: LODISNA transport operations + Convergint technical coordination. Downloadable CSV and PDF." />
+  <meta name="description" content="Andrei Adam portfolio with interactive simulators: LODISNA transport operations and Convergint technical coordination. Downloadable CSV and PDF." />
 
   <style>
     :root{
       --bg1:#f6f8ff;
       --bg2:#ffffff;
-      --panel:#ffffff;
       --card:#ffffff;
       --text:#0f172a;
       --muted:rgba(15,23,42,.68);
@@ -21,439 +20,200 @@
       --radius:18px;
       --max:1140px;
     }
-
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
       background:
         radial-gradient(1000px 650px at 10% 10%, rgba(37,99,235,.15), transparent 60%),
         radial-gradient(900px 650px at 90% 10%, rgba(239,68,68,.14), transparent 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
+        linear-gradient(180deg,var(--bg1),var(--bg2));
       line-height:1.5;
     }
+    a{color:inherit;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--max);margin:0 auto;padding:22px}
 
-    a{ color:inherit; text-decoration:none; }
-    a:hover{ text-decoration:underline; }
-
-    .container{ max-width:var(--max); margin:0 auto; padding:22px; }
-
-    /* Topbar */
-    .topbar{
-      position:sticky;
-      top:0;
-      z-index:50;
-      background: rgba(255,255,255,.86);
-      backdrop-filter: blur(10px);
+    .top{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,.88);
+      backdrop-filter:blur(10px);
       border-bottom:1px solid var(--border);
     }
-    .topbar-inner{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      font-weight:950;
-      letter-spacing:-.2px;
-    }
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      background: linear-gradient(135deg, var(--blue), var(--red));
-      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
-    }
-    .role{
-      color:var(--muted);
-      font-weight:700;
-      font-size:.95rem;
-      margin-top:2px;
-    }
+    .top-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:-.3px}
+    .dot{width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--blue),var(--red));box-shadow:0 0 0 5px rgba(37,99,235,.12)}
+    .sub{color:var(--muted);font-weight:800;font-size:.95rem;margin-top:2px}
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .nav a{padding:9px 12px;border-radius:12px;border:1px solid transparent;font-weight:950;color:rgba(15,23,42,.92)}
+    .nav a:hover{border-color:var(--border);background:rgba(15,23,42,.03);text-decoration:none}
 
-    .nav{
-      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    }
-    .nav a{
-      padding:9px 12px;
-      border-radius: 12px;
-      border:1px solid transparent;
-      font-weight:900;
-      color: rgba(15,23,42,.9);
-    }
-    .nav a:hover{
-      border-color: var(--border);
-      background: rgba(15,23,42,.03);
-      text-decoration:none;
-    }
-
-    /* Hero */
-    .hero{ padding: 64px 0 26px; }
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.3fr 1fr;
-      gap:18px;
-      align-items:start;
-    }
-    @media (max-width: 980px){ .hero-grid{ grid-template-columns:1fr; } }
-
-    h1{
-      margin:0 0 12px;
-      font-size: clamp(2rem, 3.4vw, 3rem);
-      letter-spacing:-.9px;
-      line-height:1.1;
-    }
-    .grad{
-      background: linear-gradient(135deg, var(--blue), var(--red));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-    .sub{
-      margin:0 0 18px;
-      color:var(--muted);
-      font-size:1.06rem;
-      max-width: 70ch;
-    }
-
-    /* Cards */
     .card{
-      background: var(--card);
+      background:var(--card);
       border:1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 18px;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
     }
-    .card2{
-      background: linear-gradient(180deg, rgba(37,99,235,.05), rgba(239,68,68,.04));
-      border:1px solid rgba(15,23,42,.12);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 16px;
-    }
+    .hero{padding:34px 0 10px}
+    .grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+    @media(max-width:980px){.grid2{grid-template-columns:1fr}}
+    .gridProjects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:12px}
+    @media(max-width:980px){.gridProjects{grid-template-columns:1fr}}
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:8px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(15,23,42,.02);
-      font-weight:950;
-      color: rgba(15,23,42,.92);
-      width: fit-content;
-      margin-bottom: 10px;
-    }
-    .badge .bDot{
-      width:8px;height:8px;border-radius:999px;
-      background: var(--red);
-      box-shadow:0 0 0 5px rgba(239,68,68,.12);
-    }
-
-    .muted{ color: var(--muted); }
-
-    /* Buttons */
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding:12px 14px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.85);
-      color: var(--text);
-      font-weight:950;
-      box-shadow: 0 12px 26px rgba(15,23,42,.10);
-      cursor:pointer;
-      transition: transform .08s ease, background .2s ease, border-color .2s ease;
-      user-select:none;
-    }
-    .btn:hover{
-      background: rgba(15,23,42,.02);
-      border-color: rgba(15,23,42,.18);
-      text-decoration:none;
-    }
-    .btn:active{ transform: translateY(1px); }
-    .btn.primary{
-      background: linear-gradient(135deg, rgba(37,99,235,1), rgba(37,99,235,.82));
-      border-color: rgba(37,99,235,.35);
-      color:#fff;
-    }
-    .btn.danger{
-      background: linear-gradient(135deg, rgba(239,68,68,1), rgba(239,68,68,.82));
-      border-color: rgba(239,68,68,.35);
-      color:#fff;
-    }
-    .btn.ghost{
-      background: transparent;
-      box-shadow:none;
-    }
-    .btn.small{ padding:9px 12px; border-radius: 12px; font-weight:950; font-size:.95rem; }
-
-    .cta{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
-
-    .section{ padding: 22px 0; }
-    h2{ margin: 0 0 10px; letter-spacing:-.4px; }
-    h3{ margin: 0 0 8px; letter-spacing:-.3px; }
-
-    .row{
-      display:flex;
-      align-items:baseline;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom: 12px;
-    }
+    h1{margin:0 0 10px;font-size:clamp(1.9rem,3.2vw,2.8rem);letter-spacing:-.9px;line-height:1.1}
+    h2{margin:0 0 10px;letter-spacing:-.4px}
+    h3{margin:0 0 8px;letter-spacing:-.3px}
+    .muted{color:var(--muted)}
+    .row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
 
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:7px 10px;
-      border-radius: 999px;
-      border:1px solid var(--border);
-      background: rgba(15,23,42,.02);
-      font-weight:950;
-      color: rgba(15,23,42,.90);
-      font-size:.9rem;
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 10px;border-radius:999px;border:1px solid var(--border);
+      background:rgba(15,23,42,.02);font-weight:950;font-size:.9rem;color:rgba(15,23,42,.9);
     }
-    .pill .pDot{
-      width:7px;height:7px;border-radius:999px;
-      background: var(--blue);
-      box-shadow:0 0 0 5px rgba(37,99,235,.12);
-    }
+    .pill .pDot{width:7px;height:7px;border-radius:999px;background:var(--blue);box-shadow:0 0 0 5px rgba(37,99,235,.12)}
 
     .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border:1px solid rgba(15,23,42,.12);
-      background: rgba(15,23,42,.02);
-      font-weight:950;
-      font-size:.88rem;
-      color: rgba(15,23,42,.9);
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;border:1px solid rgba(15,23,42,.12);
+      background:rgba(15,23,42,.02);font-weight:950;font-size:.88rem;color:rgba(15,23,42,.9);
     }
-    .chip.red{ border-color: rgba(239,68,68,.25); background: rgba(239,68,68,.08); }
-    .chip.blue{ border-color: rgba(37,99,235,.25); background: rgba(37,99,235,.08); }
-    .chip.ok{ border-color: rgba(34,197,94,.25); background: rgba(34,197,94,.08); }
+    .chip.blue{border-color:rgba(37,99,235,.25);background:rgba(37,99,235,.08)}
+    .chip.red{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
 
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 14px;
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      padding:12px 14px;border-radius:14px;border:1px solid var(--border);
+      background:rgba(255,255,255,.85);
+      font-weight:950;cursor:pointer;
+      box-shadow:0 12px 26px rgba(15,23,42,.10);
+      user-select:none;
+      transition:transform .08s ease, background .2s ease, border-color .2s ease;
     }
-    @media (max-width: 980px){ .grid{ grid-template-columns:1fr; } }
-
-    /* PDF capture area */
-    .pdfArea{
-      display:none;
-      background:#fff;
-      color:#0f172a;
-      border-radius: 16px;
-      padding: 16px;
-      border:1px solid #e5e7eb;
-    }
-    .pdfArea h2,.pdfArea h3{ color:#0f172a; }
-    .pdfMeta{ display:flex; gap:10px; flex-wrap:wrap; color:#334155; font-weight:800; margin-bottom:10px; }
-    .pdfTag{
-      display:inline-flex;
-      padding:6px 10px;
-      border-radius:999px;
-      background:#eef2ff;
-      color:#1e3a8a;
-      font-weight:950;
-      border:1px solid rgba(30,58,138,.18);
-    }
-    .pdfTag.red{
-      background:#fee2e2;
-      color:#7f1d1d;
-      border-color: rgba(127,29,29,.18);
-    }
+    .btn:hover{background:rgba(15,23,42,.02);border-color:rgba(15,23,42,.18);text-decoration:none}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:linear-gradient(135deg,rgba(37,99,235,1),rgba(37,99,235,.82));border-color:rgba(37,99,235,.35);color:#fff}
+    .btn.danger{background:linear-gradient(135deg,rgba(239,68,68,1),rgba(239,68,68,.82));border-color:rgba(239,68,68,.35);color:#fff}
+    .btn.small{padding:9px 12px;border-radius:12px;font-size:.95rem}
 
     .footer{
-      text-align:center;
-      padding: 22px 0;
-      color: rgba(15,23,42,.65);
-      border-top: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.65);
-      margin-top: 18px;
+      text-align:center;padding:22px 0;color:rgba(15,23,42,.65);
+      border-top:1px solid rgba(15,23,42,.10);
+      background:rgba(255,255,255,.65);margin-top:18px
     }
   </style>
 </head>
 
 <body>
-<header class="topbar">
-  <div class="container topbar-inner">
+<header class="top">
+  <div class="container top-inner">
     <div>
       <div class="brand"><span class="dot"></span> Andrei Adam</div>
-      <div class="role">BI & Operations Simulators · Transport Operations · SAP O2C · Technical Coordination</div>
+      <div class="sub">BI & Operations Simulators · Transport Ops · SAP-style exports · Technical Coordination</div>
     </div>
     <nav class="nav" aria-label="Main">
       <a href="#projects">Projects</a>
-      <a href="#pack">Interview pack</a>
       <a href="#contact">Contact</a>
     </nav>
   </div>
 </header>
 
-<main>
+<main class="container">
   <section class="hero">
-    <div class="container">
-      <div class="hero-grid">
-        <div class="card">
-          <div class="badge"><span class="bDot"></span> Interview-ready demos (realistic, invented data)</div>
-          <h1>Interactive <span class="grad">Power BI</span> & <span class="grad">Operations</span> simulators</h1>
+    <div class="grid2">
+      <div class="card">
+        <div class="row">
+          <h1>Interview-ready <span style="color:var(--blue)">BI</span> & <span style="color:var(--red)">Operations</span> demos</h1>
+          <span class="pill"><span class="pDot"></span> realistic demo data</span>
+        </div>
+        <p class="muted" style="margin:8px 0 0">
+          This portfolio includes interactive simulators designed to demonstrate operational thinking, structured data,
+          and clean exports for reporting workflows (Power BI / SAP-style tables).
+        </p>
 
-          <p class="sub">
-            This portfolio contains realistic simulators with downloadable datasets (CSV) and reports (PDF).
-            <br><br>
-            Included: a transport operations dataset inspired by my work at <strong>LODISNA</strong>,
-            plus a Convergint-inspired technical operations coordination simulator.
-          </p>
-
-          <div class="cta">
-            <a class="btn primary" href="#projects">View projects</a>
-            <a class="btn" href="lodisna.html">Open LODISNA transport simulator</a>
-            <a class="btn" href="convergint.html">Open Convergint ops simulator</a>
-            <a class="btn danger" href="ejemplo.html">Open interview pack (PDF + CSV)</a>
-          </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+          <a class="btn primary" href="#projects">View projects</a>
+          <a class="btn" href="lodisna.html">Open LODISNA simulator</a>
+          <a class="btn" href="convergint.html">Open Convergint simulator</a>
         </div>
 
-        <div class="card2">
-          <div class="row">
-            <h3 style="margin:0;">What this demonstrates</h3>
-            <span class="pill"><span class="pDot"></span> Professional</span>
-          </div>
-          <div style="display:grid; gap:10px; margin-top:10px;">
-            <div class="chip blue">Data modeling + CSV export</div>
-            <div class="chip">Operational KPI thinking</div>
-            <div class="chip red">Incidents + decision logging</div>
-            <div class="chip ok">Downloadable PDF summary</div>
-          </div>
-          <p class="muted" style="margin:12px 0 0;">
-            Tip: share this link and the interview pack page with HR.
-          </p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+          <span class="chip blue">CSV exports</span>
+          <span class="chip">Search & filter</span>
+          <span class="chip red">Incident tracking</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin:0">What recruiters can verify</h2>
+        <p class="muted" style="margin:8px 0 0">
+          Each project includes a coherent dataset, meaningful KPIs, and practical exports. You can search by technician,
+          driver, client, incident, or work order ID and validate the structure quickly.
+        </p>
+
+        <div style="display:grid;gap:10px;margin-top:12px">
+          <div class="chip">Clear tables + realistic fields</div>
+          <div class="chip">SLA / overdue logic</div>
+          <div class="chip">Operational KPIs (donut charts)</div>
+          <div class="chip">PDF snapshot reporting</div>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="projects" class="section">
-    <div class="container">
+  <section id="projects" style="padding:18px 0">
+    <div class="card">
       <div class="row">
         <h2>Projects</h2>
-        <span class="pill"><span class="pDot"></span> Opens on real pages (no 404)</span>
+        <span class="pill"><span class="pDot"></span> no 404 links</span>
       </div>
 
-      <div class="grid">
-        <div class="card">
+      <div class="gridProjects">
+        <div class="card" style="box-shadow:none">
           <div class="row">
-            <h3 style="margin:0;">LODISNA – Transport Operations Simulator</h3>
-            <span class="chip blue">CSV · BI-ready</span>
+            <h3 style="margin:0">LODISNA – Transport Operations (Example)</h3>
+            <span class="chip blue">5 trucks</span>
           </div>
-          <p class="muted" style="margin:10px 0 14px;">
-            European road freight operations dataset: 10 Spanish-plated trucks, trailers, double drivers,
-            routes, statuses, and incident fields. Export a dataset usable in Power BI.
+          <p class="muted" style="margin:8px 0 12px">
+            Road freight dataset with Spanish plates, international drivers, incidents, cost/revenue/margin, and a live search
+            to find names or incidents instantly.
           </p>
           <a class="btn primary" href="lodisna.html">Open</a>
         </div>
 
-        <div class="card">
+        <div class="card" style="box-shadow:none">
           <div class="row">
-            <h3 style="margin:0;">Convergint – Technical Operations Coordination</h3>
-            <span class="chip red">Work orders · SLAs</span>
+            <h3 style="margin:0">Convergint – Technical Operations (Example)</h3>
+            <span class="chip red">max 5 techs</span>
           </div>
-          <p class="muted" style="margin:10px 0 14px;">
-            A Convergint-inspired coordination simulator: work orders, security system categories,
-            technician assignment, status tracking, and SLA fields with exportable data.
+          <p class="muted" style="margin:8px 0 12px">
+            Work orders, security systems (CCTV, Access Control, Fire & Life Safety), SLA logic, donut KPIs, exports for
+            Power BI and SAP-style tables, plus a PDF report snapshot.
           </p>
           <a class="btn primary" href="convergint.html">Open</a>
         </div>
-
-        <div class="card" id="pack">
-          <div class="row">
-            <h3 style="margin:0;">Interview pack – PDFs + CSVs</h3>
-            <span class="chip ok">Reports</span>
-          </div>
-          <p class="muted" style="margin:10px 0 14px;">
-            A separate page designed for HR: datasets + downloadable PDFs with charts.
-          </p>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn danger" href="ejemplo.html">Open pack</a>
-            <button class="btn" id="downloadPortfolioPdf" type="button">Download PDF (portfolio)</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="row">
-            <h3 style="margin:0;">Quick downloads</h3>
-            <span class="chip">Shortcuts</span>
-          </div>
-          <p class="muted" style="margin:10px 0 14px;">
-            If you are reviewing this for a hiring process, use these direct links.
-          </p>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn" href="lodisna.html">LODISNA simulator</a>
-            <a class="btn" href="convergint.html">Convergint simulator</a>
-            <a class="btn danger" href="ejemplo.html">Interview pack</a>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
 
-  <!-- Hidden PDF area -->
-  <div class="container">
-    <div class="pdfArea" id="pdfArea">
-      <h2>Portfolio Summary – Andrei Adam</h2>
-      <div class="pdfMeta">
-        <span class="pdfTag">BI · Operations · Coordination</span>
-        <span class="pdfTag red">Demo data</span>
-        <span class="pdfTag">Email: andreiadam.lu@hotmail.com</span>
+  <section id="contact" style="padding:18px 0">
+    <div class="card">
+      <div class="row">
+        <h2>Contact</h2>
+        <span class="pill"><span class="pDot"></span> available</span>
       </div>
-
-      <h3>Projects included</h3>
-      <ul style="margin:0; padding-left:18px; color:#0f172a;">
-        <li><strong>lodisna.html</strong> – Transport operations simulator (CSV export)</li>
-        <li><strong>convergint.html</strong> – Technical coordination simulator (CSV export)</li>
-        <li><strong>ejemplo.html</strong> – Interview pack (PDF + CSV)</li>
-      </ul>
-
-      <h3 style="margin-top:12px;">Contact</h3>
-      <p style="margin:0; color:#0f172a;">
-        Email: <strong>andreiadam.lu@hotmail.com</strong><br/>
-        LinkedIn: <strong>www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b</strong>
+      <p style="margin:10px 0">
+        📧 <strong>Email:</strong> <a href="mailto:andreiadam.lu@hotmail.com">andreiadam.lu@hotmail.com</a>
       </p>
-    </div>
-  </div>
-
-  <section id="contact" class="section">
-    <div class="container">
-      <div class="card">
-        <div class="row">
-          <h2>Contact</h2>
-          <span class="pill"><span class="pDot"></span> Available</span>
-        </div>
-        <p style="margin:10px 0;">
-          📧 <strong>Email:</strong> <a href="mailto:andreiadam.lu@hotmail.com">andreiadam.lu@hotmail.com</a>
-        </p>
-        <p style="margin:10px 0;">
-          💼 <strong>LinkedIn:</strong>
-          <a href="https://www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b" target="_blank" rel="noreferrer">
-            www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b
-          </a>
-        </p>
-      </div>
+      <p style="margin:10px 0">
+        💼 <strong>LinkedIn:</strong>
+        <a href="https://www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b" target="_blank" rel="noreferrer">
+          www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b
+        </a>
+      </p>
     </div>
   </section>
 </main>
@@ -461,60 +221,6 @@
 <footer class="footer">
   <div class="container">© Andrei Adam – BI & Operations Simulators</div>
 </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-<script>
-  async function downloadPortfolioPdf(){
-    const area = document.getElementById("pdfArea");
-    area.style.display = "block";
-    await new Promise(r=>setTimeout(r, 60));
-
-    const canvas = await html2canvas(area, {scale:2, useCORS:true});
-    const img = canvas.toDataURL("image/png");
-
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({orientation:"p", unit:"pt", format:"a4"});
-    const pageW = pdf.internal.pageSize.getWidth();
-    const pageH = pdf.internal.pageSize.getHeight();
-
-    const imgW = pageW - 48;
-    const imgH = canvas.height * (imgW / canvas.width);
-
-    if (imgH <= pageH - 48){
-      pdf.addImage(img, "PNG", 24, 24, imgW, imgH);
-    } else {
-      let remaining = imgH;
-      let srcY = 0;
-      const sliceH = canvas.width * ((pageH - 48) / imgW);
-
-      while (remaining > 0){
-        const pageCanvas = document.createElement("canvas");
-        pageCanvas.width = canvas.width;
-        pageCanvas.height = Math.min(sliceH, canvas.height - srcY);
-
-        const ctx = pageCanvas.getContext("2d");
-        ctx.drawImage(canvas, 0, srcY, canvas.width, pageCanvas.height, 0, 0, canvas.width, pageCanvas.height);
-
-        const pageImg = pageCanvas.toDataURL("image/png");
-        const pageImgH = pageCanvas.height * (imgW / pageCanvas.width);
-
-        pdf.addImage(pageImg, "PNG", 24, 24, imgW, pageImgH);
-
-        remaining -= (pageH - 48);
-        srcY += pageCanvas.height;
-
-        if (remaining > 0) pdf.addPage();
-      }
-    }
-
-    pdf.save("Portfolio_AndreiAdam.pdf");
-    area.style.display = "none";
-  }
-
-  document.getElementById("downloadPortfolioPdf").addEventListener("click", downloadPortfolioPdf);
-</script>
 
 </body>
 </html>
