@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <title>Convergint – Technical Operations Coordination Simulator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="description" content="Convergint-inspired technical operations coordination simulator with donut KPIs, search, exports for Power BI and SAP-style tables, and a downloadable PDF report." />
+<meta name="description" content="Convergint-inspired technical operations coordination simulator with searchable work orders, exports for Power BI and SAP-style tables, and donut KPIs placed at the bottom." />
 
 <style>
   :root{
@@ -63,7 +63,7 @@
   h3{margin:0 0 8px;letter-spacing:-.3px}
   .muted{color:var(--muted)}
   .row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
-  .grid2{display:grid;grid-template-columns:1.12fr .88fr;gap:16px}
+  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
   @media(max-width:980px){.grid2{grid-template-columns:1fr}}
   .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
   @media(max-width:980px){.grid3{grid-template-columns:1fr 1fr}}
@@ -106,13 +106,12 @@
   @media(max-width:980px){.controls{grid-template-columns:1fr 1fr}}
   @media(max-width:560px){.controls{grid-template-columns:1fr}}
   .field label{display:block;margin-bottom:6px;font-weight:950;font-size:.9rem;color:rgba(15,23,42,.85)}
-  .field input,.field select{
+  .field input{
     width:100%;padding:11px 12px;border-radius:12px;
     border:1px solid rgba(15,23,42,.16);
     background:#fff;color:var(--text);outline:none;
   }
 
-  /* KPI cards */
   .kpi{
     border:1px solid rgba(15,23,42,.12);
     background:rgba(15,23,42,.02);
@@ -123,15 +122,35 @@
   .kpi .k{color:rgba(15,23,42,.72);font-weight:950;font-size:.9rem}
   .kpi .v{font-weight:950;font-size:1.15rem}
 
-  /* DONUTS - FIXED (no overlap) */
-  .donutWrap{
+  .searchRow{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px
+  }
+  .searchRow input{
+    flex:1 1 320px;
+    padding:11px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.16);
+    background:#fff;outline:none;font-weight:800
+  }
+
+  .tableWrap{
+    margin-top:12px;
+    border-radius:14px;
+    border:1px solid rgba(15,23,42,.12);
+    overflow:auto;
+    background:#fff;
+  }
+  table{width:100%;border-collapse:collapse;min-width:1200px}
+  th,td{padding:10px;border-bottom:1px solid rgba(15,23,42,.08);font-size:.92rem;white-space:nowrap;text-align:left}
+  th{position:sticky;top:0;background:#fff;color:rgba(15,23,42,.75);font-weight:950;z-index:2}
+
+  /* Donuts ONLY at bottom (centered) */
+  .donutGrid{
     display:grid;
     grid-template-columns:repeat(3, minmax(0, 1fr));
     gap:12px;
-    margin-top:12px;
     align-items:stretch;
+    margin-top:12px;
   }
-  @media(max-width:980px){ .donutWrap{grid-template-columns:1fr} }
+  @media(max-width:980px){.donutGrid{grid-template-columns:1fr}}
   .donutCard{
     border:1px solid rgba(15,23,42,.12);
     background:rgba(15,23,42,.02);
@@ -142,57 +161,11 @@
     gap:12px;
     align-items:center;
   }
-  .donutCanvas{
-    width:120px;
-    height:120px;
-    display:block;
-    margin:0 auto;
-  }
+  .donutCanvas{width:120px;height:120px;display:block;margin:0 auto}
   .donutText strong{font-weight:950}
   .donutText .muted{font-weight:800}
 
-  /* Icons */
-  .iconCard{
-    border:1px solid rgba(15,23,42,.12);
-    background:#fff;
-    border-radius:14px;
-    padding:12px;
-    display:flex;gap:10px;align-items:center;
-  }
-  .icon{
-    width:40px;height:40px;border-radius:12px;
-    border:1px solid rgba(15,23,42,.12);
-    background:linear-gradient(180deg, rgba(37,99,235,.10), rgba(239,68,68,.06));
-    display:flex;align-items:center;justify-content:center;
-    flex:0 0 auto;
-  }
-  .icon svg{width:22px;height:22px}
-  .iconText strong{font-weight:950}
-  .iconText span{color:var(--muted);font-weight:800;font-size:.9rem}
-
-  /* Table */
-  .tableWrap{
-    margin-top:12px;
-    border-radius:14px;
-    border:1px solid rgba(15,23,42,.12);
-    overflow:auto;
-    background:#fff;
-  }
-  table{width:100%;border-collapse:collapse;min-width:1100px}
-  th,td{padding:10px;border-bottom:1px solid rgba(15,23,42,.08);font-size:.92rem;white-space:nowrap;text-align:left}
-  th{position:sticky;top:0;background:#fff;color:rgba(15,23,42,.75);font-weight:950;z-index:2}
-
-  /* Search */
-  .searchRow{
-    display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px
-  }
-  .searchRow input{
-    flex:1 1 320px;
-    padding:11px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.16);
-    background:#fff;outline:none;font-weight:800
-  }
-
-  /* PDF report area */
+  /* PDF area */
   .reportArea{
     display:none;background:#fff;color:#0f172a;
     border-radius:16px;padding:16px;border:1px solid #e5e7eb;
@@ -214,13 +187,14 @@
   <div class="container top-inner">
     <div>
       <div class="brand"><span class="dot"></span> Convergint – Technical Operations (Example)</div>
-      <div class="sub">Work orders · Security systems · SLA compliance · Exports · PDF report</div>
+      <div class="sub">Work orders · Security systems · SLA · Exports · PDF</div>
     </div>
     <nav class="nav" aria-label="Page">
       <a href="#overview">Overview</a>
       <a href="#generator">Generator</a>
-      <a href="#kpis">KPIs</a>
+      <a href="#table">Table</a>
       <a href="#exports">Exports</a>
+      <a href="#charts">Charts</a>
       <a class="btn small" href="index.html">← Back</a>
     </nav>
   </div>
@@ -234,11 +208,11 @@
       <div class="card">
         <div class="row">
           <h1>Technical Operations Coordination</h1>
-          <span class="pill"><span class="pDot"></span> structured + realistic</span>
+          <span class="pill"><span class="pDot"></span> coherent dataset</span>
         </div>
         <p class="muted" style="margin:8px 0 0">
           Professional example of a coordinator workflow: generating work orders, assigning a small team (max 5 technicians),
-          tracking SLA compliance, and exporting clean tables for reporting.
+          tracking SLA, and exporting structured tables for reporting.
         </p>
 
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
@@ -250,60 +224,33 @@
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
           <span class="chip blue">Power BI-ready</span>
           <span class="chip">SAP-style tables</span>
-          <span class="chip red">Incidents + SLA</span>
+          <span class="chip red">SLA + incidents</span>
         </div>
       </div>
 
       <div class="card">
         <div class="row">
           <h2 style="margin:0">Systems included</h2>
-          <span class="chip blue">Essential only</span>
+          <span class="chip blue">essential only</span>
         </div>
+
         <div class="grid3" style="margin-top:12px">
-          <div class="iconCard">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 9h10l3 3H6L3 9z"></path>
-                <path d="M14 9l2-2 5 5-2 2"></path>
-                <path d="M6 12v5a2 2 0 0 0 2 2h4"></path>
-              </svg>
-            </div>
-            <div class="iconText">
-              <strong>Video Surveillance</strong>
-              <span>Cameras · VMS · NVR</span>
-            </div>
+          <div class="card" style="box-shadow:none;border:1px solid rgba(15,23,42,.12);border-radius:14px">
+            <h3 style="margin:0 0 6px">Video Surveillance</h3>
+            <p class="muted" style="margin:0">Cameras · VMS · NVR</p>
           </div>
-
-          <div class="iconCard">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="7" y="10" width="10" height="10" rx="2"></rect>
-                <path d="M9 10V7a3 3 0 0 1 6 0v3"></path>
-              </svg>
-            </div>
-            <div class="iconText">
-              <strong>Access Control</strong>
-              <span>Doors · Readers · Badges</span>
-            </div>
+          <div class="card" style="box-shadow:none;border:1px solid rgba(15,23,42,.12);border-radius:14px">
+            <h3 style="margin:0 0 6px">Access Control</h3>
+            <p class="muted" style="margin:0">Doors · Readers · Badges</p>
           </div>
-
-          <div class="iconCard">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2s4 4 4 8a4 4 0 0 1-8 0c0-4 4-8 4-8z"></path>
-                <path d="M6 22h12"></path>
-              </svg>
-            </div>
-            <div class="iconText">
-              <strong>Fire & Life Safety</strong>
-              <span>Panels · Devices · Testing</span>
-            </div>
+          <div class="card" style="box-shadow:none;border:1px solid rgba(15,23,42,.12);border-radius:14px">
+            <h3 style="margin:0 0 6px">Fire & Life Safety</h3>
+            <p class="muted" style="margin:0">Panels · Devices · Testing</p>
           </div>
         </div>
 
         <p class="muted" style="margin:12px 0 0">
-          This simulator keeps only the fields that make sense for reporting: status, priority, SLA hours, incident type,
-          technician assignment, and client/site context.
+          The dataset is intentionally focused: fields that are useful for coordination and KPI reporting.
         </p>
       </div>
     </div>
@@ -324,7 +271,7 @@
         </div>
         <div class="field">
           <label>Work orders</label>
-          <input id="nOrders" type="number" min="30" max="600" value="140" />
+          <input id="nOrders" type="number" min="30" max="600" value="160" />
         </div>
         <div class="field">
           <label>Days horizon</label>
@@ -344,59 +291,45 @@
       </div>
 
       <p class="muted" style="margin:10px 0 0">
-        Search is applied to the table live (WO, technician, client, site, system, incident). This is what recruiters usually try first.
+        Search filters the table live. Try names, incident types, WO IDs, or system categories.
       </p>
     </div>
   </section>
 
-  <!-- KPIs -->
-  <section id="kpis" class="section">
-    <div class="grid2">
-      <div class="card">
-        <div class="row">
-          <h2 style="margin:0">Operational KPIs</h2>
-          <span class="chip blue">Coordinator view</span>
-        </div>
-
-        <div class="grid4" style="margin-top:12px" id="kpiGrid"></div>
-        <div class="donutWrap" id="donutWrap"></div>
-
-        <p class="muted" style="margin:10px 0 0">
-          Donut charts are intentionally simple: SLA compliance, overdue rate, and completion rate.
-        </p>
+  <!-- TABLE + KPI CARDS -->
+  <section id="table" class="section">
+    <div class="card">
+      <div class="row">
+        <h2 style="margin:0">Work orders table</h2>
+        <span class="chip">searchable</span>
       </div>
 
-      <div class="card">
-        <div class="row">
-          <h2 style="margin:0">Work orders</h2>
-          <span class="chip">searchable</span>
-        </div>
+      <div class="grid4" style="margin-top:12px" id="kpiGrid"></div>
 
-        <div class="tableWrap">
-          <table>
-            <thead>
-              <tr>
-                <th>WO</th>
-                <th>Date</th>
-                <th>Client</th>
-                <th>Site</th>
-                <th>System</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Incident</th>
-                <th>SLA (hrs)</th>
-                <th>Tech</th>
-                <th>Within SLA</th>
-              </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-          </table>
-        </div>
-
-        <p class="muted" style="margin:10px 0 0">
-          Export the dataset and build a dashboard: SLA trend, overdue by system, workload by technician, incident mix.
-        </p>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>WO</th>
+              <th>Date</th>
+              <th>Client</th>
+              <th>Site</th>
+              <th>System</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Incident</th>
+              <th>SLA (hrs)</th>
+              <th>Tech</th>
+              <th>Within SLA</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
       </div>
+
+      <p class="muted" style="margin:10px 0 0">
+        Export this dataset to build dashboards: SLA compliance, overdue by system, workload by technician, and incident mix.
+      </p>
     </div>
   </section>
 
@@ -412,7 +345,7 @@
         <div class="card" style="box-shadow:none">
           <h3>Power BI exports (CSV)</h3>
           <p class="muted" style="margin:6px 0 12px">
-            Clean tables: work_orders, technicians, clients, assets.
+            work_orders, technicians, clients, assets.
           </p>
           <button class="btn primary" id="dlPB" type="button">Download Power BI CSV pack</button>
         </div>
@@ -420,7 +353,7 @@
         <div class="card" style="box-shadow:none">
           <h3>SAP-style exports (CSV)</h3>
           <p class="muted" style="margin:6px 0 12px">
-            Notifications, service orders, confirmations.
+            notifications, service_orders, confirmations.
           </p>
           <button class="btn" id="dlSAP" type="button">Download SAP CSV pack</button>
         </div>
@@ -428,11 +361,25 @@
         <div class="card" style="box-shadow:none">
           <h3>PDF reporting</h3>
           <p class="muted" style="margin:6px 0 12px">
-            PDF snapshot with KPIs + charts (built from current data).
+            PDF snapshot with KPIs + charts.
           </p>
           <button class="btn danger" id="dlPDF2" type="button">Download PDF report</button>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- CHARTS AT THE VERY BOTTOM -->
+  <section id="charts" class="section">
+    <div class="card">
+      <div class="row">
+        <h2 style="margin:0">Operational KPIs (Charts)</h2>
+        <span class="chip blue">donut charts</span>
+      </div>
+      <div class="donutGrid" id="donutGrid"></div>
+      <p class="muted" style="margin:10px 0 0">
+        Clean, readable donut charts: SLA compliance, overdue rate, completion rate.
+      </p>
     </div>
   </section>
 
@@ -455,13 +402,6 @@
 
       <h3 style="margin:12px 0 8px">Charts</h3>
       <div id="reportCharts" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px"></div>
-
-      <h3 style="margin:12px 0 6px">Notes</h3>
-      <ul style="margin:0;padding-left:18px;color:#0f172a">
-        <li>Technician assignment is capped at 5.</li>
-        <li>Statuses and incidents are generated coherently for reporting workflows.</li>
-        <li>Exports include Power BI-friendly tables and SAP-style operational tables.</li>
-      </ul>
     </div>
   </div>
 
@@ -477,7 +417,6 @@
 <script>
   const $ = (id) => document.getElementById(id);
 
-  // Seeded RNG
   function mulberry32(seed){
     let a = seed >>> 0;
     return function(){
@@ -491,7 +430,6 @@
   const iso = (d) => d.toISOString().slice(0,10);
   const addDays = (isoDate, n) => { const d=new Date(isoDate); d.setDate(d.getDate()+n); return iso(d); };
 
-  // Max 5 technicians
   const TECHS = [
     {tech_id:"TECH-01", name:"Amina El-Sayed", phone:"+971 50 712 4431", region:"UAE"},
     {tech_id:"TECH-02", name:"Daniel Cho",     phone:"+1 415 555 0188",  region:"USA"},
@@ -552,6 +490,7 @@
     URL.revokeObjectURL(url);
   }
 
+  // Donut helpers
   function drawDonut(canvas, value01, label, strokeStyle){
     const ctx = canvas.getContext("2d");
     const w = canvas.width, h = canvas.height;
@@ -586,7 +525,7 @@
     ctx.fillText(label, cx, cy+16);
   }
 
-  function donutCard(title, value01, label, color){
+  function donutCard(title, value01, label, color, footerText){
     const card = document.createElement("div");
     card.className = "donutCard";
     card.innerHTML = `
@@ -595,7 +534,7 @@
       </div>
       <div class="donutText">
         <strong>${title}</strong>
-        <div class="muted">${Math.round(value01*100)}% · ${label}</div>
+        <div class="muted">${footerText}</div>
         <div style="margin-top:10px">
           <span class="chip">${label}</span>
         </div>
@@ -606,9 +545,22 @@
     return card;
   }
 
+  function applySearchFilter(rows){
+    const q = ($("search").value || "").trim().toLowerCase();
+    if(!q) return rows;
+
+    return rows.filter(r => {
+      const hay = [
+        r.wo_id, r.date, r.client_name, r.site, r.system, r.priority,
+        r.status, r.incident, r.assigned_tech, r.tech_id, r.within_sla
+      ].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
   function generate(){
     const seed = +$("seed").value || 77;
-    const n = +$("nOrders").value || 140;
+    const n = +$("nOrders").value || 160;
     const horizon = +$("horizon").value || 140;
     const slaTarget = Math.max(0.70, Math.min(0.99, (+$("slaTarget").value || 92)/100));
     const rnd = mulberry32(seed);
@@ -618,7 +570,7 @@
     const start = (()=>{ const d=new Date(); d.setDate(d.getDate()-horizon); return iso(d); })();
     const pick = (arr) => arr[Math.floor(rnd()*arr.length)];
 
-    // Assets (small, coherent)
+    // assets
     let assetCounter = 1;
     for(const c of CLIENTS){
       for(const s of SYSTEMS){
@@ -680,7 +632,7 @@
         asset_id: asset ? asset.asset_id : ""
       });
 
-      // SAP-style minimal chain
+      // SAP chain
       const notif = "N-" + pad(i, 6);
       const so = "SO-" + pad(i, 6);
       const conf = "C-" + pad(i, 6);
@@ -725,7 +677,6 @@
     const completed = wo.filter(x => x.status === "Completed").length;
     const within = wo.filter(x => x.within_sla === "Yes").length;
     const overdue = wo.filter(x => x.status === "Overdue" || x.within_sla === "No").length;
-
     const avgSla = wo.length ? (wo.reduce((a,x)=>a + (+x.sla_hours||0), 0) / wo.length) : 0;
 
     return {
@@ -738,32 +689,14 @@
     };
   }
 
-  function renderKPIs(){
+  function renderKpiCards(){
     const k = computeKPIs();
     $("kpiGrid").innerHTML = `
       <div class="kpi"><div><div class="k">Work orders</div><div class="v">${k.total}</div></div><span class="chip">Total</span></div>
-      <div class="kpi"><div><div class="k">Completed</div><div class="v">${k.completed}</div></div><span class="chip blue">Done</span></div>
+      <div class="kpi"><div><div class="k">Completed</div><div class="v">${Math.round(k.completionPct*100)}%</div></div><span class="chip blue">Done</span></div>
       <div class="kpi"><div><div class="k">Avg SLA (hrs)</div><div class="v">${k.avgSla.toFixed(1)}</div></div><span class="chip">Hours</span></div>
       <div class="kpi"><div><div class="k">Overdue / breached</div><div class="v">${Math.round(k.overduePct*100)}%</div></div><span class="chip red">Risk</span></div>
     `;
-
-    $("donutWrap").innerHTML = "";
-    $("donutWrap").appendChild(donutCard("SLA Compliance", k.withinPct, "Within SLA", "rgba(37,99,235,1)"));
-    $("donutWrap").appendChild(donutCard("Overdue Rate", k.overduePct, "Overdue", "rgba(239,68,68,1)"));
-    $("donutWrap").appendChild(donutCard("Completion Rate", k.completionPct, "Completed", "rgba(15,23,42,.86)"));
-  }
-
-  function applySearchFilter(rows){
-    const q = ($("search").value || "").trim().toLowerCase();
-    if(!q) return rows;
-
-    return rows.filter(r => {
-      const hay = [
-        r.wo_id, r.date, r.client_name, r.site, r.system, r.priority,
-        r.status, r.incident, r.assigned_tech, r.tech_id, r.within_sla
-      ].join(" ").toLowerCase();
-      return hay.includes(q);
-    });
   }
 
   function renderTable(){
@@ -773,7 +706,7 @@
 
     const body = $("tbody");
     body.innerHTML = "";
-    rows.slice(0, 200).forEach(x=>{
+    rows.slice(0, 240).forEach(x=>{
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${x.wo_id}</td>
@@ -792,9 +725,37 @@
     });
   }
 
+  function renderDonutsBottom(){
+    const k = computeKPIs();
+    const grid = $("donutGrid");
+    grid.innerHTML = "";
+    grid.appendChild(donutCard(
+      "SLA Compliance",
+      k.withinPct,
+      "Within SLA",
+      "rgba(37,99,235,1)",
+      `${Math.round(k.withinPct*100)}% within SLA`
+    ));
+    grid.appendChild(donutCard(
+      "Overdue Rate",
+      k.overduePct,
+      "Overdue",
+      "rgba(239,68,68,1)",
+      `${Math.round(k.overduePct*100)}% overdue or breached`
+    ));
+    grid.appendChild(donutCard(
+      "Completion Rate",
+      k.completionPct,
+      "Completed",
+      "rgba(15,23,42,.86)",
+      `${Math.round(k.completionPct*100)}% completed`
+    ));
+  }
+
   function renderAll(){
-    renderKPIs();
+    renderKpiCards();
     renderTable();
+    renderDonutsBottom();
   }
 
   function downloadPowerBIPack(){
@@ -831,10 +792,6 @@
         <div style="font-weight:950;font-size:18px">${k.total}</div>
       </div>
       <div style="border:1px solid #e5e7eb;border-radius:12px;padding:10px">
-        <div style="font-weight:900;color:#64748b">Completed</div>
-        <div style="font-weight:950;font-size:18px">${Math.round(k.completionPct*100)}%</div>
-      </div>
-      <div style="border:1px solid #e5e7eb;border-radius:12px;padding:10px">
         <div style="font-weight:900;color:#64748b">SLA compliance</div>
         <div style="font-weight:950;font-size:18px">${Math.round(k.withinPct*100)}%</div>
       </div>
@@ -842,10 +799,15 @@
         <div style="font-weight:900;color:#64748b">Overdue rate</div>
         <div style="font-weight:950;font-size:18px">${Math.round(k.overduePct*100)}%</div>
       </div>
+      <div style="border:1px solid #e5e7eb;border-radius:12px;padding:10px">
+        <div style="font-weight:900;color:#64748b">Completion rate</div>
+        <div style="font-weight:950;font-size:18px">${Math.round(k.completionPct*100)}%</div>
+      </div>
     `;
 
+    // reuse donuts for report charts
     $("reportCharts").innerHTML = "";
-    const mk = (title, value, color) => {
+    const mk = (title, val, color) => {
       const div = document.createElement("div");
       div.style.border="1px solid #e5e7eb";
       div.style.borderRadius="12px";
@@ -854,7 +816,7 @@
       const c = document.createElement("canvas");
       c.width=240; c.height=160;
       div.appendChild(c);
-      // simple donut
+
       const ctx = c.getContext("2d");
       const cx=80, cy=80, r=52;
       ctx.lineWidth=12; ctx.lineCap="round";
@@ -862,18 +824,14 @@
       ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
       const start=-Math.PI/2;
       ctx.strokeStyle=color;
-      ctx.beginPath(); ctx.arc(cx,cy,r,start,start+Math.PI*2*Math.max(0,Math.min(1,value))); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx,cy,r,start,start+Math.PI*2*Math.max(0,Math.min(1,val))); ctx.stroke();
       ctx.fillStyle="rgba(15,23,42,.92)";
       ctx.font="900 16px system-ui";
       ctx.textAlign="center"; ctx.textBaseline="middle";
-      ctx.fillText(Math.round(value*100)+"%", cx, cy);
-      ctx.fillStyle="rgba(15,23,42,.75)";
-      ctx.font="900 12px system-ui";
-      ctx.textAlign="left"; ctx.textBaseline="alphabetic";
-      ctx.fillText("KPI snapshot", 150, 86);
+      ctx.fillText(Math.round(val*100)+"%", cx, cy);
+
       $("reportCharts").appendChild(div);
     };
-
     mk("SLA compliance", k.withinPct, "rgba(37,99,235,1)");
     mk("Overdue rate", k.overduePct, "rgba(239,68,68,1)");
     mk("Completion rate", k.completionPct, "rgba(15,23,42,.86)");
@@ -921,18 +879,19 @@
     area.style.display="none";
   }
 
-  // Events
+  // events
   $("btnGenerate").addEventListener("click", () => { showOverdueOnly=false; generate(); });
-  $("btnOverdue").addEventListener("click", () => { showOverdueOnly=true; renderTable(); });
-  $("btnAll").addEventListener("click", () => { showOverdueOnly=false; renderTable(); });
-  $("search").addEventListener("input", renderTable);
+  $("btnOverdue").addEventListener("click", () => { showOverdueOnly=true; renderAll(); });
+  $("btnAll").addEventListener("click", () => { showOverdueOnly=false; renderAll(); });
+  $("search").addEventListener("input", renderAll);
 
   $("dlPB").addEventListener("click", downloadPowerBIPack);
   $("dlSAP").addEventListener("click", downloadSAPPack);
+
   $("btnPdf").addEventListener("click", downloadPDFReport);
   $("dlPDF2").addEventListener("click", downloadPDFReport);
 
-  // Init
+  // init
   generate();
 </script>
 
