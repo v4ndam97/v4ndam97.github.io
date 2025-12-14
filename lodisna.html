@@ -34,6 +34,7 @@
   a{color:inherit;text-decoration:none}
   a:hover{text-decoration:underline}
   .container{max-width:var(--max);margin:0 auto;padding:22px}
+
   .top{
     position:sticky;top:0;z-index:50;
     background:rgba(255,255,255,.88);
@@ -44,6 +45,7 @@
   .brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:-.3px}
   .dot{width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--blue),var(--red));box-shadow:0 0 0 5px rgba(37,99,235,.12)}
   .sub{color:var(--muted);font-weight:800;font-size:.95rem;margin-top:2px}
+
   .card{
     background:var(--card);
     border:1px solid var(--border);
@@ -81,6 +83,15 @@
   .kpi .k{color:rgba(15,23,42,.72);font-weight:950;font-size:.9rem}
   .kpi .v{font-weight:950;font-size:1.15rem;margin-top:6px}
 
+  .searchRow{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px
+  }
+  .searchRow input{
+    flex:1 1 320px;
+    padding:11px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.16);
+    background:#fff;outline:none;font-weight:800
+  }
+
   .tableWrap{
     margin-top:12px;
     border-radius:14px;
@@ -88,7 +99,7 @@
     overflow:auto;
     background:#fff;
   }
-  table{width:100%;border-collapse:collapse;min-width:1100px}
+  table{width:100%;border-collapse:collapse;min-width:1200px}
   th,td{padding:10px;border-bottom:1px solid rgba(15,23,42,.08);font-size:.92rem;white-space:nowrap;text-align:left}
   th{position:sticky;top:0;background:#fff;color:rgba(15,23,42,.75);font-weight:950;z-index:2}
 </style>
@@ -99,7 +110,7 @@
   <div class="container top-inner">
     <div>
       <div class="brand"><span class="dot"></span> LODISNA – Transport Operations (Example)</div>
-      <div class="sub">5 Spanish-plated trucks · international drivers · incidents · Power BI-ready export</div>
+      <div class="sub">5 Spanish-plated trucks · international drivers · incidents · margin reporting</div>
     </div>
     <a class="btn" href="index.html">← Back</a>
   </div>
@@ -110,15 +121,21 @@
     <div class="row">
       <h1>Example of my work at LODISNA</h1>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn primary" id="gen">Generate dataset</button>
-        <button class="btn" id="dl">Download CSV</button>
+        <button class="btn primary" id="gen" type="button">Generate dataset</button>
+        <button class="btn" id="dl" type="button">Download CSV</button>
       </div>
     </div>
 
     <p class="muted" style="margin:8px 0 0">
-      Road freight operations sample: routes across Europe, double-driver assignments, delays/incidents,
-      and cost/revenue fields to support KPI reporting.
+      Road freight operations example across Europe: double-driver assignments, delays/incidents, and cost/revenue/margin
+      fields designed for KPI reporting.
     </p>
+
+    <div class="searchRow">
+      <input id="search" type="text" placeholder="Search driver, incident, pickup, delivery, plate, shipment..." />
+      <button class="btn" id="onlyIncidents" type="button">Incidents only</button>
+      <button class="btn" id="showAll" type="button">Show all</button>
+    </div>
 
     <div class="kpis" id="kpis"></div>
 
@@ -151,7 +168,6 @@
 <script>
   const $ = (id) => document.getElementById(id);
 
-  // seeded RNG
   function mulberry32(seed){
     let a = seed >>> 0;
     return function(){
@@ -166,7 +182,6 @@
   const addDays = (isoDate, n) => { const d=new Date(isoDate); d.setDate(d.getDate()+n); return iso(d); };
   const eur = (n) => "€" + (Number.isFinite(n)?n:0).toFixed(2);
 
-  // international drivers + international phones (plates remain Spanish)
   const DRIVERS = [
     {name:"Aisha Khan", phone:"+44 7700 900221"},
     {name:"Noah Johnson", phone:"+1 415 555 0129"},
@@ -217,27 +232,26 @@
   }
 
   let ROWS = [];
+  let incidentsOnly = false;
 
   function generate(){
-    const seed = 97;
-    const rnd = mulberry32(seed + Math.floor(Math.random()*9999));
+    const seed = 97 + Math.floor(Math.random()*9999);
+    const rnd = mulberry32(seed);
 
     // 5 trucks (each with trailer)
     const fleet = [];
     for(let i=1;i<=5;i++){
       fleet.push({
         truck_plate: randomSpanishPlate(rnd),
-        trailer_plate: randomSpanishPlate(rnd),
-        base: (i<=2) ? "Madrid" : (i<=4) ? "Barcelona" : "Valencia"
+        trailer_plate: randomSpanishPlate(rnd)
       });
     }
 
-    // shipments
-    const horizon = 120;
+    const horizon = 140;
     const start = (()=>{ const d=new Date(); d.setDate(d.getDate()-horizon); return iso(d); })();
 
     ROWS = [];
-    const nShip = 80; // enough for demo but not noisy
+    const nShip = 90;
 
     for(let i=1;i<=nShip;i++){
       const sh = "SHP-LD-" + pad(i, 5);
@@ -254,15 +268,13 @@
 
       const km = Math.round(320 + rnd()*1550);
 
-      const lateProb = Math.min(0.28, 0.06 + (km>1100?0.06:0));
-      const onTime = rnd() > lateProb;
+      const lateProb = Math.min(0.30, 0.06 + (km>1100?0.07:0));
+      const incident = (rnd()<0.22) ? INCIDENTS[Math.floor(rnd()*INCIDENTS.length)] : "None";
+      const delayed = (! (rnd() > lateProb)) || incident !== "None";
+      const status = delayed ? "Delayed" : "On time";
 
-      const incident = (rnd()<0.18) ? INCIDENTS[Math.floor(rnd()*INCIDENTS.length)] : "None";
-      const status = (!onTime || incident!=="None") ? "Delayed" : "On time";
-
-      // cost + revenue realistic-ish
-      const fuel = km * (0.28 + rnd()*0.07);
-      const fuelCost = fuel * (1.55 + rnd()*0.35);
+      const fuelLiters = km * (0.28 + rnd()*0.07);
+      const fuelCost = fuelLiters * (1.55 + rnd()*0.35);
       const toll = km * (0.06 + rnd()*0.05);
       const labor = (km/70) * (30 + rnd()*10);
       const overhead = 55 + rnd()*45;
@@ -292,10 +304,26 @@
     render();
   }
 
+  function applySearch(rows){
+    const q = ($("search").value || "").trim().toLowerCase();
+    if(!q) return rows;
+
+    return rows.filter(r => {
+      const hay = [
+        r.shipment_id, r.date, r.truck_plate, r.trailer_plate,
+        r.driver_1, r.driver_2, r.pickup, r.delivery,
+        r.status, r.incident
+      ].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
   function render(){
     const total = ROWS.length || 1;
     const onTime = ROWS.filter(x => x.status === "On time").length;
     const delayed = ROWS.filter(x => x.status !== "On time").length;
+    const inc = ROWS.filter(x => x.incident && x.incident !== "None").length;
+
     const rev = ROWS.reduce((a,x)=>a + x.revenue, 0);
     const cost = ROWS.reduce((a,x)=>a + x.cost, 0);
     const mar = rev - cost;
@@ -303,13 +331,17 @@
     $("kpis").innerHTML = `
       <div class="kpi"><div class="k">Shipments</div><div class="v">${total}</div></div>
       <div class="kpi"><div class="k">On time</div><div class="v">${onTime} (${Math.round(onTime/total*100)}%)</div></div>
-      <div class="kpi"><div class="k">Delayed</div><div class="v">${delayed} (${Math.round(delayed/total*100)}%)</div></div>
+      <div class="kpi"><div class="k">Incidents</div><div class="v">${inc}</div></div>
       <div class="kpi"><div class="k">Total margin</div><div class="v">${eur(mar)}</div></div>
     `;
 
+    let rows = ROWS.slice().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    if (incidentsOnly) rows = rows.filter(x => x.incident && x.incident !== "None");
+    rows = applySearch(rows);
+
     const body = $("tbody");
     body.innerHTML = "";
-    ROWS.slice().sort((a,b)=> (b.date||"").localeCompare(a.date||"")).slice(0,120).forEach(r=>{
+    rows.slice(0, 220).forEach(r=>{
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${r.shipment_id}</td>
@@ -333,6 +365,10 @@
 
   $("gen").addEventListener("click", generate);
   $("dl").addEventListener("click", ()=>downloadCSV("lodisna_transport_dataset.csv", ROWS));
+
+  $("onlyIncidents").addEventListener("click", ()=>{ incidentsOnly=true; render(); });
+  $("showAll").addEventListener("click", ()=>{ incidentsOnly=false; render(); });
+  $("search").addEventListener("input", render);
 
   generate();
 </script>
