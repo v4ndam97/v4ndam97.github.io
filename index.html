@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Andrei Adam | BI & Operations Simulators</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Andrei Adam portfolio with interactive simulators: LODISNA transport operations and Convergint technical coordination. Downloadable CSV and PDF." />
+  <title>Andrei Adam — Demo Portfolio</title>
+  <meta name="description" content="Andrei Adam demo portfolio: operational simulators (LODISNA logistics + Convergint technical ops) with exportable Power BI/SAP-style data, charts and PDF reports." />
 
   <style>
     :root{
@@ -30,12 +30,13 @@
         radial-gradient(1000px 650px at 10% 10%, rgba(37,99,235,.15), transparent 60%),
         radial-gradient(900px 650px at 90% 10%, rgba(239,68,68,.14), transparent 60%),
         linear-gradient(180deg,var(--bg1),var(--bg2));
-      line-height:1.5;
+      line-height:1.55;
     }
     a{color:inherit;text-decoration:none}
     a:hover{text-decoration:underline}
     .container{max-width:var(--max);margin:0 auto;padding:22px}
 
+    /* Sticky header */
     .top{
       position:sticky;top:0;z-index:50;
       background:rgba(255,255,255,.88);
@@ -45,11 +46,11 @@
     .top-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
     .brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:-.3px}
     .dot{width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--blue),var(--red));box-shadow:0 0 0 5px rgba(37,99,235,.12)}
-    .sub{color:var(--muted);font-weight:800;font-size:.95rem;margin-top:2px}
     .nav{display:flex;gap:10px;flex-wrap:wrap}
     .nav a{padding:9px 12px;border-radius:12px;border:1px solid transparent;font-weight:950;color:rgba(15,23,42,.92)}
     .nav a:hover{border-color:var(--border);background:rgba(15,23,42,.03);text-decoration:none}
 
+    /* UI */
     .card{
       background:var(--card);
       border:1px solid var(--border);
@@ -57,32 +58,11 @@
       box-shadow:var(--shadow);
       padding:18px;
     }
-    .hero{padding:34px 0 10px}
-    .grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
-    @media(max-width:980px){.grid2{grid-template-columns:1fr}}
-    .gridProjects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:12px}
-    @media(max-width:980px){.gridProjects{grid-template-columns:1fr}}
-
-    h1{margin:0 0 10px;font-size:clamp(1.9rem,3.2vw,2.8rem);letter-spacing:-.9px;line-height:1.1}
-    h2{margin:0 0 10px;letter-spacing:-.4px}
+    h1{margin:0 0 10px;font-size:clamp(2rem,3.2vw,2.8rem);letter-spacing:-.9px;line-height:1.1}
+    h2{margin:0 0 10px;letter-spacing:-.5px}
     h3{margin:0 0 8px;letter-spacing:-.3px}
     .muted{color:var(--muted)}
     .row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
-
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:7px 10px;border-radius:999px;border:1px solid var(--border);
-      background:rgba(15,23,42,.02);font-weight:950;font-size:.9rem;color:rgba(15,23,42,.9);
-    }
-    .pill .pDot{width:7px;height:7px;border-radius:999px;background:var(--blue);box-shadow:0 0 0 5px rgba(37,99,235,.12)}
-
-    .chip{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:6px 10px;border-radius:999px;border:1px solid rgba(15,23,42,.12);
-      background:rgba(15,23,42,.02);font-weight:950;font-size:.88rem;color:rgba(15,23,42,.9);
-    }
-    .chip.blue{border-color:rgba(37,99,235,.25);background:rgba(37,99,235,.08)}
-    .chip.red{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
 
     .btn{
       display:inline-flex;align-items:center;justify-content:center;gap:10px;
@@ -96,13 +76,45 @@
     .btn:hover{background:rgba(15,23,42,.02);border-color:rgba(15,23,42,.18);text-decoration:none}
     .btn:active{transform:translateY(1px)}
     .btn.primary{background:linear-gradient(135deg,rgba(37,99,235,1),rgba(37,99,235,.82));border-color:rgba(37,99,235,.35);color:#fff}
-    .btn.danger{background:linear-gradient(135deg,rgba(239,68,68,1),rgba(239,68,68,.82));border-color:rgba(239,68,68,.35);color:#fff}
     .btn.small{padding:9px 12px;border-radius:12px;font-size:.95rem}
 
-    .footer{
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;border:1px solid rgba(15,23,42,.12);
+      background:rgba(15,23,42,.02);font-weight:950;font-size:.88rem;color:rgba(15,23,42,.9);
+    }
+    .chip.blue{border-color:rgba(37,99,235,.25);background:rgba(37,99,235,.08)}
+    .chip.red{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
+
+    /* Intro dedication animation */
+    .intro{margin-top:18px;overflow:hidden}
+    .intro-inner{max-width:900px;margin:0 auto;animation:fadeUp 1.1s ease-out forwards;opacity:0}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    .intro-title{margin:0 0 10px}
+    .intro-actions{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
+
+    /* Layout sections */
+    .section{padding:18px 0}
+    .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+    .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    @media(max-width:980px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.grid3{grid-template-columns:1fr}}
+
+    .pCard{
+      border:1px solid rgba(15,23,42,.12);
+      background:rgba(255,255,255,.92);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 12px 26px rgba(15,23,42,.08);
+      transition:transform .12s ease;
+    }
+    .pCard:hover{transform:translateY(-2px)}
+    .pTop{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .pActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+
+    footer{
       text-align:center;padding:22px 0;color:rgba(15,23,42,.65);
-      border-top:1px solid rgba(15,23,42,.10);
-      background:rgba(255,255,255,.65);margin-top:18px
+      border-top:1px solid rgba(15,23,42,.10);background:rgba(255,255,255,.65);margin-top:18px
     }
   </style>
 </head>
@@ -110,117 +122,168 @@
 <body>
 <header class="top">
   <div class="container top-inner">
-    <div>
-      <div class="brand"><span class="dot"></span> Andrei Adam</div>
-      <div class="sub">BI & Operations Simulators · Transport Ops · SAP-style exports · Technical Coordination</div>
-    </div>
-    <nav class="nav" aria-label="Main">
+    <div class="brand"><span class="dot"></span> Andrei Adam — Demo Portfolio</div>
+    <nav class="nav" aria-label="Primary">
       <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
       <a href="#contact">Contact</a>
     </nav>
   </div>
 </header>
 
 <main class="container">
-  <section class="hero">
-    <div class="grid2">
-      <div class="card">
-        <div class="row">
-          <h1>Interview-ready <span style="color:var(--blue)">BI</span> & <span style="color:var(--red)">Operations</span> demos</h1>
-          <span class="pill"><span class="pDot"></span> realistic demo data</span>
-        </div>
-        <p class="muted" style="margin:8px 0 0">
-          This portfolio includes interactive simulators designed to demonstrate operational thinking, structured data,
-          and clean exports for reporting workflows (Power BI / SAP-style tables).
-        </p>
 
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
-          <a class="btn primary" href="#projects">View projects</a>
-          <a class="btn" href="lodisna.html">Open LODISNA simulator</a>
-          <a class="btn" href="convergint.html">Open Convergint simulator</a>
-        </div>
+  <!-- Dedicated intro -->
+  <section id="intro-dedication" class="card intro">
+    <div class="intro-inner">
+      <h1 class="intro-title">Prepared for Patrick Naze &amp; Sean McGlone</h1>
 
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
-          <span class="chip blue">CSV exports</span>
-          <span class="chip">Search & filter</span>
-          <span class="chip red">Incident tracking</span>
-        </div>
+      <p class="muted" style="margin:8px 0 0">
+        Thank you again for the interview. I truly appreciated the conversation and the opportunity to learn more about the role.
+        I spent the entire weekend designing and coding this interactive demo to demonstrate, in a practical and transparent way,
+        the type of technical and analytical work I can deliver.
+      </p>
+
+      <p class="muted" style="margin:8px 0 0">
+        This portfolio contains realistic operational simulations, KPI dashboards, Power BI–ready datasets,
+        SAP-style structures, and exportable reports. Everything is built with coherence, business logic,
+        and a strong focus on clarity and usability.
+      </p>
+
+      <p class="muted" style="margin:10px 0 0">
+        I am highly motivated for this position and genuinely interested in contributing value.
+        If useful, I would be glad to walk you through the demos and explain the reasoning behind the data models,
+        KPIs, and design decisions.
+      </p>
+
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+        <span class="chip blue">Operational reporting</span>
+        <span class="chip">Data modeling</span>
+        <span class="chip red">KPI dashboards</span>
+        <span class="chip">Exports (CSV / PDF)</span>
+        <span class="chip">Fast prototyping</span>
       </div>
 
-      <div class="card">
-        <h2 style="margin:0">What recruiters can verify</h2>
-        <p class="muted" style="margin:8px 0 0">
-          Each project includes a coherent dataset, meaningful KPIs, and practical exports. You can search by technician,
-          driver, client, incident, or work order ID and validate the structure quickly.
-        </p>
-
-        <div style="display:grid;gap:10px;margin-top:12px">
-          <div class="chip">Clear tables + realistic fields</div>
-          <div class="chip">SLA / overdue logic</div>
-          <div class="chip">Operational KPIs (donut charts)</div>
-          <div class="chip">PDF snapshot reporting</div>
-        </div>
+      <div class="intro-actions">
+        <a href="#projects" class="btn primary">View the demos</a>
+        <a href="#contact" class="btn">Contact</a>
       </div>
     </div>
   </section>
 
-  <section id="projects" style="padding:18px 0">
+  <!-- Projects -->
+  <section id="projects" class="section">
     <div class="card">
       <div class="row">
-        <h2>Projects</h2>
-        <span class="pill"><span class="pDot"></span> no 404 links</span>
+        <h2 style="margin:0">Projects (interactive demos)</h2>
+        <span class="chip blue">click “Open”</span>
       </div>
+      <p class="muted" style="margin:10px 0 0">
+        These are fully interactive examples. Each one includes realistic sample data, search, KPIs, and export options.
+      </p>
 
-      <div class="gridProjects">
-        <div class="card" style="box-shadow:none">
-          <div class="row">
-            <h3 style="margin:0">LODISNA – Transport Operations (Example)</h3>
-            <span class="chip blue">5 trucks</span>
+      <div class="grid3" style="margin-top:12px">
+        <article class="pCard">
+          <div class="pTop">
+            <h3 style="margin:0">LODISNA — Logistics Operations Simulator</h3>
+            <span class="chip">Fleet</span>
           </div>
-          <p class="muted" style="margin:8px 0 12px">
-            Road freight dataset with Spanish plates, international drivers, incidents, cost/revenue/margin, and a live search
-            to find names or incidents instantly.
+          <p class="muted" style="margin:8px 0 0">
+            5 Spanish-plated trucks, double-driver assignments, incidents, margins, trend charts, and a simplified Europe route map.
           </p>
-          <a class="btn primary" href="lodisna.html">Open</a>
-        </div>
+          <div class="pActions">
+            <a class="btn primary small" href="lodisna.html">Open</a>
+            <span class="chip red">CSV + PNG</span>
+          </div>
+        </article>
 
-        <div class="card" style="box-shadow:none">
-          <div class="row">
-            <h3 style="margin:0">Convergint – Technical Operations (Example)</h3>
-            <span class="chip red">max 5 techs</span>
+        <article class="pCard">
+          <div class="pTop">
+            <h3 style="margin:0">Convergint — Technical Ops Coordination Simulator</h3>
+            <span class="chip">SLA</span>
           </div>
-          <p class="muted" style="margin:8px 0 12px">
-            Work orders, security systems (CCTV, Access Control, Fire & Life Safety), SLA logic, donut KPIs, exports for
-            Power BI and SAP-style tables, plus a PDF report snapshot.
+          <p class="muted" style="margin:8px 0 0">
+            Max 5 technicians, work orders, incidents by system, SLA trends, overdue tracking, heatmap analytics, CSV packs and PDF report.
           </p>
-          <a class="btn primary" href="convergint.html">Open</a>
-        </div>
+          <div class="pActions">
+            <a class="btn primary small" href="convergint.html">Open</a>
+            <span class="chip blue">PDF + CSV</span>
+          </div>
+        </article>
+
+        <article class="pCard">
+          <div class="pTop">
+            <h3 style="margin:0">Reporting-Ready Exports</h3>
+            <span class="chip">Power BI / SAP</span>
+          </div>
+          <p class="muted" style="margin:8px 0 0">
+            Each project includes clean structured exports you can load into Power BI or use as SAP-style tables for process demos.
+          </p>
+          <div class="pActions">
+            <a class="btn small" href="lodisna.html#charts">Open charts</a>
+            <a class="btn small" href="convergint.html#exports">Open exports</a>
+          </div>
+        </article>
       </div>
     </div>
   </section>
 
-  <section id="contact" style="padding:18px 0">
+  <!-- Skills -->
+  <section id="skills" class="section">
     <div class="card">
       <div class="row">
-        <h2>Contact</h2>
-        <span class="pill"><span class="pDot"></span> available</span>
+        <h2 style="margin:0">Technical skills showcased in this demo</h2>
+        <span class="chip">practical</span>
       </div>
-      <p style="margin:10px 0">
-        📧 <strong>Email:</strong> <a href="mailto:andreiadam.lu@hotmail.com">andreiadam.lu@hotmail.com</a>
+
+      <div class="grid2" style="margin-top:12px">
+        <div class="pCard">
+          <h3 style="margin:0 0 8px">Data + reporting</h3>
+          <ul style="margin:0;padding-left:18px">
+            <li>Dataset generation with coherent business logic (IDs, statuses, KPIs)</li>
+            <li>Time-series trends (daily/monthly/yearly) and drill-down style views</li>
+            <li>Export-ready tables (CSV packs) for Power BI and SAP-style workflows</li>
+          </ul>
+        </div>
+        <div class="pCard">
+          <h3 style="margin:0 0 8px">UI + usability</h3>
+          <ul style="margin:0;padding-left:18px">
+            <li>Searchable tables for fast access to names, incidents, clients, and routes</li>
+            <li>Clear layouts and consistent design (blue/red/white/black)</li>
+            <li>Downloadable visuals (PNG) + PDF reporting (Convergint)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section">
+    <div class="card">
+      <div class="row">
+        <h2 style="margin:0">Contact</h2>
+        <span class="chip blue">available</span>
+      </div>
+
+      <p style="margin:12px 0 0">
+        <strong>Email:</strong> <a href="mailto:andreiadam.lu@hotmail.com">andreiadam.lu@hotmail.com</a><br/>
+        <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b" target="_blank" rel="noreferrer">www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b</a>
       </p>
-      <p style="margin:10px 0">
-        💼 <strong>LinkedIn:</strong>
-        <a href="https://www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b" target="_blank" rel="noreferrer">
-          www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b
-        </a>
+
+      <p class="muted" style="margin-top:10px">
+        If helpful, I can adapt these demos to real KPIs and workflows (same structure, real data) while keeping the dashboard clean and easy to use.
       </p>
     </div>
   </section>
+
 </main>
 
-<footer class="footer">
-  <div class="container">© Andrei Adam – BI & Operations Simulators</div>
+<footer>
+  <div class="container">© <span id="year"></span> Andrei Adam — Demo Portfolio</div>
 </footer>
 
+<script>
+  document.getElementById("year").textContent = String(new Date().getFullYear());
+</script>
 </body>
 </html>
