@@ -1,112 +1,1019 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Convergint – Technical Operations Simulator</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8" />
+<title>Convergint – Technical Operations Coordination Simulator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Convergint-inspired technical operations coordination simulator with donut KPIs, exports for Power BI and SAP-style tables, and a downloadable PDF report." />
 
 <style>
-:root{
-  --bg:#f6f8ff;
-  --card:#fff;
-  --text:#0f172a;
-  --muted:rgba(15,23,42,.65);
-  --border:rgba(15,23,42,.12);
-  --blue:#2563eb;
-  --red:#ef4444;
-  --radius:18px;
-  --shadow:0 18px 40px rgba(15,23,42,.10);
-  --max:1140px;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui;background:linear-gradient(180deg,var(--bg),#fff);color:var(--text)}
-.container{max-width:var(--max);margin:auto;padding:22px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-top:16px}
-.row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.btn{padding:10px 14px;border-radius:14px;border:1px solid var(--border);background:#fff;font-weight:900}
-.btn.primary{background:var(--blue);color:#fff}
-.tableWrap{overflow:auto;border-radius:14px;border:1px solid var(--border);margin-top:12px}
-table{border-collapse:collapse;min-width:1100px;width:100%}
-th,td{padding:10px;border-bottom:1px solid var(--border);font-size:.9rem}
-th{background:#fff}
-.muted{color:var(--muted)}
+  :root{
+    --bg1:#f6f8ff;
+    --bg2:#ffffff;
+    --card:#ffffff;
+    --text:#0f172a;
+    --muted:rgba(15,23,42,.68);
+    --border:rgba(15,23,42,.12);
+    --shadow:0 18px 40px rgba(15,23,42,.10);
+    --blue:#2563eb;
+    --red:#ef4444;
+    --radius:18px;
+    --max:1140px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(1000px 650px at 10% 10%, rgba(37,99,235,.15), transparent 60%),
+      radial-gradient(900px 650px at 90% 10%, rgba(239,68,68,.14), transparent 60%),
+      linear-gradient(180deg,var(--bg1),var(--bg2));
+    line-height:1.5;
+  }
+  a{color:inherit;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .container{max-width:var(--max);margin:0 auto;padding:22px}
+
+  /* Top bar */
+  .top{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .top-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:14px;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:-.3px}
+  .dot{width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--blue),var(--red));box-shadow:0 0 0 5px rgba(37,99,235,.12)}
+  .sub{color:var(--muted);font-weight:800;font-size:.95rem;margin-top:2px}
+  .nav{display:flex;gap:10px;flex-wrap:wrap}
+  .nav a{
+    padding:9px 12px;border-radius:12px;border:1px solid transparent;
+    font-weight:950;color:rgba(15,23,42,.92);
+  }
+  .nav a:hover{border-color:var(--border);background:rgba(15,23,42,.03);text-decoration:none}
+
+  /* Cards + layout */
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:18px;
+  }
+  .section{padding:18px 0}
+  h1{margin:0 0 10px;font-size:clamp(1.9rem,3vw,2.6rem);letter-spacing:-.9px;line-height:1.1}
+  h2{margin:0 0 10px;letter-spacing:-.4px}
+  h3{margin:0 0 8px;letter-spacing:-.3px}
+  .muted{color:var(--muted)}
+  .row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+  @media(max-width:980px){.grid2{grid-template-columns:1fr}}
+  .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  @media(max-width:980px){.grid3{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.grid3{grid-template-columns:1fr}}
+  .grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  @media(max-width:980px){.grid4{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.grid4{grid-template-columns:1fr}}
+
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:7px 10px;border-radius:999px;border:1px solid var(--border);
+    background:rgba(15,23,42,.02);font-weight:950;font-size:.9rem;color:rgba(15,23,42,.9);
+  }
+  .pill .pDot{width:7px;height:7px;border-radius:999px;background:var(--blue);box-shadow:0 0 0 5px rgba(37,99,235,.12)}
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 10px;border-radius:999px;border:1px solid rgba(15,23,42,.12);
+    background:rgba(15,23,42,.02);font-weight:950;font-size:.88rem;color:rgba(15,23,42,.9);
+  }
+  .chip.blue{border-color:rgba(37,99,235,.25);background:rgba(37,99,235,.08)}
+  .chip.red{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
+
+  /* Buttons */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    padding:12px 14px;border-radius:14px;border:1px solid var(--border);
+    background:rgba(255,255,255,.85);
+    font-weight:950;cursor:pointer;
+    box-shadow:0 12px 26px rgba(15,23,42,.10);
+    user-select:none;
+    transition:transform .08s ease, background .2s ease, border-color .2s ease;
+  }
+  .btn:hover{background:rgba(15,23,42,.02);border-color:rgba(15,23,42,.18);text-decoration:none}
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:linear-gradient(135deg,rgba(37,99,235,1),rgba(37,99,235,.82));border-color:rgba(37,99,235,.35);color:#fff}
+  .btn.danger{background:linear-gradient(135deg,rgba(239,68,68,1),rgba(239,68,68,.82));border-color:rgba(239,68,68,.35);color:#fff}
+  .btn.ghost{background:transparent;box-shadow:none}
+  .btn.small{padding:9px 12px;border-radius:12px;font-size:.95rem}
+
+  /* Forms */
+  .controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+  @media(max-width:980px){.controls{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.controls{grid-template-columns:1fr}}
+  .field label{display:block;margin-bottom:6px;font-weight:950;font-size:.9rem;color:rgba(15,23,42,.85)}
+  .field input,.field select,.field textarea{
+    width:100%;padding:11px 12px;border-radius:12px;
+    border:1px solid rgba(15,23,42,.16);
+    background:#fff;color:var(--text);outline:none;
+  }
+
+  /* KPI + donut */
+  .kpi{
+    border:1px solid rgba(15,23,42,.12);
+    background:rgba(15,23,42,.02);
+    border-radius:14px;
+    padding:12px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .kpi .k{color:rgba(15,23,42,.72);font-weight:950;font-size:.9rem}
+  .kpi .v{font-weight:950;font-size:1.15rem}
+  .donutWrap{
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px;
+  }
+  @media(max-width:980px){.donutWrap{grid-template-columns:1fr}}
+  .donutCard{
+    border:1px solid rgba(15,23,42,.12);
+    background:rgba(15,23,42,.02);
+    border-radius:14px;
+    padding:12px;
+    display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;
+  }
+  .donutLeft{display:flex;align-items:center;gap:12px}
+  canvas{display:block}
+
+  /* Icons row */
+  .iconCard{
+    border:1px solid rgba(15,23,42,.12);
+    background:#fff;
+    border-radius:14px;
+    padding:12px;
+    display:flex;gap:10px;align-items:center;
+  }
+  .icon{
+    width:40px;height:40px;border-radius:12px;
+    border:1px solid rgba(15,23,42,.12);
+    background:linear-gradient(180deg, rgba(37,99,235,.10), rgba(239,68,68,.06));
+    display:flex;align-items:center;justify-content:center;
+  }
+  .icon svg{width:22px;height:22px}
+  .iconText{display:flex;flex-direction:column}
+  .iconText strong{font-weight:950}
+  .iconText span{color:var(--muted);font-weight:800;font-size:.9rem}
+
+  /* Table */
+  .tableWrap{
+    margin-top:12px;
+    border-radius:14px;
+    border:1px solid rgba(15,23,42,.12);
+    overflow:auto;
+    background:#fff;
+  }
+  table{width:100%;border-collapse:collapse;min-width:1100px}
+  th,td{padding:10px;border-bottom:1px solid rgba(15,23,42,.08);font-size:.92rem;white-space:nowrap;text-align:left}
+  th{position:sticky;top:0;background:#fff;color:rgba(15,23,42,.75);font-weight:950;z-index:2}
+
+  /* Report area (PDF) */
+  .reportArea{
+    display:none;
+    background:#fff;color:#0f172a;
+    border-radius:16px;
+    padding:16px;
+    border:1px solid #e5e7eb;
+  }
+  .reportMeta{display:flex;gap:10px;flex-wrap:wrap;color:#334155;font-weight:900;margin-bottom:10px}
+  .tag{
+    display:inline-flex;padding:6px 10px;border-radius:999px;
+    border:1px solid rgba(15,23,42,.12);
+    background:rgba(15,23,42,.03);
+    font-weight:950;
+  }
+  .tag.blue{border-color:rgba(37,99,235,.25);background:rgba(37,99,235,.08)}
+  .tag.red{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
 </style>
 </head>
 
 <body>
-
-<header class="container row">
-  <h2>Convergint – Technical Operations Coordination</h2>
-  <a class="btn" href="index.html">← Back</a>
+<header class="top">
+  <div class="container top-inner">
+    <div>
+      <div class="brand"><span class="dot"></span> Convergint – Technical Operations Coordination (Example)</div>
+      <div class="sub">Work orders · Security systems · Technician scheduling · SLA tracking · Reporting</div>
+    </div>
+    <nav class="nav" aria-label="Page">
+      <a href="#overview">Overview</a>
+      <a href="#generator">Generator</a>
+      <a href="#kpis">KPIs</a>
+      <a href="#exports">Exports</a>
+      <a class="btn small" href="index.html">← Back</a>
+    </nav>
+  </div>
 </header>
 
 <main class="container">
 
-<div class="card">
-<p class="muted">
-Simulated project based on Convergint operations: coordination of technicians,
-security systems deployment, incidents, SLAs and reporting.
-</p>
+  <!-- OVERVIEW -->
+  <section id="overview" class="section">
+    <div class="grid2">
+      <div class="card">
+        <div class="row">
+          <h1>Technical Operations Simulator</h1>
+          <span class="pill"><span class="pDot"></span> Coordinator workflow</span>
+        </div>
+        <p class="muted" style="margin:8px 0 0">
+          This is a professional example of what a <strong>technical operations coordinator</strong> might manage:
+          dispatching a small team, tracking work orders, monitoring SLAs, and producing exportable datasets
+          for <strong>Power BI</strong> and <strong>SAP-style reporting</strong>.
+        </p>
 
-<button class="btn primary" onclick="generate()">Generate work orders</button>
-<button class="btn" onclick="download()">Download CSV</button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+          <a class="btn primary" href="#generator">Generate work orders</a>
+          <a class="btn" href="#exports">Download exports</a>
+          <button class="btn danger" id="btnPdf">Download PDF report</button>
+        </div>
+      </div>
 
-<div class="tableWrap">
-<table>
-<thead>
-<tr>
-<th>Work Order</th>
-<th>Client</th>
-<th>System</th>
-<th>Technician</th>
-<th>Country</th>
-<th>Status</th>
-<th>SLA (hrs)</th>
-</tr>
-</thead>
-<tbody id="body"></tbody>
-</table>
-</div>
-</div>
+      <div class="card">
+        <div class="row">
+          <h2 style="margin:0">Systems covered</h2>
+          <span class="chip blue">Essential only</span>
+        </div>
+        <div class="grid3" style="margin-top:12px">
+          <div class="iconCard">
+            <div class="icon" aria-hidden="true">
+              <!-- CCTV icon -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9h10l3 3H6L3 9z"></path>
+                <path d="M14 9l2-2 5 5-2 2"></path>
+                <path d="M6 12v5a2 2 0 0 0 2 2h4"></path>
+              </svg>
+            </div>
+            <div class="iconText">
+              <strong>Video Surveillance</strong>
+              <span>Cameras · VMS · NVR</span>
+            </div>
+          </div>
+
+          <div class="iconCard">
+            <div class="icon" aria-hidden="true">
+              <!-- Access control icon -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="7" y="10" width="10" height="10" rx="2"></rect>
+                <path d="M9 10V7a3 3 0 0 1 6 0v3"></path>
+              </svg>
+            </div>
+            <div class="iconText">
+              <strong>Access Control</strong>
+              <span>Doors · Readers · Badges</span>
+            </div>
+          </div>
+
+          <div class="iconCard">
+            <div class="icon" aria-hidden="true">
+              <!-- Fire alarm icon -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2s4 4 4 8a4 4 0 0 1-8 0c0-4 4-8 4-8z"></path>
+                <path d="M6 22h12"></path>
+              </svg>
+            </div>
+            <div class="iconText">
+              <strong>Fire & Life Safety</strong>
+              <span>Panels · Devices · Testing</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+          <span class="chip">Service calls</span>
+          <span class="chip red">Incidents</span>
+          <span class="chip blue">SLA compliance</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GENERATOR -->
+  <section id="generator" class="section">
+    <div class="card">
+      <div class="row">
+        <h2>Work order generator</h2>
+        <span class="pill"><span class="pDot"></span> Max 5 technicians</span>
+      </div>
+
+      <div class="controls">
+        <div class="field">
+          <label>Seed</label>
+          <input id="seed" type="number" value="77" />
+        </div>
+        <div class="field">
+          <label>Work orders</label>
+          <input id="nOrders" type="number" min="20" max="600" value="120" />
+        </div>
+        <div class="field">
+          <label>Days horizon</label>
+          <input id="horizon" type="number" min="30" max="365" value="120" />
+        </div>
+        <div class="field">
+          <label>Target SLA compliance %</label>
+          <input id="slaTarget" type="number" min="70" max="99" value="92" />
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+        <button class="btn primary" id="btnGenerate">Generate</button>
+        <button class="btn" id="btnFocusOverdue">Show overdue only</button>
+        <button class="btn ghost" id="btnShowAll">Show all</button>
+      </div>
+
+      <p class="muted" style="margin:10px 0 0">
+        The dataset is designed to be coherent: each work order has a system type, priority, SLA hours,
+        assigned technician, and a resolution path when incidents occur.
+      </p>
+    </div>
+  </section>
+
+  <!-- KPIs -->
+  <section id="kpis" class="section">
+    <div class="grid2">
+      <div class="card">
+        <div class="row">
+          <h2 style="margin:0">Operational KPIs</h2>
+          <span class="chip blue">Coordinator view</span>
+        </div>
+
+        <div class="grid4" style="margin-top:12px" id="kpiGrid">
+          <!-- KPIs injected -->
+        </div>
+
+        <div class="donutWrap" id="donutWrap" style="margin-top:12px">
+          <!-- donuts injected -->
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <h2 style="margin:0">Work orders table</h2>
+          <span class="chip">Preview</span>
+        </div>
+
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>WO</th>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Site</th>
+                <th>System</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>SLA (hrs)</th>
+                <th>Tech</th>
+                <th>Within SLA</th>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+              <!-- rows injected -->
+            </tbody>
+          </table>
+        </div>
+
+        <p class="muted" style="margin:10px 0 0">
+          Tip: export the data and build a Power BI dashboard (SLA, workload by technician, system mix, overdue trend).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPORTS -->
+  <section id="exports" class="section">
+    <div class="card">
+      <div class="row">
+        <h2>Exports</h2>
+        <span class="pill"><span class="pDot"></span> Power BI + SAP-style tables</span>
+      </div>
+
+      <div class="grid3" style="margin-top:12px">
+        <div class="card" style="box-shadow:none">
+          <h3>Power BI exports (CSV)</h3>
+          <p class="muted" style="margin:6px 0 12px">
+            Clean, analysis-friendly tables (star-schema ready).
+          </p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn primary" id="dlPB">Download Power BI CSV pack</button>
+          </div>
+          <p class="muted" style="margin:10px 0 0">
+            Includes: work_orders, technicians, clients, assets.
+          </p>
+        </div>
+
+        <div class="card" style="box-shadow:none">
+          <h3>SAP-style exports (CSV)</h3>
+          <p class="muted" style="margin:6px 0 12px">
+            Typical operations tables: notifications, service orders, confirmations.
+          </p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn" id="dlSAP">Download SAP CSV pack</button>
+          </div>
+          <p class="muted" style="margin:10px 0 0">
+            Useful to demonstrate structured operational data flows.
+          </p>
+        </div>
+
+        <div class="card" style="box-shadow:none">
+          <h3>PDF reporting</h3>
+          <p class="muted" style="margin:6px 0 12px">
+            Generate a clean PDF snapshot including KPIs and charts.
+          </p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn danger" id="dlPDF2">Download PDF report</button>
+          </div>
+          <p class="muted" style="margin:10px 0 0">
+            Designed for HR/hiring managers: one-page view of your simulator.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hidden PDF report area -->
+  <div class="container">
+    <div class="reportArea" id="reportArea">
+      <h2 style="margin:0">Convergint – Technical Operations Coordination (Example)</h2>
+      <div class="reportMeta">
+        <span class="tag blue">Security systems</span>
+        <span class="tag">Work orders</span>
+        <span class="tag red">SLA tracking</span>
+        <span class="tag">Demo data</span>
+      </div>
+
+      <p style="margin:0 0 10px;color:#334155;font-weight:800">
+        Snapshot report: KPIs and charts from the simulator (generated on demand).
+      </p>
+
+      <h3 style="margin:10px 0 8px">KPIs</h3>
+      <div id="reportKpis" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px"></div>
+
+      <h3 style="margin:12px 0 8px">Charts</h3>
+      <div id="reportCharts" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px"></div>
+
+      <h3 style="margin:12px 0 6px">Notes</h3>
+      <ul style="margin:0;padding-left:18px;color:#0f172a">
+        <li>Technician assignment is capped at 5.</li>
+        <li>Statuses and SLAs are generated coherently to support real reporting workflows.</li>
+        <li>Exports include Power BI-friendly tables and SAP-style operational tables.</li>
+      </ul>
+    </div>
+  </div>
 
 </main>
 
+<footer style="text-align:center;padding:22px 0;color:rgba(15,23,42,.65);border-top:1px solid rgba(15,23,42,.10);background:rgba(255,255,255,.65);margin-top:18px">
+  <div class="container">© Example simulator – Andrei Adam</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <script>
-const techs=["James Wilson","Ahmed Hassan","Carlos Mendoza","Stefan Müller","Marco Rossi","David Cohen"];
-const systems=["CCTV","Access Control","Fire Alarm","Intrusion Detection"];
-const clients=["Corporate HQ","Airport Facility","Hospital Campus","Industrial Plant","Data Center"];
-const countries=["USA","Germany","France","Spain","Netherlands"];
+  const $ = (id) => document.getElementById(id);
 
-function generate(){
-  const body=document.getElementById("body");
-  body.innerHTML="";
-  for(let i=1;i<=20;i++){
-    const tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>WO-${2024+i}</td>
-      <td>${clients[Math.floor(Math.random()*clients.length)]}</td>
-      <td>${systems[Math.floor(Math.random()*systems.length)]}</td>
-      <td>${techs[Math.floor(Math.random()*techs.length)]}</td>
-      <td>${countries[Math.floor(Math.random()*countries.length)]}</td>
-      <td>${Math.random()>0.15?"Completed":"In progress"}</td>
-      <td>${Math.floor(4+Math.random()*24)}</td>
-    `;
-    body.appendChild(tr);
+  // seeded RNG
+  function mulberry32(seed){
+    let a = seed >>> 0;
+    return function(){
+      a += 0x6D2B79F5;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
   }
-}
+  const pad = (n, w=4) => String(n).padStart(w,"0");
+  const iso = (d) => d.toISOString().slice(0,10);
+  const addDays = (isoDate, n) => { const d=new Date(isoDate); d.setDate(d.getDate()+n); return iso(d); };
 
-function download(){
-  let csv="WorkOrder,Client,System,Technician,Country,Status,SLA\n";
-  document.querySelectorAll("tbody tr").forEach(r=>{
-    csv+=Array.from(r.children).map(td=>td.innerText).join(",")+"\n";
-  });
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
-  a.download="convergint_operations.csv";
-  a.click();
-}
+  // max 5 technicians
+  const TECHS = [
+    {tech_id:"TECH-01", name:"Amina El-Sayed", phone:"+971 50 712 4431", region:"UAE"},
+    {tech_id:"TECH-02", name:"Daniel Cho",     phone:"+1 415 555 0188",  region:"USA"},
+    {tech_id:"TECH-03", name:"Sofia Petrov",   phone:"+359 88 773 2199", region:"BG"},
+    {tech_id:"TECH-04", name:"Liam O'Connor",  phone:"+353 86 234 7781", region:"IE"},
+    {tech_id:"TECH-05", name:"Mateo Alvarez",  phone:"+34 612 998 441",  region:"ES"}
+  ];
 
-generate();
+  // coherent categories
+  const SYSTEMS = [
+    {key:"Video Surveillance", short:"CCTV/VMS", icon:"CCTV", baseSla:12},
+    {key:"Access Control", short:"ACS", icon:"Access", baseSla:10},
+    {key:"Fire & Life Safety", short:"FLS", icon:"Fire", baseSla:8}
+  ];
+  const PRIORITIES = [
+    {p:"P1", label:"Critical", slaMul:0.65},
+    {p:"P2", label:"High",     slaMul:0.85},
+    {p:"P3", label:"Normal",   slaMul:1.00},
+    {p:"P4", label:"Low",      slaMul:1.35}
+  ];
+  const CLIENTS = [
+    {client_id:"CL-001", name:"Skyline Data Center Group", industry:"Data Centers"},
+    {client_id:"CL-002", name:"MetroCare Hospital Network", industry:"Healthcare"},
+    {client_id:"CL-003", name:"NorthGate Logistics Campus", industry:"Logistics"},
+    {client_id:"CL-004", name:"AeroHub Regional Airport", industry:"Aviation"},
+    {client_id:"CL-005", name:"Civic Services Complex", industry:"Public Sector"}
+  ];
+  const SITES = [
+    "HQ – Building A","Warehouse – Gate 3","Terminal – Concourse 2","Clinic – West Wing","DC – Pod 7","Campus – Garage Level 1"
+  ];
+  const FAILURE_MODES = [
+    "Camera offline","Reader not responding","Panel trouble","Network switch port down","Power supply fault","False alarm investigation"
+  ];
+
+  // data
+  let DATA = {
+    work_orders: [],
+    assets: [],
+    notifications: [],
+    service_orders: [],
+    confirmations: []
+  };
+
+  let showOverdueOnly = false;
+
+  function donut(canvas, value, label, colorMain){
+    // value: 0..1
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height;
+    const cx = w/2, cy = h/2;
+    const r = Math.min(w,h)/2 - 10;
+    ctx.clearRect(0,0,w,h);
+
+    // background ring
+    ctx.lineWidth = 12;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "rgba(15,23,42,.12)";
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.stroke();
+
+    // foreground ring
+    const start = -Math.PI/2;
+    const end = start + (Math.PI*2*value);
+    ctx.strokeStyle = colorMain;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, start, end);
+    ctx.stroke();
+
+    // center text
+    ctx.fillStyle = "rgba(15,23,42,.92)";
+    ctx.font = "900 16px system-ui";
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
+    ctx.fillText(Math.round(value*100) + "%", cx, cy-2);
+
+    ctx.fillStyle = "rgba(15,23,42,.65)";
+    ctx.font = "800 11px system-ui";
+    ctx.fillText(label, cx, cy+16);
+  }
+
+  function downloadCSV(filename, rows){
+    if(!rows || !rows.length){
+      alert("Please generate data first.");
+      return;
+    }
+    const headers = Object.keys(rows[0]);
+    const lines = [headers.join(",")];
+    for(const r of rows){
+      const line = headers.map(h=>{
+        const s = String(r[h] ?? "");
+        if (s.includes(",") || s.includes('"') || s.includes("\n")) return `"${s.replaceAll('"','""')}"`;
+        return s;
+      }).join(",");
+      lines.push(line);
+    }
+    const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function generate(){
+    const seed = +$("seed").value || 77;
+    const n = +$("nOrders").value || 120;
+    const horizon = +$("horizon").value || 120;
+    const slaTarget = Math.max(0.70, Math.min(0.99, (+$("slaTarget").value || 92)/100));
+    const rnd = mulberry32(seed);
+
+    // reset
+    DATA = { work_orders: [], assets: [], notifications: [], service_orders: [], confirmations: [] };
+
+    // base dates
+    const start = (()=>{ const d=new Date(); d.setDate(d.getDate()-horizon); return iso(d); })();
+
+    // build assets (small, meaningful)
+    // each client has a few assets per system
+    let assetCounter = 1;
+    for(const c of CLIENTS){
+      for(const s of SYSTEMS){
+        const count = 3 + Math.floor(rnd()*5); // 3..7
+        for(let i=0;i<count;i++){
+          const asset_id = "AS-" + pad(assetCounter++, 4);
+          DATA.assets.push({
+            asset_id,
+            client_id: c.client_id,
+            system: s.key,
+            model: (s.key==="Video Surveillance") ? ["IP Camera","NVR","VMS Server"][Math.floor(rnd()*3)]
+                 : (s.key==="Access Control") ? ["Door Controller","Card Reader","Power Supply"][Math.floor(rnd()*3)]
+                 : ["Fire Panel","Smoke Detector","Horn/Strobe"][Math.floor(rnd()*3)],
+            location: SITES[Math.floor(rnd()*SITES.length)]
+          });
+        }
+      }
+    }
+
+    // helper: pick
+    const pick = (arr) => arr[Math.floor(rnd()*arr.length)];
+
+    // create work orders
+    for(let i=1;i<=n;i++){
+      const wo_id = "WO-" + pad(i, 5);
+
+      const client = pick(CLIENTS);
+      const sys = pick(SYSTEMS);
+      const pr = pick(PRIORITIES);
+      const tech = pick(TECHS);
+
+      const date = addDays(start, Math.floor(rnd()*horizon));
+      const asset = pick(DATA.assets.filter(a => a.client_id === client.client_id && a.system === sys.key));
+
+      // SLA hours based on system + priority
+      const sla_hours = Math.max(4, Math.round(sys.baseSla * pr.slaMul * (0.9 + rnd()*0.3)));
+
+      // probability model: keep coherent and near target
+      const baseWithin = slaTarget;
+      const severityPenalty = (pr.p==="P1") ? 0.04 : (pr.p==="P2") ? 0.02 : 0;
+      const systemPenalty = (sys.key==="Video Surveillance") ? 0.01 : 0;
+      const withinProb = Math.max(0.65, Math.min(0.99, baseWithin - severityPenalty - systemPenalty));
+
+      const within_sla = (rnd() < withinProb) ? "Yes" : "No";
+
+      // statuses reflect SLA + lifecycle
+      const status = (within_sla==="No" && rnd()<0.55) ? "Overdue"
+                   : (rnd()<0.65) ? "Completed"
+                   : (rnd()<0.88) ? "In Progress"
+                   : "Scheduled";
+
+      const incident_flag = (rnd() < 0.28) ? "Yes" : "No";
+      const failure_mode = (incident_flag==="Yes") ? pick(FAILURE_MODES) : "N/A";
+
+      // work order table (Power BI)
+      DATA.work_orders.push({
+        wo_id,
+        date,
+        client_id: client.client_id,
+        client_name: client.name,
+        industry: client.industry,
+        site: asset ? asset.location : pick(SITES),
+        system: sys.key,
+        priority: pr.p,
+        status,
+        sla_hours,
+        within_sla,
+        assigned_tech: tech.name,
+        tech_id: tech.tech_id,
+        asset_id: asset ? asset.asset_id : ""
+      });
+
+      // SAP-style: Notification -> Service Order -> Confirmation (minimal but meaningful)
+      const notif = "N-" + pad(i, 6);
+      const so = "SO-" + pad(i, 6);
+      const conf = "C-" + pad(i, 6);
+
+      DATA.notifications.push({
+        notif_id: notif,
+        created_on: date,
+        client_id: client.client_id,
+        system: sys.key,
+        failure_mode,
+        priority: pr.p,
+        asset_id: asset ? asset.asset_id : "",
+        short_text: (incident_flag==="Yes") ? failure_mode : (sys.short + " check requested")
+      });
+
+      DATA.service_orders.push({
+        service_order_id: so,
+        notif_id: notif,
+        start_date: date,
+        planned_finish: addDays(date, Math.max(0, Math.floor(rnd()*3))),
+        sla_hours,
+        tech_id: tech.tech_id,
+        status: (status==="Completed") ? "TECO" : (status==="Overdue") ? "REL" : "REL"
+      });
+
+      // confirmation time / closure
+      const labor_h = Math.max(1, Math.round(1 + rnd()*4 + (pr.p==="P1"?2:0)));
+      DATA.confirmations.push({
+        confirmation_id: conf,
+        service_order_id: so,
+        tech_id: tech.tech_id,
+        confirmed_on: (status==="Completed") ? addDays(date, Math.max(0, Math.floor(rnd()*3))) : "",
+        labor_hours: labor_h,
+        final_status: (status==="Completed") ? "Completed" : "Open"
+      });
+    }
+
+    renderAll();
+  }
+
+  function computeKPIs(){
+    const wo = DATA.work_orders;
+    const total = wo.length || 1;
+
+    const completed = wo.filter(x => x.status === "Completed").length;
+    const overdue = wo.filter(x => x.status === "Overdue" || x.within_sla === "No").length;
+    const within = wo.filter(x => x.within_sla === "Yes").length;
+
+    const withinPct = within / total;
+    const overduePct = overdue / total;
+
+    // system mix
+    const sysCount = {};
+    for(const x of wo) sysCount[x.system] = (sysCount[x.system]||0) + 1;
+
+    // technician workload
+    const techCount = {};
+    for(const t of TECHS) techCount[t.name] = 0;
+    for(const x of wo) techCount[x.assigned_tech] = (techCount[x.assigned_tech]||0) + 1;
+
+    // priority split
+    const pCount = {P1:0,P2:0,P3:0,P4:0};
+    for(const x of wo) pCount[x.priority] = (pCount[x.priority]||0) + 1;
+
+    return {
+      total,
+      completed,
+      overdue,
+      withinPct,
+      overduePct,
+      sysCount,
+      techCount,
+      pCount
+    };
+  }
+
+  function renderKPIs(){
+    const k = computeKPIs();
+
+    const avgSla = (() => {
+      const wo = DATA.work_orders;
+      if(!wo.length) return 0;
+      const s = wo.reduce((a,x)=>a + (+x.sla_hours||0), 0);
+      return s / wo.length;
+    })();
+
+    $("kpiGrid").innerHTML = `
+      <div class="kpi"><div><div class="k">Work orders</div><div class="v">${k.total}</div></div><span class="chip">Total</span></div>
+      <div class="kpi"><div><div class="k">Completed</div><div class="v">${k.completed}</div></div><span class="chip blue">Done</span></div>
+      <div class="kpi"><div><div class="k">Overdue / SLA breached</div><div class="v">${k.overdue}</div></div><span class="chip red">Risk</span></div>
+      <div class="kpi"><div><div class="k">Avg SLA (hrs)</div><div class="v">${avgSla.toFixed(1)}</div></div><span class="chip">Hours</span></div>
+    `;
+
+    // donuts
+    $("donutWrap").innerHTML = "";
+    const d1 = donutCard("SLA Compliance", k.withinPct, "Within SLA", "rgba(37,99,235,1)");
+    const d2 = donutCard("Overdue Rate", k.overduePct, "Overdue", "rgba(239,68,68,1)");
+    const d3 = donutCard("Completion Rate", (k.completed / k.total), "Completed", "rgba(15,23,42,.85)");
+    $("donutWrap").appendChild(d1);
+    $("donutWrap").appendChild(d2);
+    $("donutWrap").appendChild(d3);
+  }
+
+  function donutCard(title, value01, label, color){
+    const wrap = document.createElement("div");
+    wrap.className = "donutCard";
+    wrap.innerHTML = `
+      <div class="donutLeft">
+        <canvas width="120" height="120" aria-label="${title} chart"></canvas>
+        <div>
+          <div style="font-weight:950">${title}</div>
+          <div class="muted" style="font-weight:800">${Math.round(value01*100)}% · ${label}</div>
+        </div>
+      </div>
+      <span class="chip">${label}</span>
+    `;
+    const c = wrap.querySelector("canvas");
+    donut(c, Math.max(0, Math.min(1, value01)), label, color);
+    return wrap;
+  }
+
+  function renderTable(){
+    const wo = DATA.work_orders.slice()
+      .sort((a,b) => (b.date||"").localeCompare(a.date||""));
+
+    const filtered = showOverdueOnly ? wo.filter(x => x.within_sla === "No" || x.status === "Overdue") : wo;
+
+    const body = $("tbody");
+    body.innerHTML = "";
+    filtered.slice(0, 140).forEach(x=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${x.wo_id}</td>
+        <td>${x.date}</td>
+        <td>${x.client_name}</td>
+        <td>${x.site}</td>
+        <td>${x.system}</td>
+        <td>${x.priority}</td>
+        <td>${x.status}</td>
+        <td>${x.sla_hours}</td>
+        <td>${x.assigned_tech}</td>
+        <td>${x.within_sla}</td>
+      `;
+      body.appendChild(tr);
+    });
+  }
+
+  function renderAll(){
+    renderKPIs();
+    renderTable();
+  }
+
+  // Export packs
+  function downloadPowerBIPack(){
+    // technicians + clients are small dimension tables (Power BI style)
+    const technicians = TECHS.map(t => ({
+      tech_id: t.tech_id,
+      technician: t.name,
+      region: t.region,
+      phone: t.phone
+    }));
+    const clients = CLIENTS.map(c => ({
+      client_id: c.client_id,
+      client_name: c.name,
+      industry: c.industry
+    }));
+
+    downloadCSV("powerbi_work_orders.csv", DATA.work_orders);
+    downloadCSV("powerbi_assets.csv", DATA.assets);
+    downloadCSV("powerbi_technicians.csv", technicians);
+    downloadCSV("powerbi_clients.csv", clients);
+  }
+
+  function downloadSAPPack(){
+    downloadCSV("sap_notifications.csv", DATA.notifications);
+    downloadCSV("sap_service_orders.csv", DATA.service_orders);
+    downloadCSV("sap_confirmations.csv", DATA.confirmations);
+  }
+
+  // PDF report
+  async function downloadPDFReport(){
+    // build report DOM from current KPIs + charts
+    const k = computeKPIs();
+
+    // KPIs
+    $("reportKpis").innerHTML = `
+      <div style="border:1px solid #e5e7eb;border-radius:12px;padding:10px">
+        <div style="font-weight:900;color:#64748b">Work orders</div>
+        <div style="font-weight:950;font-size:18px">${k.total}</div>
+      </div>
+      <div style="border:1px solid #e5e7eb;border-radius:12px;padding:10px">
+        <div style="font-weight:900;color:#64748b">Completed</div>
+        <div style="font-weight:950;font-size:18px">${k.completed}</div>
+      </div>
+      <div style="border:1px solid #e5e7eb;border-radius:12px;padding:10px">
+        <div style="font-weight:900;color:#64748b">SLA compliance</div>
+        <div style="font-weight:950;font-size:18px">${Math.round(k.withinPct*100)}%</div>
+      </div>
+      <div style="border:1px solid #e5e7eb;border-radius:12px;padding:10px">
+        <div style="font-weight:900;color:#64748b">Overdue rate</div>
+        <div style="font-weight:950;font-size:18px">${Math.round(k.overduePct*100)}%</div>
+      </div>
+    `;
+
+    // charts (as canvases)
+    $("reportCharts").innerHTML = "";
+    const c1 = document.createElement("canvas"); c1.width=260; c1.height=160;
+    const c2 = document.createElement("canvas"); c2.width=260; c2.height=160;
+    const c3 = document.createElement("canvas"); c3.width=260; c3.height=160;
+
+    // simple donut snapshots in the report
+    drawReportDonut(c1, k.withinPct, "SLA compliance", "rgba(37,99,235,1)");
+    drawReportDonut(c2, k.overduePct, "Overdue", "rgba(239,68,68,1)");
+    drawReportDonut(c3, (k.completed/k.total), "Completed", "rgba(15,23,42,.85)");
+
+    wrapCanvasCard($("reportCharts"), c1, "SLA compliance");
+    wrapCanvasCard($("reportCharts"), c2, "Overdue");
+    wrapCanvasCard($("reportCharts"), c3, "Completion");
+
+    const area = $("reportArea");
+    area.style.display = "block";
+    await new Promise(r=>setTimeout(r, 60));
+
+    const canvas = await html2canvas(area, {scale:2, useCORS:true});
+    const img = canvas.toDataURL("image/png");
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({orientation:"p", unit:"pt", format:"a4"});
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+
+    const imgW = pageW - 48;
+    const imgH = canvas.height * (imgW / canvas.width);
+
+    if (imgH <= pageH - 48){
+      pdf.addImage(img, "PNG", 24, 24, imgW, imgH);
+    } else {
+      // multi-page slice
+      let remaining = imgH;
+      let srcY = 0;
+      const sliceH = canvas.width * ((pageH - 48) / imgW);
+
+      while (remaining > 0){
+        const pageCanvas = document.createElement("canvas");
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = Math.min(sliceH, canvas.height - srcY);
+
+        const ctx = pageCanvas.getContext("2d");
+        ctx.drawImage(canvas, 0, srcY, canvas.width, pageCanvas.height, 0, 0, canvas.width, pageCanvas.height);
+
+        const pageImg = pageCanvas.toDataURL("image/png");
+        const pageImgH = pageCanvas.height * (imgW / pageCanvas.width);
+
+        pdf.addImage(pageImg, "PNG", 24, 24, imgW, pageImgH);
+
+        remaining -= (pageH - 48);
+        srcY += pageCanvas.height;
+
+        if (remaining > 0) pdf.addPage();
+      }
+    }
+
+    pdf.save("Convergint_Technical_Ops_Report.pdf");
+    area.style.display = "none";
+  }
+
+  function wrapCanvasCard(parent, canvas, title){
+    const div = document.createElement("div");
+    div.style.border="1px solid #e5e7eb";
+    div.style.borderRadius="12px";
+    div.style.padding="10px";
+    div.innerHTML = `<div style="font-weight:950;margin-bottom:6px;color:#0f172a">${title}</div>`;
+    div.appendChild(canvas);
+    parent.appendChild(div);
+  }
+
+  function drawReportDonut(canvas, value, label, color){
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0,0,w,h);
+
+    const cx=80, cy=80, r=52;
+
+    // background ring
+    ctx.lineWidth=12;
+    ctx.lineCap="round";
+    ctx.strokeStyle="rgba(15,23,42,.12)";
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
+
+    // foreground
+    const start = -Math.PI/2;
+    const end = start + Math.PI*2*Math.max(0,Math.min(1,value));
+    ctx.strokeStyle=color;
+    ctx.beginPath(); ctx.arc(cx, cy, r, start, end); ctx.stroke();
+
+    ctx.fillStyle="rgba(15,23,42,.92)";
+    ctx.font="900 16px system-ui";
+    ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillText(Math.round(value*100)+"%", cx, cy);
+
+    ctx.fillStyle="rgba(15,23,42,.75)";
+    ctx.font="900 12px system-ui";
+    ctx.textAlign="left"; ctx.textBaseline="alphabetic";
+    ctx.fillText(label, 150, 70);
+
+    ctx.fillStyle="rgba(15,23,42,.65)";
+    ctx.font="800 11px system-ui";
+    ctx.fillText("Coordinator KPI snapshot", 150, 92);
+  }
+
+  // events
+  $("btnGenerate").addEventListener("click", ()=>generate());
+  $("btnFocusOverdue").addEventListener("click", ()=>{ showOverdueOnly=true; renderTable(); });
+  $("btnShowAll").addEventListener("click", ()=>{ showOverdueOnly=false; renderTable(); });
+
+  $("dlPB").addEventListener("click", downloadPowerBIPack);
+  $("dlSAP").addEventListener("click", downloadSAPPack);
+
+  $("btnPdf").addEventListener("click", downloadPDFReport);
+  $("dlPDF2").addEventListener("click", downloadPDFReport);
+
+  // init
+  generate();
 </script>
 
 </body>
