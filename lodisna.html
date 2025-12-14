@@ -4,27 +4,19 @@
 <meta charset="utf-8" />
 <title>LODISNA – Transport Operations Simulator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="description" content="LODISNA-inspired transport operations simulator: 5 Spanish-plated trucks, international drivers, incidents, KPI donuts, and interactive charts (line + bar) for Power BI-style reporting." />
+<meta name="description" content="LODISNA-inspired transport operations simulator: 5 Spanish-plated trucks, international drivers, incidents, KPI donuts, interactive charts, and a simplified European route map." />
 
 <style>
   :root{
-    --bg1:#f6f8ff;
-    --bg2:#ffffff;
-    --card:#ffffff;
-    --text:#0f172a;
-    --muted:rgba(15,23,42,.68);
-    --border:rgba(15,23,42,.12);
-    --shadow:0 18px 40px rgba(15,23,42,.10);
-    --blue:#2563eb;
-    --red:#ef4444;
-    --radius:18px;
-    --max:1140px;
+    --bg1:#f6f8ff; --bg2:#ffffff; --card:#ffffff;
+    --text:#0f172a; --muted:rgba(15,23,42,.68);
+    --border:rgba(15,23,42,.12); --shadow:0 18px 40px rgba(15,23,42,.10);
+    --blue:#2563eb; --red:#ef4444; --radius:18px; --max:1140px;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{
-    margin:0;
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     color:var(--text);
     background:
       radial-gradient(1000px 650px at 10% 10%, rgba(37,99,235,.15), transparent 60%),
@@ -32,9 +24,9 @@
       linear-gradient(180deg,var(--bg1),var(--bg2));
     line-height:1.5;
   }
+  .container{max-width:var(--max);margin:0 auto;padding:22px}
   a{color:inherit;text-decoration:none}
   a:hover{text-decoration:underline}
-  .container{max-width:var(--max);margin:0 auto;padding:22px}
 
   .top{
     position:sticky;top:0;z-index:50;
@@ -47,13 +39,7 @@
   .dot{width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--blue),var(--red));box-shadow:0 0 0 5px rgba(37,99,235,.12)}
   .sub{color:var(--muted);font-weight:800;font-size:.95rem;margin-top:2px}
 
-  .card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    padding:18px;
-  }
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
   h1{margin:0 0 8px;font-size:clamp(1.9rem,3vw,2.6rem);letter-spacing:-.9px;line-height:1.1}
   h2{margin:0 0 10px;letter-spacing:-.4px}
   h3{margin:0 0 8px;letter-spacing:-.3px}
@@ -63,58 +49,57 @@
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:10px;
     padding:12px 14px;border-radius:14px;border:1px solid var(--border);
-    background:rgba(255,255,255,.85);
-    font-weight:950;cursor:pointer;
-    box-shadow:0 12px 26px rgba(15,23,42,.10);
-    user-select:none;
+    background:rgba(255,255,255,.85);font-weight:950;cursor:pointer;
+    box-shadow:0 12px 26px rgba(15,23,42,.10);user-select:none;
     transition:transform .08s ease, background .2s ease, border-color .2s ease;
   }
   .btn:hover{background:rgba(15,23,42,.02);border-color:rgba(15,23,42,.18);text-decoration:none}
   .btn:active{transform:translateY(1px)}
   .btn.primary{background:linear-gradient(135deg,rgba(37,99,235,1),rgba(37,99,235,.82));border-color:rgba(37,99,235,.35);color:#fff}
-  .btn.danger{background:linear-gradient(135deg,rgba(239,68,68,1),rgba(239,68,68,.82));border-color:rgba(239,68,68,.35);color:#fff}
   .btn.small{padding:9px 12px;border-radius:12px;font-size:.95rem}
+
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 10px;border-radius:999px;border:1px solid rgba(15,23,42,.12);
+    background:rgba(15,23,42,.02);font-weight:950;font-size:.88rem;color:rgba(15,23,42,.9);
+  }
+  .chip.blue{border-color:rgba(37,99,235,.25);background:rgba(37,99,235,.08)}
+  .chip.red{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
 
   .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
   @media(max-width:980px){.kpis{grid-template-columns:1fr 1fr}}
   @media(max-width:560px){.kpis{grid-template-columns:1fr}}
-  .kpi{
-    border:1px solid rgba(15,23,42,.12);
-    background:rgba(15,23,42,.02);
-    border-radius:14px;
-    padding:12px;
-  }
+  .kpi{border:1px solid rgba(15,23,42,.12);background:rgba(15,23,42,.02);border-radius:14px;padding:12px}
   .kpi .k{color:rgba(15,23,42,.72);font-weight:950;font-size:.9rem}
   .kpi .v{font-weight:950;font-size:1.15rem;margin-top:6px}
 
-  .searchRow{
-    display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px
-  }
+  .searchRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
   .searchRow input{
-    flex:1 1 320px;
-    padding:11px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.16);
-    background:#fff;outline:none;font-weight:800
+    flex:1 1 320px;padding:11px 12px;border-radius:12px;
+    border:1px solid rgba(15,23,42,.16);background:#fff;outline:none;font-weight:800
   }
 
-  .tableWrap{
-    margin-top:12px;
-    border-radius:14px;
-    border:1px solid rgba(15,23,42,.12);
-    overflow:auto;
-    background:#fff;
-  }
+  .tableWrap{margin-top:12px;border-radius:14px;border:1px solid rgba(15,23,42,.12);overflow:auto;background:#fff}
   table{width:100%;border-collapse:collapse;min-width:1200px}
   th,td{padding:10px;border-bottom:1px solid rgba(15,23,42,.08);font-size:.92rem;white-space:nowrap;text-align:left}
   th{position:sticky;top:0;background:#fff;color:rgba(15,23,42,.75);font-weight:950;z-index:2}
 
-  /* Donuts bottom (centered, no overlap) */
-  .donutSection{margin-top:16px}
+  /* Charts */
+  .chartControls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px;align-items:end}
+  @media(max-width:980px){.chartControls{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.chartControls{grid-template-columns:1fr}}
+  .field label{display:block;margin-bottom:6px;font-weight:950;font-size:.9rem;color:rgba(15,23,42,.85)}
+  .field select{width:100%;padding:11px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.16);background:#fff;outline:none;font-weight:800}
+  .chartsGrid{display:grid;grid-template-columns:1.25fr .75fr;gap:12px;margin-top:12px}
+  @media(max-width:980px){.chartsGrid{grid-template-columns:1fr}}
+  .chartCard{border:1px solid rgba(15,23,42,.12);background:#fff;border-radius:14px;padding:12px}
+  .chartCanvasWrap{position:relative;height:320px}
+  @media(max-width:980px){.chartCanvasWrap{height:300px}}
+
+  /* Donuts bottom */
   .donutGrid{
-    display:grid;
-    grid-template-columns:repeat(3, minmax(0, 1fr));
-    gap:12px;
-    align-items:stretch;
-    margin-top:12px;
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;align-items:stretch;margin-top:12px;
   }
   @media(max-width:980px){.donutGrid{grid-template-columns:1fr}}
   .donutCard{
@@ -131,48 +116,10 @@
   .donutText strong{font-weight:950}
   .donutText .muted{font-weight:800}
 
-  .chip{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:6px 10px;border-radius:999px;border:1px solid rgba(15,23,42,.12);
-    background:rgba(15,23,42,.02);font-weight:950;font-size:.88rem;color:rgba(15,23,42,.9);
-  }
-  .chip.blue{border-color:rgba(37,99,235,.25);background:rgba(37,99,235,.08)}
-  .chip.red{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
-
-  /* Interactive charts */
-  .chartControls{
-    display:grid;
-    grid-template-columns:repeat(4, minmax(0, 1fr));
-    gap:12px;
-    margin-top:12px;
-    align-items:end;
-  }
-  @media(max-width:980px){.chartControls{grid-template-columns:1fr 1fr}}
-  @media(max-width:560px){.chartControls{grid-template-columns:1fr}}
-  .field label{display:block;margin-bottom:6px;font-weight:950;font-size:.9rem;color:rgba(15,23,42,.85)}
-  .field select, .field input{
-    width:100%;padding:11px 12px;border-radius:12px;
-    border:1px solid rgba(15,23,42,.16);
-    background:#fff;color:var(--text);outline:none;font-weight:800;
-  }
-  .chartsGrid{
-    display:grid;
-    grid-template-columns:1.25fr .75fr;
-    gap:12px;
-    margin-top:12px;
-  }
-  @media(max-width:980px){.chartsGrid{grid-template-columns:1fr}}
-  .chartCard{
-    border:1px solid rgba(15,23,42,.12);
-    background:#fff;
-    border-radius:14px;
-    padding:12px;
-  }
-  .chartTop{
-    display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap
-  }
-  .chartCanvasWrap{position:relative;height:320px}
-  @media(max-width:980px){.chartCanvasWrap{height:300px}}
+  /* Map */
+  .mapWrap{margin-top:14px;border:1px solid rgba(15,23,42,.12);border-radius:14px;overflow:hidden;background:#fff}
+  .mapHeader{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-bottom:1px solid rgba(15,23,42,.10)}
+  .mapCanvas{width:100%;display:block}
 </style>
 </head>
 
@@ -186,6 +133,7 @@
     <div style="display:flex;gap:10px;flex-wrap:wrap">
       <a class="btn" href="index.html">← Back</a>
       <a class="btn small" href="#charts">Charts</a>
+      <a class="btn small" href="#map">Map</a>
     </div>
   </div>
 </header>
@@ -196,7 +144,7 @@
       <div>
         <h1>Example of my work at LODISNA</h1>
         <p class="muted" style="margin:6px 0 0">
-          Road freight operations example across Europe: double-driver assignments, realistic incidents, and cost/revenue/margin fields.
+          Road freight operations example across Europe: double-driver assignments, realistic incidents, and cost/revenue/margin logic.
         </p>
       </div>
 
@@ -238,14 +186,14 @@
       </table>
     </div>
 
-    <!-- Interactive charts -->
+    <!-- Charts -->
     <div id="charts" style="margin-top:18px">
       <div class="row">
         <h2 style="margin:0">Interactive Reporting (Charts)</h2>
         <span class="chip blue">line + bar</span>
       </div>
       <p class="muted" style="margin:10px 0 0">
-        Designed for Power BI-like analysis: trends over time (line chart) and performance by truck (bar chart).
+        Power BI-like analysis: trends over time (line chart) and performance by truck (bar chart).
       </p>
 
       <div class="chartControls">
@@ -288,43 +236,47 @@
 
       <div class="chartsGrid">
         <div class="chartCard">
-          <div class="chartTop">
+          <div class="row">
             <h3 style="margin:0">Trend over time</h3>
             <span class="chip">time series</span>
           </div>
-          <div class="chartCanvasWrap">
-            <canvas id="trendChart"></canvas>
-          </div>
-          <p class="muted" style="margin:10px 0 0">
-            Useful for: monthly margin trend, incident spikes, seasonal volume.
-          </p>
+          <div class="chartCanvasWrap"><canvas id="trendChart"></canvas></div>
+          <p class="muted" style="margin:10px 0 0">Useful for: monthly margin trend, incident spikes, seasonal volume.</p>
         </div>
 
         <div class="chartCard">
-          <div class="chartTop">
+          <div class="row">
             <h3 style="margin:0">By truck (fleet view)</h3>
             <span class="chip red">operations</span>
           </div>
-          <div class="chartCanvasWrap">
-            <canvas id="barChart"></canvas>
-          </div>
-          <p class="muted" style="margin:10px 0 0">
-            Useful for: identifying best-performing units and risk (incidents).
-          </p>
+          <div class="chartCanvasWrap"><canvas id="barChart"></canvas></div>
+          <p class="muted" style="margin:10px 0 0">Useful for: identifying best-performing units and risk (incidents).</p>
         </div>
       </div>
     </div>
 
-    <!-- Donuts at the bottom -->
-    <div class="donutSection">
-      <div class="row" style="margin-top:16px">
+    <!-- Map -->
+    <div id="map" class="mapWrap">
+      <div class="mapHeader">
+        <div>
+          <h2 style="margin:0">European Route Map (simplified)</h2>
+          <p class="muted" style="margin:6px 0 0">Nodes and links derived from the dataset (no external map API).</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn small" id="dlMapPng" type="button">Map PNG</button>
+        </div>
+      </div>
+      <canvas id="routeMap" width="1100" height="480" class="mapCanvas"></canvas>
+    </div>
+
+    <!-- Donuts bottom -->
+    <div style="margin-top:16px">
+      <div class="row">
         <h2 style="margin:0">Operational KPIs (Donuts)</h2>
         <span class="chip blue">quick view</span>
       </div>
       <div class="donutGrid" id="donutGrid"></div>
-      <p class="muted" style="margin:10px 0 0">
-        Quick interpretation: on-time performance, incident rate, and margin index.
-      </p>
+      <p class="muted" style="margin:10px 0 0">Quick interpretation: on-time performance, incident rate, and margin index.</p>
     </div>
 
   </section>
@@ -375,10 +327,7 @@
   }
 
   function downloadCSV(filename, rows){
-    if(!rows || !rows.length){
-      alert("Please generate data first.");
-      return;
-    }
+    if(!rows || !rows.length){ alert("Please generate data first."); return; }
     const headers = Object.keys(rows[0]);
     const lines = [headers.join(",")];
     for(const r of rows){
@@ -437,15 +386,11 @@
     const card = document.createElement("div");
     card.className = "donutCard";
     card.innerHTML = `
-      <div>
-        <canvas class="donutCanvas" width="120" height="120" aria-label="${title} chart"></canvas>
-      </div>
+      <div><canvas class="donutCanvas" width="120" height="120" aria-label="${title} chart"></canvas></div>
       <div class="donutText">
         <strong>${title}</strong>
         <div class="muted">${footerText}</div>
-        <div style="margin-top:10px">
-          <span class="chip">${label}</span>
-        </div>
+        <div style="margin-top:10px"><span class="chip">${label}</span></div>
       </div>
     `;
     const c = card.querySelector("canvas");
@@ -459,20 +404,22 @@
   let trendChart = null;
   let barChart = null;
 
+  function groupKey(date, gran){
+    if (gran === "day") return date;
+    if (gran === "month") return date.slice(0,7);
+    return date.slice(0,4);
+  }
+
   function generate(){
     const seed = 97 + Math.floor(Math.random()*9999);
     const rnd = mulberry32(seed);
 
-    // fleet: 5 trucks + trailers
     const fleet = [];
     for(let i=1;i<=5;i++){
-      fleet.push({
-        truck_plate: randomSpanishPlate(rnd),
-        trailer_plate: randomSpanishPlate(rnd)
-      });
+      fleet.push({ truck_plate: randomSpanishPlate(rnd), trailer_plate: randomSpanishPlate(rnd) });
     }
 
-    const horizon = 540; // bigger horizon to show year/month/day trends
+    const horizon = 540;
     const start = (()=>{ const d=new Date(); d.setDate(d.getDate()-horizon); return iso(d); })();
 
     ROWS = [];
@@ -497,7 +444,6 @@
       const delayed = (rnd() < (0.08 + (km>1100?0.08:0))) || incident !== "None";
       const status = delayed ? "Delayed" : "On time";
 
-      // seasonal-ish pricing + costs (more realistic trends)
       const month = Number(date.slice(5,7));
       const seasonFactor = (month>=11 || month<=2) ? 1.08 : (month>=6 && month<=8) ? 1.04 : 1.00;
 
@@ -559,15 +505,8 @@
     const incidentPct = incidentCount / total;
 
     const marginPerShipment = margin / total;
-    const marginIndex = Math.max(0, Math.min(1, marginPerShipment / 450));
 
-    return { total, onTime, incidentCount, rev, cost, margin, onTimePct, incidentPct, marginIndex, marginPerShipment };
-  }
-
-  function groupKey(date, gran){
-    if (gran === "day") return date;
-    if (gran === "month") return date.slice(0,7);
-    return date.slice(0,4); // year
+    return { total, onTime, incidentCount, rev, cost, margin, onTimePct, incidentPct, marginPerShipment };
   }
 
   function buildTimeSeries(gran, metric){
@@ -626,7 +565,7 @@
   }
 
   function renderTable(){
-    let rows = ROWS.slice().sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+    let rows = ROWS.slice().sort((a,b) => (b.date || "").localeCompare(a.date || ""));
     if (incidentsOnly) rows = rows.filter(x => x.incident && x.incident !== "None");
     rows = applySearch(rows);
 
@@ -665,27 +604,9 @@
 
     const g = $("donutGrid");
     g.innerHTML = "";
-    g.appendChild(donutCard(
-      "On-time Performance",
-      k.onTimePct,
-      "On time",
-      "rgba(37,99,235,1)",
-      `${Math.round(k.onTimePct*100)}% on-time shipments`
-    ));
-    g.appendChild(donutCard(
-      "Incident Rate",
-      k.incidentPct,
-      "Incidents",
-      "rgba(239,68,68,1)",
-      `${k.incidentCount} shipments with incidents`
-    ));
-    g.appendChild(donutCard(
-      "Margin Index",
-      Math.max(0, Math.min(1, k.marginPerShipment / 450)),
-      "Margin",
-      "rgba(15,23,42,.86)",
-      `Avg margin ≈ ${eur(k.marginPerShipment)} / shipment`
-    ));
+    g.appendChild(donutCard("On-time Performance", k.onTimePct, "On time", "rgba(37,99,235,1)", `${Math.round(k.onTimePct*100)}% on-time shipments`));
+    g.appendChild(donutCard("Incident Rate", k.incidentPct, "Incidents", "rgba(239,68,68,1)", `${k.incidentCount} shipments with incidents`));
+    g.appendChild(donutCard("Margin Index", Math.max(0, Math.min(1, (k.marginPerShipment / 450))), "Margin", "rgba(15,23,42,.86)", `Avg margin ≈ ${eur(k.marginPerShipment)} / shipment`));
   }
 
   function renderCharts(){
@@ -696,66 +617,104 @@
     const ts = buildTimeSeries(gran, trendMetric);
     const bars = buildTruckBars(barMetric);
 
-    // Trend line
     if (trendChart) trendChart.destroy();
     trendChart = new Chart($("trendChart"), {
       type: "line",
-      data: {
-        labels: ts.labels,
-        datasets: [{
-          label: trendMetric,
-          data: ts.values,
-          tension: 0.25,
-          pointRadius: 2,
-          borderWidth: 2
-        }]
-      },
+      data: { labels: ts.labels, datasets: [{ label: trendMetric, data: ts.values, tension: 0.25, pointRadius: 2, borderWidth: 2 }] },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: true },
-          tooltip: { mode: "index", intersect: false }
-        },
+        responsive: true, maintainAspectRatio: false,
         interaction: { mode: "index", intersect: false },
-        scales: {
-          x: { grid: { display: false } },
-          y: { beginAtZero: false }
-        }
+        plugins: { legend: { display: true }, tooltip: { mode: "index", intersect: false } },
+        scales: { x: { grid: { display: false } }, y: { beginAtZero: false } }
       }
     });
 
-    // Bar
     if (barChart) barChart.destroy();
     barChart = new Chart($("barChart"), {
       type: "bar",
-      data: {
-        labels: bars.labels,
-        datasets: [{
-          label: barMetric,
-          data: bars.values,
-          borderWidth: 1
-        }]
-      },
+      data: { labels: bars.labels, datasets: [{ label: barMetric, data: bars.values, borderWidth: 1 }] },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
+        responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: true } },
-        scales: {
-          x: { grid: { display: false } },
-          y: { beginAtZero: true }
-        }
+        scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
       }
     });
   }
 
   function downloadChartPng(chart, filename){
-    if (!chart){
-      alert("Generate data first.");
-      return;
-    }
+    if (!chart){ alert("Generate data first."); return; }
     const a = document.createElement("a");
     a.href = chart.toBase64Image("image/png", 1);
+    a.download = filename;
+    a.click();
+  }
+
+  // Simplified map (nodes)
+  const GEO = {
+    Madrid:[180,340], Barcelona:[240,330], Valencia:[220,360], Bilbao:[170,300], Seville:[150,380],
+    Paris:[360,220], Lyon:[380,250], Brussels:[390,200], Luxembourg:[420,210],
+    Frankfurt:[470,220], Cologne:[455,210], Hamburg:[480,170], Munich:[500,260],
+    Milan:[470,300], Turin:[450,290], Vienna:[560,250], Prague:[540,230],
+    Warsaw:[620,210], Budapest:[590,270], Bucharest:[680,300],
+    Amsterdam:[380,180], Rotterdam:[370,185]
+  };
+
+  function drawRouteMap(){
+    const c = $("routeMap");
+    const ctx = c.getContext("2d");
+    ctx.clearRect(0,0,c.width,c.height);
+
+    // Background
+    ctx.fillStyle = "rgba(255,255,255,1)";
+    ctx.fillRect(0,0,c.width,c.height);
+
+    // Subtle grid
+    ctx.strokeStyle = "rgba(15,23,42,.08)";
+    for(let x=0;x<c.width;x+=110){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,c.height); ctx.stroke(); }
+    for(let y=0;y<c.height;y+=90){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(c.width,y); ctx.stroke(); }
+
+    // Routes (top 28 shipments by km)
+    const routes = ROWS.slice().sort((a,b)=>b.km-a.km).slice(0,28);
+
+    // draw lines
+    routes.forEach(r=>{
+      const a = GEO[r.pickup], b = GEO[r.delivery];
+      if(!a || !b) return;
+      ctx.strokeStyle = (r.incident && r.incident!=="None") ? "rgba(239,68,68,.75)" : "rgba(37,99,235,.75)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(a[0], a[1]);
+      ctx.lineTo(b[0], b[1]);
+      ctx.stroke();
+    });
+
+    // nodes
+    Object.entries(GEO).forEach(([city,xy])=>{
+      const x=xy[0], y=xy[1];
+      ctx.fillStyle = "rgba(15,23,42,.86)";
+      ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle = "rgba(15,23,42,.65)";
+      ctx.font = "900 11px system-ui";
+      ctx.fillText(city, x+8, y+4);
+    });
+
+    // legend
+    ctx.fillStyle = "rgba(15,23,42,.75)";
+    ctx.font = "900 12px system-ui";
+    ctx.fillText("Legend:", 20, 26);
+    ctx.strokeStyle = "rgba(37,99,235,.75)"; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(90, 22); ctx.lineTo(130, 22); ctx.stroke();
+    ctx.fillText("On time", 140, 26);
+    ctx.strokeStyle = "rgba(239,68,68,.75)"; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(230, 22); ctx.lineTo(270, 22); ctx.stroke();
+    ctx.fillText("Incident/Delay", 280, 26);
+  }
+
+  function downloadCanvasPng(canvasId, filename){
+    const c = $(canvasId);
+    if (!c){ alert("Canvas not found."); return; }
+    const a = document.createElement("a");
+    a.href = c.toDataURL("image/png");
     a.download = filename;
     a.click();
   }
@@ -764,23 +723,23 @@
     renderKPICardsAndDonuts();
     renderTable();
     renderCharts();
+    drawRouteMap();
   }
 
   // Events
   $("gen").addEventListener("click", generate);
   $("dl").addEventListener("click", ()=>downloadCSV("lodisna_powerbi_shipments.csv", ROWS));
-
-  $("onlyIncidents").addEventListener("click", ()=>{ incidentsOnly=true; renderTable(); });
-  $("showAll").addEventListener("click", ()=>{ incidentsOnly=false; renderTable(); });
-  $("search").addEventListener("input", renderTable);
+  $("onlyIncidents").addEventListener("click", ()=>{ incidentsOnly=true; renderTable(); drawRouteMap(); });
+  $("showAll").addEventListener("click", ()=>{ incidentsOnly=false; renderTable(); drawRouteMap(); });
+  $("search").addEventListener("input", ()=>{ renderTable(); drawRouteMap(); });
 
   ["gran","trendMetric","barMetric"].forEach(id => $(id).addEventListener("change", renderCharts));
   $("dlTrendPng").addEventListener("click", ()=>downloadChartPng(trendChart, "LODISNA_Trend.png"));
   $("dlBarPng").addEventListener("click", ()=>downloadChartPng(barChart, "LODISNA_ByTruck.png"));
+  $("dlMapPng").addEventListener("click", ()=>downloadCanvasPng("routeMap", "LODISNA_RouteMap.png"));
 
   // Init
   generate();
 </script>
-
 </body>
 </html>
