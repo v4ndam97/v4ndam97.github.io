@@ -4,112 +4,775 @@
   <meta charset="utf-8" />
   <title>Andrei Adam | Data, BI & Operations</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Portfolio of Andrei Adam – Power BI, SAP simulations and operational data projects." />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Portfolio of Andrei Adam – Power BI and SAP simulators, dashboards and operational data projects." />
+
+  <style>
+    :root{
+      --bg:#f3f6f8;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --blue:#0a66c2;     /* LinkedIn-ish */
+      --dark:#111827;     /* YouTube-ish */
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --r: 14px;
+      --max: 1100px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    a{ color:var(--blue); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+
+    .container{ max-width:var(--max); margin:0 auto; padding:22px; }
+    .topbar{
+      background:rgba(255,255,255,.92);
+      border-bottom:1px solid var(--border);
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter: blur(10px);
+    }
+    .topbar-inner{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      font-weight:900;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: linear-gradient(135deg, var(--blue), #8b5cf6);
+      box-shadow: 0 0 0 4px rgba(10,102,194,.12);
+    }
+    .role{ color:var(--muted); font-weight:600; font-size:.95rem; }
+    .nav{
+      display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    }
+    .nav a{
+      color: rgba(31,41,55,.85);
+      font-weight:700;
+      padding:8px 10px;
+      border-radius:10px;
+    }
+    .nav a:hover{ background: rgba(17,24,39,.05); text-decoration:none; }
+
+    .hero{
+      background:var(--card);
+      border-bottom:1px solid var(--border);
+      padding:70px 0 40px;
+      text-align:center;
+    }
+    .hero h1{
+      margin:0 0 12px;
+      font-size: clamp(2rem, 3.4vw, 2.8rem);
+      letter-spacing: -0.6px;
+    }
+    .hero p{
+      margin:0 auto 22px;
+      max-width: 70ch;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:12px 18px;
+      border-radius: 10px;
+      border:1px solid var(--border);
+      background:#eef2f7;
+      font-weight:800;
+      color: var(--text);
+      text-decoration:none;
+      box-shadow: 0 6px 18px rgba(15,23,42,.06);
+    }
+    .btn:hover{ background:#e8edf6; text-decoration:none; }
+    .btn.primary{
+      background: var(--blue);
+      border-color: rgba(10,102,194,.35);
+      color:#fff;
+    }
+    .btn.primary:hover{ background:#095eaF; }
+
+    .section{ padding:38px 0; }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    h2{ margin:0 0 10px; letter-spacing:-0.3px; }
+    .muted{ color:var(--muted); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    @media (max-width: 920px){
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    .project-card h3{ margin:0 0 8px; }
+    .pill{
+      display:inline-flex;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#f8fafc;
+      font-weight:800;
+      font-size:.85rem;
+      color: rgba(31,41,55,.8);
+    }
+    .row{
+      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      margin-bottom: 12px;
+    }
+
+    /* Simulator shared UI */
+    .sim-head{
+      display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .sim-controls{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .field label{
+      display:block;
+      font-size:.9rem;
+      font-weight:800;
+      color: rgba(31,41,55,.75);
+      margin-bottom: 6px;
+    }
+    .field input, .field select{
+      width:100%;
+      padding:11px 12px;
+      border-radius: 10px;
+      border:1px solid var(--border);
+      background:#fff;
+    }
+    .actions{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top: 12px;
+    }
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (max-width: 920px){
+      .kpis{ grid-template-columns:1fr; }
+      .sim-controls{ grid-template-columns:1fr; }
+    }
+    .kpi{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .kpi .k{ color:var(--muted); font-weight:800; font-size:.9rem; }
+    .kpi .v{ font-weight:950; font-size:1.25rem; margin-top:6px; }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top: 12px;
+      overflow:hidden;
+      border-radius: 12px;
+      border:1px solid var(--border);
+      background:#fff;
+    }
+    th, td{
+      text-align:left;
+      padding:10px;
+      border-bottom:1px solid #eef2f7;
+      font-size: .92rem;
+    }
+    th{ color: rgba(31,41,55,.7); font-weight:900; background:#fbfcfe; }
+    tr:hover td{ background:#fafcff; }
+
+    .footer{
+      text-align:center;
+      padding: 22px 0;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,.55);
+    }
+  </style>
 </head>
 
 <body>
 
 <header class="topbar">
-  <div class="container">
-    <div class="logo">Andrei Adam</div>
-    <div class="role">Data · Business Intelligence · Operations</div>
+  <div class="container topbar-inner">
+    <div>
+      <div class="brand"><span class="dot"></span> Andrei Adam</div>
+      <div class="role">Data · Business Intelligence · Operations</div>
+    </div>
+    <nav class="nav" aria-label="Main">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#simulators">Simulators</a>
+      <a href="#contact">Contact</a>
+    </nav>
   </div>
 </header>
 
 <main>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="container">
-    <h1>Turning operational data into decisions</h1>
-    <p class="hero-sub">
-      Practical projects in <strong>Power BI</strong>, <strong>SAP</strong> and data analysis.<br>
-      Built to simulate real business scenarios for decision making.
-    </p>
-    <a href="#projects" class="btn primary">View projects</a>
-  </div>
-</section>
+  <section class="hero">
+    <div class="container">
+      <h1>Turning operational data into decisions</h1>
+      <p>
+        Practical, interview-ready demos in <strong>Power BI</strong> and <strong>SAP process simulation</strong>.
+        Built to show how I model data, calculate KPIs, and turn operations into clear reporting.
+      </p>
+      <a class="btn primary" href="#simulators">Open simulators</a>
+      <span style="display:inline-block;width:10px;"></span>
+      <a class="btn" href="#contact">Contact</a>
+    </div>
+  </section>
 
-<!-- ABOUT -->
-<section class="about">
-  <div class="container card">
-    <h2>About me</h2>
-    <p>
-      I am a multidisciplinary professional with experience in logistics, operations and regulated
-      industrial environments, combined with strong self-taught skills in data analysis, reporting
-      and automation.
-    </p>
-    <p>
-      I focus on transforming operational data into clear dashboards, KPIs and decision-support tools,
-      bridging the gap between business processes and data.
-    </p>
-  </div>
-</section>
-
-<!-- PROJECTS -->
-<section id="projects" class="projects">
-  <div class="container">
-    <h2>Projects</h2>
-
-    <div class="project-grid">
-
-      <div class="project-card">
-        <h3>Power BI – Logistics KPI Dashboard</h3>
-        <p>
-          Interactive dashboard simulating logistics and transport KPIs:
-          costs per route, performance, trends and monthly analysis.
+  <section id="about" class="section">
+    <div class="container">
+      <div class="card">
+        <div class="row">
+          <h2>About me</h2>
+          <span class="pill">Ops → Data → BI</span>
+        </div>
+        <p class="muted">
+          I am a multidisciplinary professional with experience in logistics, operations and regulated environments,
+          combined with self-taught skills in reporting, data analysis and automation.
         </p>
-        <p><strong>Skills:</strong> Power BI · KPIs · Data modeling · CSV analysis</p>
-        <a class="btn" href="projects/powerbi-dashboard/">Open simulator</a>
+        <p class="muted" style="margin-bottom:0;">
+          I focus on turning operational data into dashboards and decision-support tools: clear KPIs, performance analysis,
+          costs, and process visibility (Power BI + business process thinking).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="section">
+    <div class="container">
+      <div class="row">
+        <h2>Projects</h2>
+        <span class="muted">Click “Open simulator” to try them live</span>
       </div>
 
-      <div class="project-card">
-        <h3>SAP – Order to Cash (O2C) Simulator</h3>
-        <p>
-          Simulation of a SAP Order-to-Cash flow, from sales order creation
-          to delivery, invoicing and KPI monitoring.
-        </p>
-        <p><strong>Skills:</strong> SAP processes · O2C · Business flows · Reporting</p>
-        <a class="btn" href="projects/sap-otc-simulator/">Open simulator</a>
+      <div class="grid">
+        <div class="card project-card">
+          <div class="row">
+            <h3 style="margin:0;">Power BI – Logistics KPI Dashboard</h3>
+            <span class="pill">Editable + CSV</span>
+          </div>
+          <p class="muted" style="margin:0 0 12px;">
+            Simulates shipments, routes, costs and punctuality. Exports a CSV dataset you can load into Power BI.
+          </p>
+          <a class="btn primary" href="#powerbi-sim">Open simulator</a>
+        </div>
+
+        <div class="card project-card">
+          <div class="row">
+            <h3 style="margin:0;">SAP – Order to Cash (O2C) Simulator</h3>
+            <span class="pill">Process + KPIs</span>
+          </div>
+          <p class="muted" style="margin:0 0 12px;">
+            Simulates an O2C flow (Sales Order → Delivery → Invoice → Payment), with status breakdown and aging.
+          </p>
+          <a class="btn primary" href="#sap-sim">Open simulator</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="simulators" class="section">
+    <div class="container">
+
+      <!-- POWER BI SIM -->
+      <div id="powerbi-sim" class="card">
+        <div class="sim-head">
+          <div>
+            <h2 style="margin:0;">Power BI Simulator – Logistics KPI Dataset</h2>
+            <div class="muted">Edit parameters → generate data → export CSV (Power BI / Excel ready)</div>
+          </div>
+          <span class="pill" id="pbBadge">Rows: 300</span>
+        </div>
+
+        <div class="sim-controls">
+          <div class="field">
+            <label for="pbSeed">Seed (reproducible)</label>
+            <input id="pbSeed" type="number" value="42" />
+          </div>
+          <div class="field">
+            <label for="pbRows">Number of shipments</label>
+            <input id="pbRows" type="number" min="50" max="5000" value="300" />
+          </div>
+
+          <div class="field">
+            <label for="pbRegion">Region</label>
+            <select id="pbRegion">
+              <option value="EU">EU</option>
+              <option value="RO">RO</option>
+              <option value="DE">DE</option>
+              <option value="ES">ES</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="pbTarget">On-time target (%)</label>
+            <input id="pbTarget" type="number" min="70" max="99" value="92" />
+          </div>
+
+          <div class="field">
+            <label for="pbPriceKm">Revenue per km (€/km)</label>
+            <input id="pbPriceKm" type="number" step="0.01" value="1.15" />
+          </div>
+          <div class="field">
+            <label for="pbFuel">Fuel price (€/L)</label>
+            <input id="pbFuel" type="number" step="0.01" value="1.70" />
+          </div>
+
+          <div class="field">
+            <label for="pbL100">Consumption (L/100km)</label>
+            <input id="pbL100" type="number" step="0.1" value="28.0" />
+          </div>
+          <div class="field">
+            <label for="pbOverhead">Overhead per shipment (€)</label>
+            <input id="pbOverhead" type="number" step="1" value="45" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" id="pbGen" type="button">Generate</button>
+          <button class="btn" id="pbCSV" type="button">Export CSV</button>
+        </div>
+
+        <div class="kpis" id="pbKpis"></div>
+
+        <div style="overflow:auto;">
+          <table aria-label="Shipments sample">
+            <thead>
+              <tr>
+                <th>Date</th><th>Client</th><th>Route</th><th>Km</th>
+                <th>Cost (€)</th><th>Revenue (€)</th><th>Margin (€)</th><th>On-time</th><th>Incidence</th>
+              </tr>
+            </thead>
+            <tbody id="pbTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="height:18px;"></div>
+
+      <!-- SAP SIM -->
+      <div id="sap-sim" class="card">
+        <div class="sim-head">
+          <div>
+            <h2 style="margin:0;">SAP Simulator – Order to Cash (O2C)</h2>
+            <div class="muted">Generate a realistic O2C dataset: statuses, lead times, unpaid aging</div>
+          </div>
+          <span class="pill" id="sapBadge">Orders: 250</span>
+        </div>
+
+        <div class="sim-controls">
+          <div class="field">
+            <label for="sapSeed">Seed</label>
+            <input id="sapSeed" type="number" value="13" />
+          </div>
+          <div class="field">
+            <label for="sapN">Number of orders</label>
+            <input id="sapN" type="number" min="50" max="5000" value="250" />
+          </div>
+
+          <div class="field">
+            <label for="sapFail">Failure probability (%)</label>
+            <input id="sapFail" type="number" min="0" max="40" value="6" />
+          </div>
+          <div class="field">
+            <label for="sapDelay">Average delay (days)</label>
+            <input id="sapDelay" type="number" min="0" max="30" value="4" />
+          </div>
+
+          <div class="field">
+            <label for="sapNet">Payment terms NET (days)</label>
+            <input id="sapNet" type="number" min="7" max="90" value="30" />
+          </div>
+          <div class="field">
+            <label for="sapUnpaid">Unpaid share (%)</label>
+            <input id="sapUnpaid" type="number" min="0" max="60" value="18" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" id="sapGen" type="button">Generate</button>
+          <button class="btn" id="sapCSV" type="button">Export CSV</button>
+        </div>
+
+        <div class="kpis" id="sapKpis"></div>
+
+        <div style="overflow:auto;">
+          <table aria-label="O2C sample">
+            <thead>
+              <tr>
+                <th>Order</th><th>Customer</th><th>Value (€)</th><th>Status</th><th>Lead time (d)</th><th>Aging (d)</th>
+              </tr>
+            </thead>
+            <tbody id="sapTbody"></tbody>
+          </table>
+        </div>
       </div>
 
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CONTACT -->
-<section class="contact">
-  <div class="container card">
-    <h2>Contact</h2>
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="card">
+        <div class="row">
+          <h2>Contact</h2>
+          <span class="pill">Open to opportunities</span>
+        </div>
 
-    <p>
-      📧 <strong>Email:</strong>
-      <a href="mailto:andreiadam.lu@hotmail.com">
-        andreiadam.lu@hotmail.com
-      </a>
-    </p>
+        <p style="margin:10px 0;">
+          📧 <strong>Email:</strong>
+          <a href="mailto:andreiadam.lu@hotmail.com">andreiadam.lu@hotmail.com</a>
+        </p>
 
-    <p>
-      💼 <strong>LinkedIn:</strong>
-      <a href="https://www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b"
-         target="_blank"
-         rel="noreferrer">
-        www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b
-      </a>
-    </p>
+        <p style="margin:10px 0;">
+          💼 <strong>LinkedIn:</strong>
+          <a href="https://www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b" target="_blank" rel="noreferrer">
+            www.linkedin.com/in/valeriu-andrei-emanuel-adam-94861538b
+          </a>
+        </p>
 
-  </div>
-</section>
+        <p class="muted" style="margin:12px 0 0;">
+          Tip for HR: These simulators generate datasets similar to real business scenarios and demonstrate KPI logic,
+          process understanding and reporting mindset.
+        </p>
+      </div>
+    </div>
+  </section>
 
 </main>
 
 <footer class="footer">
-  <div class="container">
-    © Andrei Adam – Data & Business Intelligence
-  </div>
+  <div class="container">© Andrei Adam – Data & Business Intelligence</div>
 </footer>
 
-<script src="script.js"></script>
+<script>
+  // ---------- Shared helpers ----------
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n, d=2) => Number(n).toFixed(d);
+
+  function mulberry32(seed) {
+    let a = seed >>> 0;
+    return function() {
+      a += 0x6D2B79F5;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function todayMinus(days){
+    const dt = new Date();
+    dt.setDate(dt.getDate() - days);
+    return dt.toISOString().slice(0,10);
+  }
+  function addDays(dateStr, d){
+    const dt = new Date(dateStr);
+    dt.setDate(dt.getDate() + d);
+    return dt.toISOString().slice(0,10);
+  }
+
+  function downloadCSV(filename, rows){
+    if (!rows || !rows.length) return alert("Generate data first.");
+    const headers = Object.keys(rows[0]);
+    const lines = [headers.join(",")];
+
+    for (const row of rows){
+      const line = headers.map(h=>{
+        const v = row[h] ?? "";
+        const s = String(v);
+        if (s.includes(",") || s.includes('"') || s.includes("\n")) return `"${s.replaceAll('"','""')}"`;
+        return s;
+      }).join(",");
+      lines.push(line);
+    }
+    const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // =========================================================
+  // POWER BI SIMULATOR (Logistics KPIs)
+  // =========================================================
+  const pbRoutes = {
+    EU: ["LU-DE", "LU-FR", "LU-BE", "DE-FR", "DE-NL", "FR-ES", "RO-HU", "HU-AT"],
+    RO: ["BUC-CLJ", "BUC-TMS", "IAS-CLJ", "CLJ-BRA", "BUC-CT", "CT-GL", "BUC-SBV"],
+    DE: ["HAM-BER", "BER-MUC", "FRA-CGN", "STR-MUC", "FRA-HAM", "CGN-DUS"],
+    ES: ["MAD-BCN", "BCN-VLC", "MAD-SEV", "SEV-MLG", "BIL-MAD", "ZAR-BCN"]
+  };
+  const pbClients = ["IKEA","DHL","DB Schenker","Amazon","Kuehne+Nagel","Carrefour","Leroy Merlin","Zalando"];
+  let pbData = [];
+
+  function pbGenerate(){
+    const seed = +$("pbSeed").value || 42;
+    const rows = +$("pbRows").value || 300;
+    const region = $("pbRegion").value || "EU";
+    const target = +$("pbTarget").value || 92;
+    const priceKm = +$("pbPriceKm").value || 1.15;
+    const fuel = +$("pbFuel").value || 1.70;
+    const l100 = +$("pbL100").value || 28;
+    const overheadFixed = +$("pbOverhead").value || 45;
+
+    $("pbBadge").textContent = "Rows: " + rows;
+
+    const rnd = mulberry32(seed);
+    const routes = pbRoutes[region] || pbRoutes.EU;
+    pbData = [];
+
+    for (let i=0; i<rows; i++){
+      const km = Math.round(80 + rnd()*1200);
+      const baseDelayProb = Math.max(0, (100 - target) / 100);
+      const traffic = 0.03 + rnd()*0.08;
+      const delayProb = Math.min(0.35, baseDelayProb + traffic);
+      const onTime = rnd() > delayProb;
+
+      const incidenceProb = 0.04 + (onTime ? 0 : 0.03) + (km > 900 ? 0.02 : 0);
+      const hasInc = rnd() < Math.min(0.18, incidenceProb);
+      const inc = hasInc ? (["Damage","Docs issue","Customs","Customer not available","Temperature deviation"][Math.floor(rnd()*5)]) : "None";
+
+      const fuelCost = (km * (l100/100)) * fuel;
+      const driverCost = km * (0.22 + rnd()*0.10);
+      const tolls = km * (0.05 + rnd()*0.06);
+      const overhead = overheadFixed + rnd()*25;
+
+      const cost = fuelCost + driverCost + tolls + overhead;
+      const revenue = km * (priceKm + (rnd()*0.25 - 0.05));
+      const margin = revenue - cost;
+
+      const day = Math.floor(rnd()*120);
+      const date = todayMinus(day);
+
+      pbData.push({
+        shipment_id: `SHP-${seed}-${String(i+1).padStart(5,"0")}`,
+        date,
+        region,
+        client: pbClients[Math.floor(rnd()*pbClients.length)],
+        route: routes[Math.floor(rnd()*routes.length)],
+        km,
+        on_time: onTime ? 1 : 0,
+        incidence: inc,
+        total_cost: +cost.toFixed(2),
+        revenue: +revenue.toFixed(2),
+        margin: +margin.toFixed(2)
+      });
+    }
+
+    pbRenderKPIs();
+    pbRenderTable();
+  }
+
+  function pbRenderKPIs(){
+    const sum = (f)=> pbData.reduce((a,x)=>a+f(x),0);
+    const totalKm = sum(x=>x.km);
+    const totalCost = sum(x=>x.total_cost);
+    const totalRev = sum(x=>x.revenue);
+    const totalMargin = totalRev - totalCost;
+    const onTimePct = 100 * sum(x=>x.on_time) / pbData.length;
+    const incPct = 100 * pbData.filter(x=>x.incidence!=="None").length / pbData.length;
+
+    const costPerKm = totalCost / totalKm;
+    const revPerKm = totalRev / totalKm;
+
+    const items = [
+      ["Shipments", pbData.length],
+      ["On-time %", fmt(onTimePct,1) + "%"],
+      ["Incidents %", fmt(incPct,1) + "%"],
+      ["Total cost", fmt(totalCost,0) + " €"],
+      ["Revenue", fmt(totalRev,0) + " €"],
+      ["Margin", fmt(totalMargin,0) + " €"],
+      ["Cost/km", fmt(costPerKm,2) + " €"],
+      ["Revenue/km", fmt(revPerKm,2) + " €"],
+      ["Km total", fmt(totalKm,0)]
+    ];
+
+    const wrap = $("pbKpis");
+    wrap.innerHTML = "";
+    for (const [k,v] of items){
+      const d = document.createElement("div");
+      d.className = "kpi";
+      d.innerHTML = `<div class="k">${k}</div><div class="v">${v}</div>`;
+      wrap.appendChild(d);
+    }
+  }
+
+  function pbRenderTable(){
+    const tb = $("pbTbody");
+    tb.innerHTML = "";
+    const sample = pbData.slice(-20).reverse();
+
+    for (const r of sample){
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${r.date}</td>
+        <td>${r.client}</td>
+        <td>${r.route}</td>
+        <td>${r.km}</td>
+        <td>${fmt(r.total_cost,2)}</td>
+        <td>${fmt(r.revenue,2)}</td>
+        <td>${fmt(r.margin,2)}</td>
+        <td>${r.on_time ? "✅" : "❌"}</td>
+        <td>${r.incidence==="None" ? "—" : r.incidence}</td>
+      `;
+      tb.appendChild(tr);
+    }
+  }
+
+  $("pbGen").addEventListener("click", pbGenerate);
+  $("pbCSV").addEventListener("click", ()=>downloadCSV("powerbi_logistics_kpi_dataset.csv", pbData));
+
+  // =========================================================
+  // SAP O2C SIMULATOR
+  // =========================================================
+  const sapCustomers = ["AUTOMOTIVE SRL","MEGA RETAIL","INDUSTRIAL NV","FRESH FOODS","TECH DISTRIB","HOME&BUILD","MED SUPPLY","E-COMMERCE HUB"];
+  let sapData = [];
+
+  function sapGenerate(){
+    const seed = +$("sapSeed").value || 13;
+    const n = +$("sapN").value || 250;
+    const failP = (+$("sapFail").value || 6) / 100;
+    const delayMean = +$("sapDelay").value || 4;
+    const net = +$("sapNet").value || 30;
+    const unpaidShare = (+$("sapUnpaid").value || 18) / 100;
+
+    $("sapBadge").textContent = "Orders: " + n;
+
+    const rnd = mulberry32(seed);
+    sapData = [];
+
+    for (let i=0; i<n; i++){
+      const orderDate = todayMinus(Math.floor(rnd()*120));
+      const value = Math.round(200 + rnd()*18000);
+      const customer = sapCustomers[Math.floor(rnd()*sapCustomers.length)];
+
+      const t_del = Math.max(0, Math.round(1 + rnd()*3 + rnd()*delayMean));
+      const t_gi  = Math.max(0, Math.round(0 + rnd()*2));
+      const t_inv = Math.max(0, Math.round(1 + rnd()*2 + rnd()*delayMean/2));
+      const payDelay = Math.max(0, Math.round((rnd()*2-1) * 6 + rnd()*delayMean));
+
+      const deliveryDate = addDays(orderDate, t_del);
+      const giDate = addDays(deliveryDate, t_gi);
+      const invoiceDate = addDays(giDate, t_inv);
+      const dueDate = addDays(invoiceDate, net);
+      const paymentDate = addDays(dueDate, payDelay);
+
+      const deliveryFail = rnd() < failP;
+      const invoiceFail = (!deliveryFail) && (rnd() < failP);
+
+      let status = "PAID";
+      if (deliveryFail) status = "BLOCKED_DELIVERY";
+      else if (invoiceFail) status = "BLOCKED_INVOICE";
+      else {
+        if (rnd() < unpaidShare) status = "INVOICED_UNPAID";
+      }
+
+      const leadTime = (deliveryFail || invoiceFail) ? "" : Math.round((new Date(invoiceDate) - new Date(orderDate)) / 86400000);
+      const aging = (status === "INVOICED_UNPAID")
+        ? Math.max(0, Math.round((new Date().getTime() - new Date(dueDate).getTime()) / 86400000))
+        : 0;
+
+      sapData.push({
+        order_id: `SO-${seed}-${String(i+1).padStart(5,"0")}`,
+        customer,
+        order_date: orderDate,
+        delivery_date: deliveryFail ? "" : deliveryDate,
+        goods_issue_date: deliveryFail ? "" : giDate,
+        invoice_date: (deliveryFail || invoiceFail) ? "" : invoiceDate,
+        due_date: (deliveryFail || invoiceFail) ? "" : dueDate,
+        payment_date: (status === "PAID") ? paymentDate : "",
+        order_value: value,
+        status,
+        lead_time_days: leadTime,
+        aging_days: aging
+      });
+    }
+
+    sapRenderKPIs();
+    sapRenderTable();
+  }
+
+  function sapRenderKPIs(){
+    const count = sapData.length;
+    const sumVal = sapData.reduce((a,r)=>a+(+r.order_value||0),0);
+    const paid = sapData.filter(r=>r.status==="PAID").length;
+    const blockedD = sapData.filter(r=>r.status==="BLOCKED_DELIVERY").length;
+    const blockedI = sapData.filter(r=>r.status==="BLOCKED_INVOICE").length;
+    const unpaid = sapData.filter(r=>r.status==="INVOICED_UNPAID").length;
+
+    const leads = sapData.map(r=>+r.lead_time_days).filter(x=>Number.isFinite(x));
+    const avgLead = leads.length ? (leads.reduce((a,x)=>a+x,0)/leads.length) : 0;
+
+    const items = [
+      ["Orders", count],
+      ["Total value", fmt(sumVal,0) + " €"],
+      ["Paid %", fmt(paid/count*100,1) + "%"],
+      ["Blocked delivery", blockedD],
+      ["Blocked invoice", blockedI],
+      ["Unpaid (aging)", unpaid],
+      ["Avg lead time", fmt(avgLead,1) + " days"]
+    ];
+
+    const wrap = $("sapKpis");
+    wrap.innerHTML = "";
+    for (const [k,v] of items){
+      const d = document.createElement("div");
+      d.className = "kpi";
+      d.innerHTML = `<div class="k">${k}</div><div class="v">${v}</div>`;
+      wrap.appendChild(d);
+    }
+  }
+
+  function sapRenderTable(){
+    const tb = $("sapTbody");
+    tb.innerHTML = "";
+    const sample = sapData.slice(-20).reverse();
+
+    for (const r of sample){
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${r.order_id}</td>
+        <td>${r.customer}</td>
+        <td>${r.order_value}</td>
+        <td>${r.status}</td>
+        <td>${r.lead_time_days === "" ? "—" : r.lead_time_days}</td>
+        <td>${r.aging_days ? r.aging_days : "—"}</td>
+      `;
+      tb.appendChild(tr);
+    }
+  }
+
+  $("sapGen").addEventListener("click", sapGenerate);
+  $("sapCSV").addEventListener("click", ()=>downloadCSV("sap_o2c_simulator_dataset.csv", sapData));
+
+  // initial render
+  pbGenerate();
+  sapGenerate();
+</script>
+
 </body>
 </html>
