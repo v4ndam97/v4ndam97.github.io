@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Convergint – Technical Operations Simulator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+:root{
+  --bg:#f6f8ff;
+  --card:#fff;
+  --text:#0f172a;
+  --muted:rgba(15,23,42,.65);
+  --border:rgba(15,23,42,.12);
+  --blue:#2563eb;
+  --red:#ef4444;
+  --radius:18px;
+  --shadow:0 18px 40px rgba(15,23,42,.10);
+  --max:1140px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui;background:linear-gradient(180deg,var(--bg),#fff);color:var(--text)}
+.container{max-width:var(--max);margin:auto;padding:22px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-top:16px}
+.row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.btn{padding:10px 14px;border-radius:14px;border:1px solid var(--border);background:#fff;font-weight:900}
+.btn.primary{background:var(--blue);color:#fff}
+.tableWrap{overflow:auto;border-radius:14px;border:1px solid var(--border);margin-top:12px}
+table{border-collapse:collapse;min-width:1100px;width:100%}
+th,td{padding:10px;border-bottom:1px solid var(--border);font-size:.9rem}
+th{background:#fff}
+.muted{color:var(--muted)}
+</style>
+</head>
+
+<body>
+
+<header class="container row">
+  <h2>Convergint – Technical Operations Coordination</h2>
+  <a class="btn" href="index.html">← Back</a>
+</header>
+
+<main class="container">
+
+<div class="card">
+<p class="muted">
+Simulated project based on Convergint operations: coordination of technicians,
+security systems deployment, incidents, SLAs and reporting.
+</p>
+
+<button class="btn primary" onclick="generate()">Generate work orders</button>
+<button class="btn" onclick="download()">Download CSV</button>
+
+<div class="tableWrap">
+<table>
+<thead>
+<tr>
+<th>Work Order</th>
+<th>Client</th>
+<th>System</th>
+<th>Technician</th>
+<th>Country</th>
+<th>Status</th>
+<th>SLA (hrs)</th>
+</tr>
+</thead>
+<tbody id="body"></tbody>
+</table>
+</div>
+</div>
+
+</main>
+
+<script>
+const techs=["James Wilson","Ahmed Hassan","Carlos Mendoza","Stefan Müller","Marco Rossi","David Cohen"];
+const systems=["CCTV","Access Control","Fire Alarm","Intrusion Detection"];
+const clients=["Corporate HQ","Airport Facility","Hospital Campus","Industrial Plant","Data Center"];
+const countries=["USA","Germany","France","Spain","Netherlands"];
+
+function generate(){
+  const body=document.getElementById("body");
+  body.innerHTML="";
+  for(let i=1;i<=20;i++){
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>WO-${2024+i}</td>
+      <td>${clients[Math.floor(Math.random()*clients.length)]}</td>
+      <td>${systems[Math.floor(Math.random()*systems.length)]}</td>
+      <td>${techs[Math.floor(Math.random()*techs.length)]}</td>
+      <td>${countries[Math.floor(Math.random()*countries.length)]}</td>
+      <td>${Math.random()>0.15?"Completed":"In progress"}</td>
+      <td>${Math.floor(4+Math.random()*24)}</td>
+    `;
+    body.appendChild(tr);
+  }
+}
+
+function download(){
+  let csv="WorkOrder,Client,System,Technician,Country,Status,SLA\n";
+  document.querySelectorAll("tbody tr").forEach(r=>{
+    csv+=Array.from(r.children).map(td=>td.innerText).join(",")+"\n";
+  });
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download="convergint_operations.csv";
+  a.click();
+}
+
+generate();
+</script>
+
+</body>
+</html>
