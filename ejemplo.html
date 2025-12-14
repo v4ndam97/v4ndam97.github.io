@@ -1,0 +1,1157 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Ejemplo empresa | Pack Operaciones + BI (Datos ficticios)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Ejemplo profesional con datos ficticios: operaciones de transporte + BI + SAP O2C. Incluye CSV y PDFs con gráficos." />
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f172a;
+      --card:#0c1630;
+      --card2:#0d1b38;
+      --text:#e5e7eb;
+      --muted:rgba(229,231,235,.72);
+      --border:rgba(229,231,235,.10);
+      --shadow:0 18px 45px rgba(0,0,0,.35);
+      --blue:#2563eb;
+      --red:#ef4444;
+      --radius:16px;
+      --max:1180px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 600px at 15% 10%, rgba(37,99,235,.22), transparent 60%),
+        radial-gradient(900px 550px at 85% 25%, rgba(239,68,68,.18), transparent 60%),
+        linear-gradient(180deg, var(--bg), #050a14);
+      color:var(--text);
+      line-height:1.5;
+    }
+
+    a{color:inherit;text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .container{max-width:var(--max); margin:0 auto; padding:22px}
+
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      background: rgba(11,18,32,.74);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--border);
+    }
+    .top-inner{
+      display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      font-weight:950;
+      letter-spacing:-.2px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: linear-gradient(135deg, var(--blue), var(--red));
+      box-shadow: 0 0 0 4px rgba(37,99,235,.16);
+    }
+    .sub{color:var(--muted); font-weight:700; font-size:.95rem}
+
+    .nav{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+    .nav a{
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid transparent;
+      font-weight:900;
+      color: rgba(229,231,235,.92);
+    }
+    .nav a:hover{
+      border-color: var(--border);
+      background: rgba(255,255,255,.04);
+      text-decoration:none;
+    }
+
+    .hero{ padding: 44px 0 14px; }
+    .heroGrid{
+      display:grid;
+      grid-template-columns: 1.25fr .9fr;
+      gap: 16px;
+      align-items:start;
+    }
+    @media (max-width: 980px){ .heroGrid{grid-template-columns:1fr} }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .card2{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+
+    h1{ margin:0 0 10px; font-size: clamp(1.9rem, 3.2vw, 2.7rem); letter-spacing:-.8px; line-height:1.1; }
+    h2{ margin:0 0 10px; letter-spacing:-.4px; }
+    h3{ margin:0 0 8px; letter-spacing:-.3px; }
+
+    .muted{color:var(--muted)}
+    .grad{
+      background: linear-gradient(135deg, var(--blue), var(--red));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+
+    .row{
+      display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      font-weight:900;
+      font-size:.9rem;
+    }
+    .pill .pDot{
+      width:7px;height:7px;border-radius:999px;
+      background: var(--blue);
+      box-shadow:0 0 0 4px rgba(37,99,235,.18);
+    }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:12px 14px;
+      border-radius: 14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      font-weight:950;
+      cursor:pointer;
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+    }
+    .btn:hover{ background: rgba(255,255,255,.08); border-color: rgba(229,231,235,.18); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(37,99,235,1), rgba(37,99,235,.78));
+      border-color: rgba(37,99,235,.45);
+    }
+    .btn.danger{
+      background: linear-gradient(135deg, rgba(239,68,68,1), rgba(239,68,68,.78));
+      border-color: rgba(239,68,68,.45);
+    }
+    .btn.small{ padding:9px 12px; border-radius: 12px; font-size:.95rem; }
+
+    .grid2{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+    @media (max-width: 980px){ .grid2{grid-template-columns:1fr} }
+
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (max-width: 980px){ .kpis{grid-template-columns: 1fr 1fr} }
+    @media (max-width: 560px){ .kpis{grid-template-columns: 1fr} }
+
+    .kpi{
+      border:1px solid rgba(229,231,235,.12);
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      padding: 12px;
+    }
+    .kpi .k{ color: rgba(229,231,235,.70); font-weight:950; font-size:.9rem; }
+    .kpi .v{ font-weight:1000; font-size:1.25rem; margin-top:6px; letter-spacing:-.3px; }
+
+    .tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px; }
+    .tab{
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: rgba(229,231,235,.92);
+      font-weight:950;
+      cursor:pointer;
+    }
+    .tab.active{
+      border-color: rgba(37,99,235,.45);
+      background: rgba(37,99,235,.18);
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (max-width: 980px){ .controls{grid-template-columns:1fr 1fr} }
+    @media (max-width: 560px){ .controls{grid-template-columns:1fr} }
+
+    .field label{
+      display:block;
+      margin-bottom:6px;
+      font-size:.9rem;
+      font-weight:950;
+      color: rgba(229,231,235,.88);
+    }
+    .field input, .field select{
+      width:100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border:1px solid rgba(229,231,235,.16);
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+      outline:none;
+    }
+
+    .tableWrap{
+      margin-top: 12px;
+      border-radius: 14px;
+      border:1px solid rgba(229,231,235,.12);
+      overflow:auto;
+      background: rgba(0,0,0,.18);
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width: 980px;
+    }
+    th, td{
+      padding:10px;
+      border-bottom: 1px solid rgba(229,231,235,.08);
+      font-size:.92rem;
+      white-space:nowrap;
+    }
+    th{
+      position:sticky; top:0;
+      background: rgba(11,18,32,.92);
+      color: rgba(229,231,235,.78);
+      font-weight:1000;
+      z-index:2;
+    }
+
+    /* PDF capture area style (important) */
+    .pdfArea{
+      background: #ffffff;
+      color:#0f172a;
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .pdfArea h2, .pdfArea h3{ color:#0f172a; }
+    .pdfMeta{
+      display:flex; gap:10px; flex-wrap:wrap;
+      color:#334155;
+      font-weight:700;
+      margin-bottom: 10px;
+    }
+    .pdfTag{
+      display:inline-flex;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#1e3a8a;
+      font-weight:900;
+      border:1px solid rgba(30,58,138,.18);
+    }
+    .pdfTag.red{
+      background:#fee2e2;
+      color:#7f1d1d;
+      border-color: rgba(127,29,29,.18);
+    }
+
+    .footer{
+      text-align:center;
+      padding: 22px 0;
+      color: rgba(229,231,235,.65);
+      border-top: 1px solid rgba(229,231,235,.08);
+      background: rgba(0,0,0,.10);
+      margin-top: 18px;
+    }
+  </style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="container top-inner">
+    <div>
+      <div class="brand"><span class="dot"></span> Ejemplo para empresa · Pack Operaciones + BI</div>
+      <div class="sub">Datos ficticios realistas · CSV + PDFs con gráficos · Transporte EU (10 camiones ES)</div>
+    </div>
+    <nav class="nav" aria-label="Main">
+      <a href="#resumen">Resumen</a>
+      <a href="#archivos">Archivos</a>
+      <a href="#dash">Dashboard</a>
+      <a href="#pdfs">PDFs</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO / RESUMEN -->
+  <section id="resumen" class="hero">
+    <div class="container">
+      <div class="heroGrid">
+
+        <div class="card">
+          <h1>Ejemplo realista de <span class="grad">cómo trabajaría</span> con vuestros datos</h1>
+          <p class="muted" style="margin:0 0 14px;">
+            Este documento simula una empresa de transporte con flota propia, doble conductor, rutas por Europa,
+            incidencias y gestión documental. Incluye datasets exportables (CSV) y reportes PDF con gráficos.
+          </p>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+            <button class="btn primary" id="genAll">Generar todo</button>
+            <button class="btn" id="dlAllCSVs">Descargar CSVs (todos)</button>
+            <a class="btn danger" href="index.html">Volver al portfolio</a>
+          </div>
+
+          <div class="kpis" id="kpisTop"></div>
+        </div>
+
+        <div class="card2">
+          <div class="row">
+            <h3 style="margin:0;">Funciones simuladas</h3>
+            <span class="pill"><span class="pDot"></span> Operativa</span>
+          </div>
+
+          <div style="display:grid; gap:10px; margin-top:10px;">
+            <div class="pill">Planificación rutas y asignación flota</div>
+            <div class="pill">Seguimiento incidencias + comunicación conductor</div>
+            <div class="pill">KPIs: OTIF, coste/km, margen, incidencias</div>
+            <div class="pill">Documentación: CMR, POD, manifiestos</div>
+            <div class="pill">Facturación + simulación O2C (SAP)</div>
+          </div>
+
+          <p class="muted" style="margin:12px 0 0;">
+            Todo lo de esta página se puede descargar como CSV y como PDF con gráficos.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHIVOS -->
+  <section id="archivos" class="container" style="padding-bottom:0;">
+    <div class="row">
+      <h2>Archivos que “trabaja” la empresa (ficticios)</h2>
+      <span class="pill"><span class="pDot"></span> Descargables</span>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>Operativa Transporte</h3>
+        <p class="muted" style="margin:0 0 10px;">
+          Dataset listo para Power BI: envíos, paradas, incidencias, conductores, flota, combustible.
+        </p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn small primary" id="dlShipments">CSV · Shipments</button>
+          <button class="btn small" id="dlStops">CSV · Stops</button>
+          <button class="btn small" id="dlIncidents">CSV · Incidents</button>
+          <button class="btn small" id="dlFleet">CSV · Fleet</button>
+          <button class="btn small" id="dlDrivers">CSV · Drivers</button>
+          <button class="btn small" id="dlFuel">CSV · Fuel log</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>SAP / Facturación (O2C)</h3>
+        <p class="muted" style="margin:0 0 10px;">
+          Dataset O2C estilo SAP: pedidos, entregas, facturas, cobros, aging y bloqueos.
+        </p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn small primary" id="dlSO">CSV · Sales Orders</button>
+          <button class="btn small" id="dlDN">CSV · Deliveries</button>
+          <button class="btn small" id="dlINV">CSV · Invoices</button>
+          <button class="btn small" id="dlPAY">CSV · Payments</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dash" class="container">
+    <div class="row">
+      <h2>Dashboard (vista rápida)</h2>
+      <span class="pill"><span class="pDot"></span> Charts + tablas</span>
+    </div>
+
+    <div class="card">
+      <div class="controls">
+        <div class="field">
+          <label for="seed">Seed</label>
+          <input id="seed" type="number" value="2025" />
+        </div>
+        <div class="field">
+          <label for="days">Horizon (días)</label>
+          <input id="days" type="number" min="30" max="365" value="120" />
+        </div>
+        <div class="field">
+          <label for="shipN">Shipments</label>
+          <input id="shipN" type="number" min="80" max="5000" value="520" />
+        </div>
+        <div class="field">
+          <label for="otifTarget">OTIF target %</label>
+          <input id="otifTarget" type="number" min="70" max="99" value="92" />
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+        <button class="btn primary" id="regen">Regenerar</button>
+        <a class="btn" href="#pdfs">Ir a PDFs</a>
+      </div>
+
+      <div class="kpis" id="kpisDash"></div>
+
+      <div class="grid2" style="margin-top:12px;">
+        <div class="card2">
+          <h3 style="margin:0 0 8px;">Coste vs Ingresos (mensual)</h3>
+          <canvas id="chartMonthly" height="140"></canvas>
+        </div>
+        <div class="card2">
+          <h3 style="margin:0 0 8px;">Incidencias por tipo</h3>
+          <canvas id="chartInc" height="140"></canvas>
+        </div>
+      </div>
+
+      <div class="tabs" style="margin-top:14px;">
+        <button class="tab active" data-tab="shipments">Shipments</button>
+        <button class="tab" data-tab="incidents">Incidents</button>
+        <button class="tab" data-tab="invoices">Invoices</button>
+      </div>
+
+      <div class="tableWrap">
+        <table>
+          <thead id="thead"></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PDFs -->
+  <section id="pdfs" class="container">
+    <div class="row">
+      <h2>Descargar PDFs con gráficos</h2>
+      <span class="pill"><span class="pDot"></span> Generados en el navegador</span>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>PDF · Informe Operaciones Transporte</h3>
+        <p class="muted" style="margin:0 0 10px;">
+          KPIs, gráfico mensual y top incidencias. Ideal para enviar a RRHH.
+        </p>
+        <button class="btn primary" id="pdfOps">Descargar PDF (Operaciones)</button>
+      </div>
+
+      <div class="card">
+        <h3>PDF · Informe SAP O2C</h3>
+        <p class="muted" style="margin:0 0 10px;">
+          Estado O2C (bloqueos, aging, pagos), gráfico y tabla resumen.
+        </p>
+        <button class="btn primary" id="pdfSap">Descargar PDF (SAP O2C)</button>
+      </div>
+    </div>
+
+    <!-- Hidden capture areas (rendered to canvas for PDF) -->
+    <div style="height:14px;"></div>
+
+    <div class="pdfArea" id="pdfAreaOps" style="display:none;">
+      <h2>Informe Operaciones Transporte (ficticio)</h2>
+      <div class="pdfMeta">
+        <span class="pdfTag">IberiaTrans Logistics</span>
+        <span class="pdfTag red">Datos ficticios</span>
+        <span class="pdfTag">Flota: 10 camiones (ES)</span>
+      </div>
+      <div id="pdfOpsKpis" style="display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px;"></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+        <div>
+          <h3>Coste vs Ingresos (mensual)</h3>
+          <canvas id="pdfChartMonthly" height="160"></canvas>
+        </div>
+        <div>
+          <h3>Incidencias por tipo</h3>
+          <canvas id="pdfChartInc" height="160"></canvas>
+        </div>
+      </div>
+      <h3 style="margin-top:12px;">Muestra de envíos</h3>
+      <div id="pdfOpsTable"></div>
+    </div>
+
+    <div class="pdfArea" id="pdfAreaSap" style="display:none;">
+      <h2>Informe SAP O2C (ficticio)</h2>
+      <div class="pdfMeta">
+        <span class="pdfTag">O2C: Sales Order → Delivery → Invoice → Payment</span>
+        <span class="pdfTag red">Datos ficticios</span>
+      </div>
+      <div id="pdfSapKpis" style="display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px;"></div>
+      <div style="margin-top:12px;">
+        <h3>Aging de facturas (distribución)</h3>
+        <canvas id="pdfChartAging" height="170"></canvas>
+      </div>
+      <h3 style="margin-top:12px;">Muestra de facturas</h3>
+      <div id="pdfSapTable"></div>
+    </div>
+
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">© Ejemplo ficticio – Pack Operaciones + BI</div>
+</footer>
+
+<!-- Libraries for charts + PDF -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<script>
+/* =========================
+   Helpers
+========================= */
+const el = (id)=>document.getElementById(id);
+
+function mulberry32(seed){
+  let a = seed >>> 0;
+  return function(){
+    a += 0x6D2B79F5;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function iso(d){ return d.toISOString().slice(0,10); }
+function addDays(dateStr, days){
+  const d = new Date(dateStr);
+  d.setDate(d.getDate()+days);
+  return iso(d);
+}
+function euro(n){ n=+n; return "€"+(Number.isFinite(n)?n:0).toFixed(2); }
+function pct(n){ n=+n; return (Number.isFinite(n)?n:0).toFixed(1)+"%"; }
+function fmt(n){ n=+n; return (Number.isFinite(n)?n:0).toFixed(2); }
+
+function downloadCSV(filename, rows){
+  if (!rows || !rows.length) return alert("Genera datos primero.");
+  const headers = Object.keys(rows[0]);
+  const lines = [headers.join(",")];
+  for (const r of rows){
+    const line = headers.map(h=>{
+      const v = r[h] ?? "";
+      const s = String(v);
+      if (s.includes(",") || s.includes('"') || s.includes("\n")) return `"${s.replaceAll('"','""')}"`;
+      return s;
+    }).join(",");
+    lines.push(line);
+  }
+  const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function renderTableSimple(target, rows, cols, limit=16){
+  const data = rows.slice(0, limit);
+  const html = `
+    <table style="width:100%; border-collapse:collapse; font-family:system-ui, Arial; font-size:12px;">
+      <thead>
+        <tr>${cols.map(c=>`<th style="text-align:left; padding:8px; border-bottom:1px solid #e5e7eb; background:#f8fafc;">${c}</th>`).join("")}</tr>
+      </thead>
+      <tbody>
+        ${data.map(r=>`<tr>${cols.map(c=>`<td style="padding:8px; border-bottom:1px solid #e5e7eb;">${(r[c]??"")}</td>`).join("")}</tr>`).join("")}
+      </tbody>
+    </table>`;
+  target.innerHTML = html;
+}
+
+/* =========================
+   Fake company datasets
+========================= */
+const COMPANY = "IberiaTrans Logistics (ficticia)";
+const CLIENTS = ["IKEA","Amazon","Carrefour","DB Schenker","DHL","Zalando","Decathlon","Leroy Merlin","Auchan","Kuehne+Nagel"];
+const INC_TYPES = ["Delay (traffic)","Delay (weather)","Damage","Docs issue","Customs hold","Customer not available","Trailer issue","Temperature deviation"];
+const DRIVERS = [
+  "Carlos Vega","Javier Martín","Sergio Ruiz","Antonio López","Miguel Santos","Álvaro Díaz","David Romero","Pablo Navarro","Iván Torres","Raúl Ortega",
+  "Adrián Molina","Rubén Herrera","Hugo Castro","Óscar Marín","Gonzalo Prieto","Marcos Gil","Juan Ramos","Fernando Delgado","Luis Reyes","Diego Serrano"
+];
+const CITIES = [
+  ["Madrid","ES"],["Barcelona","ES"],["Valencia","ES"],["Zaragoza","ES"],["Bilbao","ES"],["Sevilla","ES"],
+  ["Paris","FR"],["Lyon","FR"],["Brussels","BE"],["Luxembourg","LU"],["Frankfurt","DE"],["Cologne","DE"],["Hamburg","DE"],["Munich","DE"],
+  ["Milan","IT"],["Turin","IT"],["Vienna","AT"],["Prague","CZ"],["Warsaw","PL"],["Budapest","HU"],["Bucharest","RO"],["Cluj","RO"],["Rotterdam","NL"],["Amsterdam","NL"]
+];
+
+function plateES(rnd){
+  const letters = "BCDFGHJKLMNPRSTVWXYZ";
+  const n = Math.floor(1000 + rnd()*9000);
+  let s=""; for(let i=0;i<3;i++) s+=letters[Math.floor(rnd()*letters.length)];
+  return `${n}-${s}`;
+}
+
+let DATA = {
+  fleet:[], drivers:[], shipments:[], stops:[], incidents:[], fuel:[],
+  so:[], dn:[], inv:[], pay:[]
+};
+
+function buildData(){
+  const seed = +el("seed").value || 2025;
+  const days = +el("days").value || 120;
+  const shipN = +el("shipN").value || 520;
+  const target = (+el("otifTarget").value || 92)/100;
+
+  const rnd = mulberry32(seed);
+
+  const start = (()=>{ const d=new Date(); d.setDate(d.getDate()-days); return iso(d); })();
+
+  // Fleet: 10 trucks
+  DATA.fleet = [];
+  for(let i=1;i<=10;i++){
+    DATA.fleet.push({
+      truck_id:`TRK-${String(i).padStart(2,"0")}`,
+      truck_plate: plateES(rnd),
+      trailer_id:`TRL-${String(i).padStart(2,"0")}`,
+      trailer_plate: plateES(rnd),
+      base: (i<=4)?"Madrid":(i<=7)?"Barcelona":"Valencia",
+      model: ["Volvo FH","Scania R450","Mercedes Actros","MAN TGX","DAF XF"][Math.floor(rnd()*5)]
+    });
+  }
+
+  // Drivers: 20 (double)
+  DATA.drivers = [];
+  for(let i=1;i<=20;i++){
+    const a = Math.floor(600 + rnd()*99);
+    const b = Math.floor(100 + rnd()*899);
+    const c = Math.floor(100 + rnd()*899);
+    const phone = `+34 6${a} ${b} ${c}`;
+    DATA.drivers.push({
+      driver_id:`DRV-${String(i).padStart(2,"0")}`,
+      name: DRIVERS[i-1] || ("Driver "+i),
+      phone,
+      team: (i%2===1)?"A":"B",
+      assigned_truck:`TRK-${String(Math.ceil(i/2)).padStart(2,"0")}`
+    });
+  }
+
+  // Shipments + stops + incidents + fuel
+  DATA.shipments = [];
+  DATA.stops = [];
+  DATA.incidents = [];
+  DATA.fuel = [];
+
+  // Monthly buckets for charts
+  const monthKey = (d)=>d.slice(0,7);
+
+  for(let i=1;i<=shipN;i++){
+    const sh = `SHP-${seed}-${String(i).padStart(5,"0")}`;
+    const trk = DATA.fleet[Math.floor(rnd()*DATA.fleet.length)];
+    const drv1 = DATA.drivers[(Number(trk.truck_id.split("-")[1])-1)*2];
+    const drv2 = DATA.drivers[(Number(trk.truck_id.split("-")[1])-1)*2+1];
+
+    const a = CITIES[Math.floor(rnd()*CITIES.length)];
+    let b = CITIES[Math.floor(rnd()*CITIES.length)];
+    while (b[0]===a[0]) b = CITIES[Math.floor(rnd()*CITIES.length)];
+
+    const date = addDays(start, Math.floor(rnd()*days));
+    const km = Math.round(220 + rnd()*1500);
+    const ontime = (rnd() > (0.06 + (1-target) + (km>1100?0.05:0))) ? 1 : 0;
+
+    const fuelL = km * (0.28 + rnd()*0.06);
+    const fuelCost = fuelL * (1.55 + rnd()*0.35);
+    const toll = km*(0.06 + rnd()*0.05);
+    const driverCost = (km/70)*(30 + rnd()*8);
+    const overhead = 55 + rnd()*35;
+    const cost = fuelCost + toll + driverCost + overhead;
+    const revenue = km*(1.08 + rnd()*0.35) + (rnd()*70);
+    const margin = revenue - cost;
+
+    // Fuel log line
+    DATA.fuel.push({
+      date,
+      truck_id: trk.truck_id,
+      liters: +fuelL.toFixed(1),
+      fuel_cost: +fuelCost.toFixed(2)
+    });
+
+    // Stops
+    DATA.stops.push({ shipment_id: sh, stop_no: 1, type:"PICKUP", city:a[0], country:a[1], date });
+    DATA.stops.push({ shipment_id: sh, stop_no: 2, type:"DELIVERY", city:b[0], country:b[1], date });
+
+    // Incidents
+    const incProb = 0.07 + (ontime?0:0.07) + (km>1200?0.03:0);
+    let incType="None", solution="—";
+    if (rnd() < Math.min(0.22, incProb)){
+      incType = INC_TYPES[Math.floor(rnd()*INC_TYPES.length)];
+      solution = [
+        "Dispatch called driver – rerouted to alternative highway",
+        "Customer rescheduled slot – updated ETA",
+        "Replaced trailer at partner yard – continued trip",
+        "Corrected docs – released by customs",
+        "Workshop check – spare vehicle assigned",
+        "Temperature log attached – cold chain validated"
+      ][Math.floor(rnd()*6)];
+      DATA.incidents.push({
+        incident_id: "INC-"+sh,
+        shipment_id: sh,
+        date,
+        type: incType,
+        severity: (rnd()<0.55)?"Low":(rnd()<0.85)?"Medium":"High",
+        driver_contact: drv1.phone,
+        solution
+      });
+    }
+
+    DATA.shipments.push({
+      shipment_id: sh,
+      date,
+      client: CLIENTS[Math.floor(rnd()*CLIENTS.length)],
+      truck_id: trk.truck_id,
+      truck_plate: trk.truck_plate,
+      trailer_plate: trk.trailer_plate,
+      driver_1: drv1.name,
+      driver_2: drv2.name,
+      pickup_city: a[0],
+      delivery_city: b[0],
+      km,
+      on_time: ontime,
+      total_cost: +cost.toFixed(2),
+      revenue: +revenue.toFixed(2),
+      margin: +margin.toFixed(2),
+      incident: incType
+    });
+  }
+
+  // SAP O2C: SO/DN/INV/PAY derived from shipments (realistic link)
+  DATA.so = [];
+  DATA.dn = [];
+  DATA.inv = [];
+  DATA.pay = [];
+
+  for (let i=0;i<Math.min(DATA.shipments.length, 420);i++){
+    const rnd2 = rnd;
+    const sh = DATA.shipments[i];
+    const so = `SO-${seed}-${String(i+1).padStart(5,"0")}`;
+    const dn = `DN-${seed}-${String(i+1).padStart(5,"0")}`;
+    const inv = `INV-${seed}-${String(i+1).padStart(5,"0")}`;
+    const pay = `PAY-${seed}-${String(i+1).padStart(5,"0")}`;
+
+    const blockP = 0.06;
+    const unpaidP = 0.18;
+
+    const blocked = rnd2() < blockP;
+    const status = blocked ? "BLOCKED" : "INVOICED";
+    const block_reason = blocked ? (rnd2()<0.5?"Credit block":"Incomplete data") : "";
+
+    const order_date = sh.date;
+    const delivery_date = addDays(order_date, Math.max(1, Math.round(1 + rnd2()*5)));
+    const invoice_date = addDays(delivery_date, Math.max(1, Math.round(1 + rnd2()*3)));
+    const due_date = addDays(invoice_date, 30);
+
+    const unpaid = (!blocked) && (rnd2() < unpaidP);
+    const paid = (!blocked) && !unpaid;
+
+    const aging = unpaid ? Math.max(0, Math.round((new Date() - new Date(due_date))/86400000)) : 0;
+    const payment_date = paid ? addDays(due_date, Math.max(0, Math.round((rnd2()*2-1)*6 + rnd2()*4))) : "";
+
+    DATA.so.push({
+      so_id: so,
+      order_date,
+      customer: sh.client,
+      reference: sh.shipment_id,
+      order_value: sh.revenue,
+      status,
+      block_reason
+    });
+
+    if (!blocked){
+      DATA.dn.push({ delivery_id: dn, so_id: so, delivery_date, ship_to: sh.delivery_city, lead_time_days: Math.max(1, Math.round((new Date(delivery_date)-new Date(order_date))/86400000)) });
+      DATA.inv.push({ invoice_id: inv, so_id: so, invoice_date, due_date, amount: sh.revenue, payment_status: paid?"PAID":"UNPAID", aging_days: aging });
+      if (paid){
+        DATA.pay.push({ payment_id: pay, invoice_id: inv, payment_date, amount: sh.revenue, method: (rnd2()<0.7)?"Bank transfer":(rnd2()<0.9)?"SEPA":"Card" });
+      }
+    }
+  }
+
+  return {start, days, shipN};
+}
+
+/* =========================
+   Dashboard rendering
+========================= */
+let chartMonthly, chartInc;
+
+function calcKPIs(){
+  const s = DATA.shipments;
+  const km = s.reduce((a,x)=>a+x.km,0);
+  const rev = s.reduce((a,x)=>a+x.revenue,0);
+  const cost = s.reduce((a,x)=>a+x.total_cost,0);
+  const mar = rev - cost;
+  const otif = (s.reduce((a,x)=>a+x.on_time,0)/Math.max(1,s.length))*100;
+  const inc = (DATA.incidents.length/Math.max(1,s.length))*100;
+
+  return {km, rev, cost, mar, otif, inc, n:s.length};
+}
+
+function setKpis(targetId){
+  const k = calcKPIs();
+  const wrap = el(targetId);
+  wrap.innerHTML = "";
+  const items = [
+    ["Shipments", k.n],
+    ["OTIF", pct(k.otif)],
+    ["Incidents", pct(k.inc)],
+    ["Total km", k.km.toLocaleString()],
+    ["Revenue", euro(k.rev)],
+    ["Cost", euro(k.cost)],
+    ["Margin", euro(k.mar)],
+    ["Cost/km", "€"+fmt(k.cost/Math.max(1,k.km))]
+  ];
+  for (const [kk,vv] of items){
+    const div = document.createElement("div");
+    div.className="kpi";
+    div.innerHTML = `<div class="k">${kk}</div><div class="v">${vv}</div>`;
+    wrap.appendChild(div);
+  }
+}
+
+function monthlySeries(){
+  const map = new Map();
+  for (const r of DATA.shipments){
+    const m = r.date.slice(0,7);
+    const cur = map.get(m) || {rev:0,cost:0};
+    cur.rev += r.revenue;
+    cur.cost += r.total_cost;
+    map.set(m, cur);
+  }
+  const labels = Array.from(map.keys()).sort();
+  const rev = labels.map(m=>+(map.get(m).rev.toFixed(2)));
+  const cost = labels.map(m=>+(map.get(m).cost.toFixed(2)));
+  return {labels, rev, cost};
+}
+
+function incSeries(){
+  const map = new Map();
+  for (const r of DATA.incidents){
+    map.set(r.type, (map.get(r.type)||0)+1);
+  }
+  const labels = Array.from(map.keys());
+  const values = labels.map(k=>map.get(k));
+  return {labels, values};
+}
+
+function renderCharts(){
+  const m = monthlySeries();
+  const inc = incSeries();
+
+  // Monthly
+  if (chartMonthly) chartMonthly.destroy();
+  chartMonthly = new Chart(el("chartMonthly"), {
+    type:"bar",
+    data:{
+      labels:m.labels,
+      datasets:[
+        {label:"Revenue", data:m.rev},
+        {label:"Cost", data:m.cost}
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{labels:{color:"#e5e7eb"}}},
+      scales:{
+        x:{ticks:{color:"#cbd5e1"}},
+        y:{ticks:{color:"#cbd5e1"}}
+      }
+    }
+  });
+
+  // Incidents
+  if (chartInc) chartInc.destroy();
+  chartInc = new Chart(el("chartInc"), {
+    type:"doughnut",
+    data:{
+      labels:inc.labels,
+      datasets:[{label:"Incidents", data:inc.values}]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{labels:{color:"#e5e7eb"}}}
+    }
+  });
+}
+
+function renderMainTable(tab){
+  const thead = el("thead");
+  const tbody = el("tbody");
+
+  let rows = [];
+  let cols = [];
+
+  if (tab==="shipments"){
+    rows = DATA.shipments.slice().reverse();
+    cols = ["shipment_id","date","client","truck_plate","driver_1","driver_2","pickup_city","delivery_city","km","revenue","total_cost","margin","on_time","incident"];
+  } else if (tab==="incidents"){
+    rows = DATA.incidents.slice().reverse();
+    cols = ["incident_id","shipment_id","date","type","severity","solution","driver_contact"];
+  } else {
+    rows = DATA.inv.slice().reverse();
+    cols = ["invoice_id","so_id","invoice_date","due_date","amount","payment_status","aging_days"];
+  }
+
+  thead.innerHTML = "<tr>"+cols.map(c=>`<th>${c}</th>`).join("")+"</tr>";
+  tbody.innerHTML = "";
+
+  rows.slice(0, 80).forEach(r=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML = cols.map(c=>`<td>${(r[c]??"")}</td>`).join("");
+    tbody.appendChild(tr);
+  });
+}
+
+/* =========================
+   PDF generation
+========================= */
+async function makePdfFromArea(areaId, filename){
+  const area = el(areaId);
+  area.style.display = "block";
+  await new Promise(r=>setTimeout(r, 50));
+
+  const canvas = await html2canvas(area, {scale: 2, useCORS:true});
+  const imgData = canvas.toDataURL("image/png");
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({orientation:"p", unit:"pt", format:"a4"});
+
+  const pageW = pdf.internal.pageSize.getWidth();
+  const pageH = pdf.internal.pageSize.getHeight();
+
+  const imgW = pageW - 48;
+  const imgH = canvas.height * (imgW / canvas.width);
+
+  let y = 24;
+  if (imgH <= pageH - 48){
+    pdf.addImage(imgData, "PNG", 24, y, imgW, imgH);
+  } else {
+    // multi-page
+    let remaining = imgH;
+    let srcY = 0;
+    const sliceH = canvas.width * ((pageH - 48) / imgW);
+    while (remaining > 0){
+      const pageCanvas = document.createElement("canvas");
+      pageCanvas.width = canvas.width;
+      pageCanvas.height = Math.min(sliceH, canvas.height - srcY);
+
+      const ctx = pageCanvas.getContext("2d");
+      ctx.drawImage(canvas, 0, srcY, canvas.width, pageCanvas.height, 0, 0, canvas.width, pageCanvas.height);
+
+      const pageImg = pageCanvas.toDataURL("image/png");
+      const pageImgH = pageCanvas.height * (imgW / pageCanvas.width);
+
+      pdf.addImage(pageImg, "PNG", 24, 24, imgW, pageImgH);
+      remaining -= (pageH - 48);
+      srcY += pageCanvas.height;
+
+      if (remaining > 0) pdf.addPage();
+    }
+  }
+
+  pdf.save(filename);
+
+  area.style.display = "none";
+}
+
+function buildPdfOpsArea(){
+  // KPIs
+  const k = calcKPIs();
+  const wrap = el("pdfOpsKpis");
+  wrap.innerHTML = "";
+  const items = [
+    ["Shipments", k.n],
+    ["OTIF", pct(k.otif)],
+    ["Incidents", pct(k.inc)],
+    ["Total km", k.km.toLocaleString()],
+    ["Revenue", euro(k.rev)],
+    ["Cost", euro(k.cost)],
+    ["Margin", euro(k.mar)],
+    ["Cost/km", "€"+fmt(k.cost/Math.max(1,k.km))]
+  ];
+  for (const [kk,vv] of items){
+    const div = document.createElement("div");
+    div.style.border = "1px solid #e5e7eb";
+    div.style.borderRadius = "12px";
+    div.style.padding = "10px";
+    div.innerHTML = `<div style="color:#475569; font-weight:900; font-size:12px;">${kk}</div>
+                     <div style="font-weight:950; font-size:18px; margin-top:4px;">${vv}</div>`;
+    wrap.appendChild(div);
+  }
+
+  // Charts for PDF (separados)
+  const m = monthlySeries();
+  const inc = incSeries();
+
+  // Monthly PDF chart
+  new Chart(el("pdfChartMonthly"), {
+    type:"bar",
+    data:{ labels:m.labels, datasets:[ {label:"Revenue", data:m.rev}, {label:"Cost", data:m.cost} ] },
+    options:{ responsive:true, plugins:{legend:{display:true}} }
+  });
+
+  // Inc PDF chart
+  new Chart(el("pdfChartInc"), {
+    type:"doughnut",
+    data:{ labels:inc.labels, datasets:[{label:"Incidents", data:inc.values}] },
+    options:{ responsive:true, plugins:{legend:{display:true}} }
+  });
+
+  // Table sample
+  const sample = DATA.shipments.slice().reverse();
+  renderTableSimple(el("pdfOpsTable"), sample, ["shipment_id","date","client","truck_plate","pickup_city","delivery_city","km","revenue","total_cost","on_time","incident"], 14);
+}
+
+function buildPdfSapArea(){
+  // KPIs SAP
+  const totalInv = DATA.inv.reduce((a,x)=>a+(+x.amount||0),0);
+  const unpaid = DATA.inv.filter(x=>x.payment_status==="UNPAID");
+  const paid = DATA.inv.filter(x=>x.payment_status==="PAID");
+  const blocked = DATA.so.filter(x=>x.status==="BLOCKED").length;
+  const avgAging = unpaid.length ? unpaid.reduce((a,x)=>a+(+x.aging_days||0),0)/unpaid.length : 0;
+
+  const wrap = el("pdfSapKpis");
+  wrap.innerHTML = "";
+  const items = [
+    ["Sales Orders", DATA.so.length],
+    ["Blocked", blocked],
+    ["Invoices", DATA.inv.length],
+    ["Paid", paid.length],
+    ["Unpaid", unpaid.length],
+    ["Total Invoiced", euro(totalInv)],
+    ["Avg Aging (unpaid)", avgAging.toFixed(1)+" d"],
+    ["Payments", DATA.pay.length]
+  ];
+  for (const [kk,vv] of items){
+    const div = document.createElement("div");
+    div.style.border = "1px solid #e5e7eb";
+    div.style.borderRadius = "12px";
+    div.style.padding = "10px";
+    div.innerHTML = `<div style="color:#475569; font-weight:900; font-size:12px;">${kk}</div>
+                     <div style="font-weight:950; font-size:18px; margin-top:4px;">${vv}</div>`;
+    wrap.appendChild(div);
+  }
+
+  // Aging distribution chart
+  const buckets = {"0-7":0,"8-14":0,"15-30":0,"31-60":0,"60+":0};
+  unpaid.forEach(x=>{
+    const a = +x.aging_days||0;
+    if (a<=7) buckets["0-7"]++;
+    else if (a<=14) buckets["8-14"]++;
+    else if (a<=30) buckets["15-30"]++;
+    else if (a<=60) buckets["31-60"]++;
+    else buckets["60+"]++;
+  });
+
+  new Chart(el("pdfChartAging"), {
+    type:"bar",
+    data:{
+      labels:Object.keys(buckets),
+      datasets:[{label:"Unpaid invoices", data:Object.values(buckets)}]
+    },
+    options:{ responsive:true, plugins:{legend:{display:true}} }
+  });
+
+  // Table sample
+  renderTableSimple(el("pdfSapTable"), DATA.inv.slice().reverse(), ["invoice_id","so_id","invoice_date","due_date","amount","payment_status","aging_days"], 16);
+}
+
+/* =========================
+   Wire UI
+========================= */
+function regenAll(){
+  buildData();
+  setKpis("kpisTop");
+  setKpis("kpisDash");
+  renderCharts();
+  renderMainTable("shipments");
+}
+
+document.querySelectorAll("[data-tab]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll("[data-tab]").forEach(x=>x.classList.remove("active"));
+    btn.classList.add("active");
+    renderMainTable(btn.dataset.tab);
+  });
+});
+
+el("regen").addEventListener("click", regenAll);
+el("genAll").addEventListener("click", regenAll);
+
+// CSV buttons
+el("dlShipments").addEventListener("click", ()=>downloadCSV("shipments.csv", DATA.shipments));
+el("dlStops").addEventListener("click", ()=>downloadCSV("stops.csv", DATA.stops));
+el("dlIncidents").addEventListener("click", ()=>downloadCSV("incidents.csv", DATA.incidents.length?DATA.incidents:[{incident_id:"",shipment_id:"",date:"",type:"",severity:"",driver_contact:"",solution:""}]));
+el("dlFleet").addEventListener("click", ()=>downloadCSV("fleet.csv", DATA.fleet));
+el("dlDrivers").addEventListener("click", ()=>downloadCSV("drivers.csv", DATA.drivers));
+el("dlFuel").addEventListener("click", ()=>downloadCSV("fuel_log.csv", DATA.fuel));
+
+el("dlSO").addEventListener("click", ()=>downloadCSV("sap_sales_orders.csv", DATA.so));
+el("dlDN").addEventListener("click", ()=>downloadCSV("sap_deliveries.csv", DATA.dn.length?DATA.dn:[{delivery_id:"",so_id:"",delivery_date:"",ship_to:"",lead_time_days:""}]));
+el("dlINV").addEventListener("click", ()=>downloadCSV("sap_invoices.csv", DATA.inv.length?DATA.inv:[{invoice_id:"",so_id:"",invoice_date:"",due_date:"",amount:"",payment_status:"",aging_days:""}]));
+el("dlPAY").addEventListener("click", ()=>downloadCSV("sap_payments.csv", DATA.pay.length?DATA.pay:[{payment_id:"",invoice_id:"",payment_date:"",amount:"",method:""}]));
+
+el("dlAllCSVs").addEventListener("click", ()=>{
+  downloadCSV("shipments.csv", DATA.shipments);
+  downloadCSV("stops.csv", DATA.stops);
+  downloadCSV("incidents.csv", DATA.incidents.length?DATA.incidents:[{incident_id:"",shipment_id:"",date:"",type:"",severity:"",driver_contact:"",solution:""}]);
+  downloadCSV("fleet.csv", DATA.fleet);
+  downloadCSV("drivers.csv", DATA.drivers);
+  downloadCSV("fuel_log.csv", DATA.fuel);
+
+  downloadCSV("sap_sales_orders.csv", DATA.so);
+  downloadCSV("sap_deliveries.csv", DATA.dn.length?DATA.dn:[{delivery_id:"",so_id:"",delivery_date:"",ship_to:"",lead_time_days:""}]);
+  downloadCSV("sap_invoices.csv", DATA.inv.length?DATA.inv:[{invoice_id:"",so_id:"",invoice_date:"",due_date:"",amount:"",payment_status:"",aging_days:""}]);
+  downloadCSV("sap_payments.csv", DATA.pay.length?DATA.pay:[{payment_id:"",invoice_id:"",payment_date:"",amount:"",method:""}]);
+});
+
+// PDFs
+el("pdfOps").addEventListener("click", async ()=>{
+  // reset canvases by recreating containers
+  el("pdfAreaOps").style.display = "none";
+  el("pdfChartMonthly").replaceWith(el("pdfChartMonthly").cloneNode(true));
+  el("pdfChartInc").replaceWith(el("pdfChartInc").cloneNode(true));
+
+  buildPdfOpsArea();
+  await makePdfFromArea("pdfAreaOps", "Informe_Operaciones_Transporte_ficticio.pdf");
+});
+
+el("pdfSap").addEventListener("click", async ()=>{
+  el("pdfAreaSap").style.display = "none";
+  el("pdfChartAging").replaceWith(el("pdfChartAging").cloneNode(true));
+
+  buildPdfSapArea();
+  await makePdfFromArea("pdfAreaSap", "Informe_SAP_O2C_ficticio.pdf");
+});
+
+// Init
+(function init(){
+  regenAll();
+})();
+</script>
+</body>
+</html>
